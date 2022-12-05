@@ -83,6 +83,9 @@ class Anim
 	/** @public {Anim[]} */
 	dependsOn;
 
+	/** @public {function():void|null} */
+	callback;
+
 
 
 	/**
@@ -92,8 +95,15 @@ class Anim
 	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
 	 * @param {Number} duration
 	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
+	 * @param {function():void|null} callback
 	 */
-	constructor ( selection, startParams, endParams, ease, duration, dependsOn = [] )
+	constructor (
+		selection,
+		startParams,
+		endParams,
+		ease, duration,
+		dependsOn = [],
+		callback = null )
 	{
 		/* Check array parameters */
 		if ( !startParams )
@@ -119,6 +129,7 @@ class Anim
 		this.ease = ease;
 		this.duration = duration;
 		this.dependsOn = dependsOn.slice ();
+		this.callback = callback;
 	}
 
 
@@ -164,6 +175,18 @@ class Anim
 
 
 	/**
+	 * @param {Anim} anim
+	 * @returns {Anim}
+	 */
+	addDependency ( anim )
+	{
+		this.dependsOn.push ( anim );
+		return this;
+	}
+
+
+
+	/**
 	 * @param {AnimParams|AnimParams[]|null} endParams
 	 * @param {Object|null} [ease = null]
 	 * @param {Number|null} [duration = null]
@@ -172,7 +195,13 @@ class Anim
 	 */
 	continueTo ( endParams, ease= null, duration= null )
 	{
-		return new Anim ( this.selection, null, endParams, ease ? ease : this.ease, duration != null ? duration : this.duration, [ this ] );
+		return new Anim (
+			this.selection,
+			null, endParams,
+			ease ? ease : this.ease,
+			duration != null ? duration : this.duration,
+			[ this ]
+		);
 	}
 
 
@@ -187,7 +216,26 @@ class Anim
 	 */
 	singleContinueTo ( index, endParams, ease= null, duration= null )
 	{
-		return new Anim ( this.selection.filter ( ( d, i ) => i === index ), null, endParams, ease ? ease : this.ease, duration != null ? duration : this.duration, [ this ] );
+		return new Anim (
+			this.selection.filter ( ( d, i ) => i === index ),
+			null,
+			endParams,
+			ease ? ease : this.ease,
+			duration != null ? duration : this.duration,
+			[ this ]
+		);
+	}
+
+
+
+	/**
+	 * @param {function():void|null} f
+	 */
+	addCallback ( f )
+	{
+		const oldCallback = this.callback;
+		this.callback = ( this.callback ? () => { oldCallback (); f () } : f );
+		return this;
 	}
 
 
@@ -198,6 +246,10 @@ class Anim
 	 */
 	_animate ()
 	{
+		/* The return animation */
+		let promise;
+
+		/* Animate */
 		if ( this.arrayParams )
 		{
 			if ( this.startParams )
@@ -206,28 +258,31 @@ class Anim
 					.join ()
 					.style ( "transform", d => d.toTransform () );
 			if ( this.endParams )
-				return this.selection
+				promise = this.selection
 					.data ( this.endParams )
 					.join ()
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease )
 					.style ( "transform", d => d.toTransform () )
-					.end ();
-			else return new Promise ( res => setTimeout ( () => res (), this.duration ) );
+					.end ()
+			else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) );
 		} else
 		{
 			if ( this.startParams )
 				this.selection.style ( "transform", this.startParams.toTransform () );
 			if ( this.endParams )
-				return this.selection
+				promise = this.selection
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease )
 					.style ( "transform", this.endParams.toTransform () )
-					.end ();
-			else return new Promise ( res => setTimeout ( () => res (), this.duration ) );
+					.end ()
+			else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) )
 		}
+
+		/* Add the callback and return */
+		return promise.then ( () => { if ( this.callback ) this.callback (); } );
 	}
 
 

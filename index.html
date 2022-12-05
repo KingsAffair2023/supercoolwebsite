@@ -26,6 +26,8 @@
 				let sanim = Anim.Setup ( d3.selectAll ( ".duck" ), d3.easeSin, 1000 )
 					.continueTo ( pparams1 )
 					.continueTo ( pparams2 )
+					.addCallback ( () => console.log ( "callback 1" ) )
+					.addCallback ( () => console.log ( "callback 2" ) )
 					.singleContinueTo ( 0, params1 )
 					.continueTo ( params2 )
 					.continueTo ( params3 );
