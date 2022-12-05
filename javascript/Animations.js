@@ -83,7 +83,7 @@ class Anim
 	/** @public {Anim[]} */
 	dependsOn;
 
-	/** @public {function():void|null} */
+	/** @public {(function():void)|null} */
 	callback;
 
 
@@ -95,7 +95,7 @@ class Anim
 	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
 	 * @param {Number} duration
 	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
-	 * @param {function():void|null} callback
+	 * @param {(function():void)|null} callback
 	 */
 	constructor (
 		selection,
@@ -229,7 +229,7 @@ class Anim
 
 
 	/**
-	 * @param {function():void|null} f
+	 * @param {function():void} f
 	 */
 	addCallback ( f )
 	{
@@ -313,9 +313,9 @@ class Anim
 }
 
 
-
 /**
  * @class SetupAnim
+ * @extends Anim
  *
  * @description Stores the parameters for a normal animation, but _animate resolves immediately, having no effect.
  */
