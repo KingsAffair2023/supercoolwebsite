@@ -339,6 +339,7 @@ class SetupAnim extends Anim
 	 */
 	_animate ()
 	{
+		if ( this.callback ) this.callback ();
 		return Promise.resolve ();
 	}
 }
