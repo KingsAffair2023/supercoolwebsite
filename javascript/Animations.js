@@ -296,7 +296,7 @@ class Anim
 	 */
 	static Identity ( selection, ease, duration, dependsOn = [] )
 	{
-		return new Anim ( selection, null, null, ease, duration, dependsOn );
+		return new IdentityAnim ( selection, ease, duration, dependsOn );
 	}
 
 	/**
@@ -309,6 +309,39 @@ class Anim
 	static Setup ( selection, ease, duration, dependsOn = [] )
 	{
 		return new SetupAnim ( selection, ease, duration, dependsOn );
+	}
+}
+
+
+
+/**
+ * @class IdentityAnim
+ * @extends Anim
+ *
+ * @description An animation which performs no transition, but will still take some duration.
+ */
+class IdentityAnim extends Anim
+{
+	/**
+	 * @param {Object} selection The D3 selection which the animation should act on.
+	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
+	 * @param {Number} duration
+	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
+	 */
+	constructor ( selection, ease, duration, dependsOn = [] )
+	{
+		super ( selection, null, null, ease, duration, dependsOn );
+	}
+
+	/**
+	 * @description Actually perform the animation for this node.
+	 * @private
+	 * @override
+	 */
+	_animate ()
+	{
+		return new Promise ( res => setTimeout ( () => res (), this.duration ) )
+			.then ( () => { if ( this.callback ) this.callback () } );
 	}
 }
 
