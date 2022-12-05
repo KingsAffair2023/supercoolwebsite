@@ -1,31 +1,39 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Base Page</title>
-  </head>
-  <body>
-    <!--
-         _________________________ 
-        < We could do this        >
-         ------------------------- 
-                \   ^__^
-                 \  (oo)\_______
-                    (__)\       )\/\
-                        ||----w |
-                        ||     ||
+	<head>
+		<title>Base Page</title>
+		<script src="https://d3js.org/d3.v7.min.js"></script>
+		<script src="javascript/Vec.js" ></script>
+		<script src="javascript/Animations.js" ></script>
+	</head>
 
+	<body>
+		
+		<img id="duck1" class="duck" src="assets/duck.jpg" style="">
+		<img id="duck2" class="duck" src="assets/duck.jpg" style="">
 
-    -->
-    <pre>
-         _________________________ 
-        < Welcome to kings Affair >
-         ------------------------- 
-                \   ^__^
-                 \  (oo)\_______
-                    (__)\       )\/\
-                        ||----w |
-                        ||     ||
-            
-    </pre>
-  </body>
+		<script>
+
+			window.onload = () =>
+			{
+				let pparams1 = [ new AnimParams ( null, null, 0.5 ), new AnimParams ( null, null, 0.5 ) ];
+				let pparams2 = [ new AnimParams ( null, null, 0.8 ), new AnimParams ( null, null, 0.2 ) ];
+
+				let params1 = new AnimParams ( null, 180, null );
+				let params2 = new AnimParams ( new Vec ( 500, 600 ), 359, null );
+				let params3 = new AnimParams ( new Vec ( 100, 200 ), 420, null );
+
+				let sanim = Anim.Setup ( d3.selectAll ( ".duck" ), d3.easeSin, 1000 )
+					.continueTo ( pparams1 )
+					.continueTo ( pparams2 )
+					.singleContinueTo ( 0, params1 )
+					.continueTo ( params2 )
+					.continueTo ( params3 );
+
+				sanim.animate();
+			};
+
+		</script>
+
+	</body>
 </html>
