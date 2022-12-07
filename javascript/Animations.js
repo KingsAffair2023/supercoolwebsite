@@ -18,28 +18,15 @@ class AnimParams
 
 	/**
 	 * @param {Vec|null} position
+	 * @param {Vec|null} size
 	 * @param {Number|null} rotation
-	 * @param {Number|null} scale
 	 */
-	constructor ( position= null, rotation= null, scale= null )
+	constructor ( position= null, size = null, rotation= null )
 	{
 		this.position = position;
+		this.size = size;
 		this.rotation = rotation;
-		this.scale = scale;
 		Object.freeze ( this );
-	}
-
-
-
-	/**
-	 * @returns {String}
-	 * @public
-	 */
-	toTransform ()
-	{
-		return ( this.position != null ? "translate(" + this.position.x + "px," + this.position.y + "px)" : "" ) +
-			( this.rotation != null ? "rotate(" + this.rotation + "deg)" : "" ) +
-			( this.scale != null ? "scale(" + this.scale + ")" : "" );
 	}
 
 
@@ -65,14 +52,11 @@ class Anim
 	/** @public */
 	selection;
 
-	/** @public {AnimParams|AnimParams[]|null} */
+	/** @public {AnimParams[]|null} */
 	startParams;
 
-	/** @public {AnimParams|AnimParams[]|null} */
+	/** @public {AnimParams[]|null} */
 	endParams;
-
-	/** @public {Boolean} */
-	arrayParams;
 
 	/** @public {Object} */
 	ease;
@@ -106,26 +90,28 @@ class Anim
 		callback = null )
 	{
 		/* Check array parameters */
+		let arrayParams;
 		if ( !startParams )
 		{
-			if ( !endParams ) this.arrayParams = false;
-			else this.arrayParams = Array.isArray ( endParams );
+			if ( !endParams ) arrayParams = false;
+			else arrayParams = Array.isArray ( endParams );
 		}
 		else
 		{
-			this.arrayParams = Array.isArray ( startParams );
-			if ( endParams && Array.isArray ( endParams ) !== this.arrayParams )
+			arrayParams = Array.isArray ( startParams );
+			if ( endParams && Array.isArray ( endParams ) !== arrayParams )
 				throw new Error ( "ParallelAnimation.constructor: startParams and endParams must both be an array, or both objects" );
 		}
 
 		/* Check cardinalities */
-		if ( this.arrayParams )
+		if ( arrayParams )
 			if ( ( startParams && selection.size () !== startParams.length ) || ( endParams && selection.size () !== endParams.length ) )
 				throw new Error ( "ParallelAnimation.constructor: Assertion 'selection.size () == startParams.length == endParams.length' failed" );
 
+		/* Turn the animation parameters into arrays and set the attributes */
 		this.selection = selection;
-		this.startParams = ( this.arrayParams ? startParams?.slice () : startParams );
-		this.endParams = ( this.arrayParams ? endParams?.slice () : endParams );
+		this.startParams = startParams ? ( arrayParams ? startParams.slice () : new Array ( selection.size () ).fill ( startParams ) ) : null;
+		this.endParams = endParams ? ( arrayParams ? endParams.slice () : new Array ( selection.size () ).fill ( endParams ) ) : null;
 		this.ease = ease;
 		this.duration = duration;
 		this.dependsOn = dependsOn.slice ();
@@ -198,8 +184,8 @@ class Anim
 		return new Anim (
 			this.selection,
 			null, endParams,
-			ease ? ease : this.ease,
-			duration != null ? duration : this.duration,
+			ease ?? this.ease,
+			duration ?? this.duration,
 			[ this ]
 		);
 	}
@@ -220,8 +206,8 @@ class Anim
 			this.selection.filter ( ( d, i ) => i === index ),
 			null,
 			endParams,
-			ease ? ease : this.ease,
-			duration != null ? duration : this.duration,
+			ease ?? this.ease,
+			duration ?? this.duration,
 			[ this ]
 		);
 	}
@@ -249,37 +235,30 @@ class Anim
 		/* The return animation */
 		let promise;
 
+		/* Set the attributes of a selection */
+		const applyAnimParams = selection => selection
+			.attr ( "x", function ( d ) { return d.position?.x ?? this.getAttribute ( "x" ) } )
+			.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
+			.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
+			.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } )
+			.style ( "transform", function ( d ) { return d.rotation ? "rotate(" + d.rotation + "deg)" : this.getAttribute ( "transform" ); } );
+
 		/* Animate */
-		if ( this.arrayParams )
-		{
-			if ( this.startParams )
+		if ( this.startParams )
+			applyAnimParams (
 				this.selection
 					.data ( this.startParams )
-					.join ()
-					.style ( "transform", d => d.toTransform () );
-			if ( this.endParams )
-				promise = this.selection
+					.join () );
+		if ( this.endParams )
+			promise = applyAnimParams (
+				this.selection
 					.data ( this.endParams )
 					.join ()
 					.transition ()
 					.duration ( this.duration )
-					.ease ( this.ease )
-					.style ( "transform", d => d.toTransform () )
-					.end ()
-			else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) );
-		} else
-		{
-			if ( this.startParams )
-				this.selection.style ( "transform", this.startParams.toTransform () );
-			if ( this.endParams )
-				promise = this.selection
-					.transition ()
-					.duration ( this.duration )
-					.ease ( this.ease )
-					.style ( "transform", this.endParams.toTransform () )
-					.end ()
-			else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) )
-		}
+					.ease ( this.ease ) )
+				.end ()
+		else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) );
 
 		/* Add the callback and return */
 		return promise.then ( () => { if ( this.callback ) this.callback (); } );
