@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="">
 	<head>
 		<title>Base Page</title>
 		<script src="https://d3js.org/d3.v7.min.js"></script>
@@ -17,7 +17,7 @@
 		</svg>
 		-->
 
-		<svg id="svg" viewBox="0 0 1000 1000">
+		<svg id="svg" viewBox="0 0 800 1000" style="width:100%">
 
 		</svg>
 
@@ -46,9 +46,9 @@
 
 			const onload2 = () =>
 			{
-				const dealSize = new Vec ( 800, 300 );
-				const dealPos = new Vec ( 200, 200 );
-				const cardSize = new Vec ( 87, 122 ).mult ( 2 );
+				const dealSize = new Vec ( 400, 120 );
+				const dealPos = new Vec ( 200, 100 );
+				const cardSize = new Vec ( 87, 122 ).mult ( 1.5 );
 
 				d3.select ( "#svg" ).append ( "rect" )
 					.attr ( "x", dealPos.x )
@@ -57,7 +57,7 @@
 					.attr ( "height", dealSize.y );
 
 				const cards = d3.select ( "#svg" ).selectAll ( "image" )
-					.data ( [ ...Array ( 20 ).keys () ] )
+					.data ( [ ...Array ( 8 ).keys () ] )
 					.join ( "image" )
 					.attr ( "class", d => "card" + d )
 					.attr ( "href", "assets/card.jpeg" )
