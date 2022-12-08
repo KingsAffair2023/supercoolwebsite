@@ -1,6 +1,8 @@
-
-
-
+/**
+ * @class Line
+ *
+ * @description Creates an implicit representation of a line between two points.
+ */
 class Line
 {
 	/** @public {Vec} */
@@ -117,6 +119,12 @@ class Line
 }
 
 
+
+/**
+ * @class Rect
+ *
+ * @description Creates a rectangle with Line's for boundaries, which allow for intersection and containment detection.
+ */
 class Rect
 {
 
@@ -232,6 +240,11 @@ class Rect
 
 
 
+/**
+ * @class Dealer
+ *
+ * @description Create animations for dealing cards.
+ */
 class Dealer
 {
 
@@ -249,17 +262,6 @@ class Dealer
 
 	/** @private {Vec} The position from which cards are dealt */
 	_dealOrigin;
-
-
-
-	/** @public {Vec} As a multiple of the card average side length */
-	static transJitter = 0.2;
-
-	/** @public {Number} */
-	static rotJitter = 10;
-
-	/** @public {Number} */
-	static jitterIter = 10;
 
 
 
@@ -289,9 +291,15 @@ class Dealer
 
 	/**
 	 * @description Create the animation to deal the cards.
+	 *
+	 * @param {Number} dealDelay The delay between throwing cards.
+	 * @param {Number} cardDelay The time for a card to reach its final position.
+	 * @param {Number} [transJitter] The maximum translation jitter on each iteration, as a multiple of the average card dimension.
+	 * @param {Number} [rotJitter] The maximum rotation jitter on each iteration, in degrees.
+	 * @param {Number} [iters] The number of iterations.
 	 * @public
 	 */
-	createAnimation ()
+	createAnimation ( dealDelay, cardDelay, transJitter= 0.1, rotJitter = 10, iters = 5 )
 	{
 		/* Get the minimum grid of cards required to cover the deal area */
 		const minGrid = new Vec ( Math.ceil ( this._dealSize.x / this._cardSize.x ), Math.ceil ( this._dealSize.y / this._cardSize.y ) );
@@ -324,7 +332,7 @@ class Dealer
 				0 );
 
 		/* Generate noise */
-		this.generateNoise ( endParams );
+		this._generateNoise ( endParams, transJitter, rotJitter, iters );
 
 		/* Permute the end parameters */
 		for ( let i = minGrid.x * minGrid.y - 1; i > 0; i-- )
@@ -343,18 +351,16 @@ class Dealer
 
 		/* Return the animation */
 		this._cards.each ( function ( d, i ) {
-			const card = d3.select ( this );
 			animations [ i ] = new Anim (
-				card,
-				startParams [ i ],
-				null,
-				d3.easeSinOut,
-				i * 150
-			).continueTo (
-				endParams [ i ],
-				d3.easeSinOut,
-				1000
-			);
+					d3.select ( this ),
+					startParams [ i ],
+					null,
+					d3.easeSinOut,
+					i * dealDelay )
+				.continueTo (
+					endParams [ i ],
+					d3.easeSinOut,
+					cardDelay );
 		} );
 
 		/* Return a final animation */
@@ -362,10 +368,17 @@ class Dealer
 	}
 
 
+
 	/**
-	 * @param {AnimParams[]} endParams
+	 * @description Create the animation to deal the cards.
+	 *
+	 * @param {AnimParams[]} endParams The final positions to jitter.
+	 * @param {Number} transJitter The maximum translation jitter on each iteration, as a multiple of the average card dimension.
+	 * @param {Number} rotJitter The maximum rotation jitter on each iteration, in degrees.
+	 * @param {Number} iters The number of iterations.
+	 * @private
 	 */
-	generateNoise ( endParams )
+	_generateNoise ( endParams, transJitter, rotJitter, iters )
 	{
 
 		/* Create a rectangle for the deal area */
@@ -376,20 +389,18 @@ class Dealer
 			new Rect ( param.position.add ( this._cardSize.div ( 2 ) ), this._cardSize ) );
 
 		/* Iterate over victim rectangles */
-		for ( let its = 0; its < Dealer.jitterIter; ++its )
-			for ( let victim_i = 0; victim_i < cardRects.length; ++victim_i )
+		for ( let its = 0; its < iters; ++its )
+			for ( let victim = 0; victim < cardRects.length; ++victim )
 			{
-				/* Get the victim */
-				const victim = cardRects [ victim_i ];
-
 				/* Create the jitter amounts */
-				const trans = new Vec ( Math.random (), Math.random () ).mult ( 2 ).sub ( new Vec ( 1 ) )
-					.mult ( this._cardSize.x + this._cardSize.y * 0.5 * Dealer.transJitter )
-					.clamp ( this._dealPos.sub ( victim.center ), this._dealPos.add ( this._dealSize ).sub ( victim.center ) );
-				const rot = ( Math.random () * 2 - 1 ) * Dealer.rotJitter;
+				const rand = () => ( Math.random () * 2 - 1 );
+				const trans = new Vec ( rand (), rand () )
+					.mult ( this._cardSize.x + this._cardSize.y * 0.5 * transJitter )
+					.clamp ( this._dealPos.sub ( cardRects [ victim ].center ), this._dealPos.add ( this._dealSize ).sub ( cardRects [ victim ].center ) );
+				const rot = rand () * rotJitter;
 
-				victim.translate ( trans );
-				victim.rotate ( Vec.rad ( rot ) );
+				/* Move the victim */
+				cardRects [ victim ].translate ( trans ).rotate ( Vec.rad ( rot ) );
 
 				/* Get an object of query points, and the rectangles that they came from */
 				let queryPoints = [ { points : dealRect.corners (), rects : [] } ];
@@ -431,12 +442,12 @@ class Dealer
 
 				/* Undo the movement, if it was bad. Otherwise commit it. */
 				if ( badNoise )
-					victim.rotate ( -Vec.rad ( rot ) ).translate ( trans.neg () );
+					cardRects [ victim ].rotate ( -Vec.rad ( rot ) ).translate ( trans.neg () );
 				else
-					endParams [ victim_i ] = new AnimParams (
-						endParams [ victim_i ].position.add ( trans ),
-						endParams [ victim_i ].size,
-						endParams [ victim_i ].rotation + rot );
+					endParams [ victim ] = new AnimParams (
+						endParams [ victim ].position.add ( trans ),
+						endParams [ victim ].size,
+						endParams [ victim ].rotation + rot );
 			}
 	}
 
