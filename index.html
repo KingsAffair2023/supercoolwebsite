@@ -5,18 +5,25 @@
 		<script src="https://d3js.org/d3.v7.min.js"></script>
 		<script src="javascript/Vec.js" ></script>
 		<script src="javascript/Animations.js" ></script>
+		<script src="javascript/Dealer.js" ></script>
 	</head>
 
 	<body>
 
+		<!--
 		<svg viewBox="0 0 1000 1000">
 			<image id="duck1" class="duck" href="assets/duck.jpg" width="100" style="transform-box: fill-box; transform-origin: center"/>
 			<image id="duck2" class="duck" href="assets/duck.jpg" width="100" style="transform-box: fill-box; transform-origin: center"/>
 		</svg>
+		-->
+
+		<svg id="svg" viewBox="0 0 1000 1000">
+
+		</svg>
 
 		<script>
 
-			window.onload = () =>
+			const onload1 = () =>
 			{
 				let pparams1 = [ new AnimParams ( null, new Vec ( 50 ), null ),  new AnimParams ( null, new Vec ( 50 ), null ) ];
 				let pparams2 = [ new AnimParams ( null, new Vec ( 80 ), 90 ),  new AnimParams ( null, new Vec ( 20 ), 90 ) ];
@@ -36,6 +43,42 @@
 
 				sanim.animate();
 			};
+
+			const onload2 = () =>
+			{
+				const dealSize = new Vec ( 800, 300 );
+				const dealPos = new Vec ( 200, 200 );
+				const cardSize = new Vec ( 87, 122 ).mult ( 2 );
+
+				d3.select ( "#svg" ).append ( "rect" )
+					.attr ( "x", dealPos.x )
+					.attr ( "y", dealPos.y )
+					.attr ( "width", dealSize.x )
+					.attr ( "height", dealSize.y );
+
+				const cards = d3.select ( "#svg" ).selectAll ( "image" )
+					.data ( [ ...Array ( 20 ).keys () ] )
+					.join ( "image" )
+					.attr ( "class", d => "card" + d )
+					.attr ( "href", "assets/card.jpeg" )
+					.attr ( "width", cardSize.x )
+					.attr ( "height", cardSize.y )
+					.attr ( "style", "transform-box: fill-box; transform-origin: center" );
+
+				const dealer = new Dealer (
+					cards,
+					cardSize,
+					dealPos,
+					dealSize,
+					new Vec ( -200, 0 )
+				);
+
+				const anim = dealer.createAnimation ();
+
+				anim.animate ();
+			}
+
+			window.onload = onload2;
 
 		</script>
 

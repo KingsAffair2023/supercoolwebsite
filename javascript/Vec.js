@@ -90,6 +90,31 @@ class Vec
 	}
 
 	/**
+	 * @name neg
+	 *
+	 * @returns {Vec} A negated vector.
+	 */
+	neg ()
+	{
+		return new Vec ( -this.x, -this.y );
+	}
+
+	/**
+	 * @name clamp
+	 *
+	 * @param {Vec} lo
+	 * @param {Vec} hi
+	 *
+	 * @returns {Vec} The vector clamped between the low and high vectors.
+	 */
+	clamp ( lo, hi )
+	{
+		return new Vec (
+			Math.min ( Math.max ( this.x, lo.x ), hi.x ),
+			Math.min ( Math.max ( this.y, lo.y ), hi.y ) );
+	}
+
+	/**
 	 * @name norm
 	 *
 	 * @returns {Vec} A new, normalised vector.
@@ -223,7 +248,7 @@ class Vec
 	 */
 	static rad ( deg )
 	{
-		return deg / ( 180 * Math.PI );
+		return deg * ( Math.PI / 180 );
 	}
 
 	/**

@@ -28,23 +28,14 @@ class AnimParams
 		this.rotation = rotation;
 		Object.freeze ( this );
 	}
-
-
-
-	/**
-	 * @returns {AnimParams}
-	 * @constructor
-	 */
-	static Empty ()
-	{
-		return new AnimParams ();
-	}
 }
 
 
 
 /**
  * @class Anim
+ *
+ * @description Forms the nodes of an animation dependency graph.
  */
 class Anim
 {
@@ -123,14 +114,14 @@ class Anim
 	/**
 	 * @description Animate the entire dependency tree.
 	 *
-	 * @param {Object} [promises = {}] An object with SingleAnimation objects as keys, storing promises for their respective animations.
-	 * @returns {Object} The updated promises object.
+	 * @param {Map<Anim, Promise<void>>} [promises = new Map ()] A map with SingleAnimation objects as keys, storing promises for their respective animations.
+	 * @returns {Map<Anim, Promise<void>>} The updated promises map.
 	 * @public
 	 */
-	animate ( promises= {} )
+	animate ( promises= new Map () )
 	{
 		/* Ignore if we are already animating */
-		if ( promises.hasOwnProperty ( this ) )
+		if ( promises.has ( this ) )
 			return promises;
 
 		/* Create an array of animation promises that this node depends on */
@@ -138,11 +129,11 @@ class Anim
 		for ( const dep of this.dependsOn )
 		{
 			dep.animate ( promises );
-			depPromises.push ( promises [ dep ] );
+			depPromises.push ( promises.get ( dep ) );
 		}
 
 		/* Add the promise for this animation */
-		promises [ this ] = Promise.all ( depPromises ).then ( () => this._animate () );
+		promises.set ( this, Promise.all ( depPromises ).then ( () => this._animate () ) );
 		return promises;
 	}
 
@@ -258,7 +249,7 @@ class Anim
 					.duration ( this.duration )
 					.ease ( this.ease ) )
 				.end ()
-		else promise = new Promise ( res => setTimeout ( () => res (), this.duration ) );
+		else promise = new Promise ( res => setTimeout ( res, this.duration ) );
 
 		/* Add the callback and return */
 		return promise.then ( () => { if ( this.callback ) this.callback (); } );
@@ -273,33 +264,21 @@ class Anim
 	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 * @constructor
 	 */
-	static Identity ( selection, ease, duration, dependsOn = [] )
+	static Delay ( selection, ease, duration, dependsOn = [] )
 	{
-		return new IdentityAnim ( selection, ease, duration, dependsOn );
-	}
-
-	/**
-	 * @param {Object} selection The D3 selection which the animation should act on.
-	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
-	 * @param {Number} duration
-	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
-	 * @constructor
-	 */
-	static Setup ( selection, ease, duration, dependsOn = [] )
-	{
-		return new SetupAnim ( selection, ease, duration, dependsOn );
+		return new DelayAnim ( selection, ease, duration, dependsOn );
 	}
 }
 
 
 
 /**
- * @class IdentityAnim
+ * @class DelayAnim
  * @extends Anim
  *
  * @description An animation which performs no transition, but will still take some duration.
  */
-class IdentityAnim extends Anim
+class DelayAnim extends Anim
 {
 	/**
 	 * @param {Object} selection The D3 selection which the animation should act on.
@@ -319,39 +298,7 @@ class IdentityAnim extends Anim
 	 */
 	_animate ()
 	{
-		return new Promise ( res => setTimeout ( () => res (), this.duration ) )
+		return new Promise ( res => setTimeout ( res, this.duration ) )
 			.then ( () => { if ( this.callback ) this.callback () } );
-	}
-}
-
-
-/**
- * @class SetupAnim
- * @extends Anim
- *
- * @description Stores the parameters for a normal animation, but _animate resolves immediately, having no effect.
- */
-class SetupAnim extends Anim
-{
-	/**
-	 * @param {Object} selection The D3 selection which the animation should act on.
-	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
-	 * @param {Number} duration
-	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
-	 */
-	constructor ( selection, ease, duration, dependsOn = [] )
-	{
-		super ( selection, null, null, ease, duration, dependsOn );
-	}
-
-	/**
-	 * @description Actually perform the animation for this node.
-	 * @private
-	 * @override
-	 */
-	_animate ()
-	{
-		if ( this.callback ) this.callback ();
-		return Promise.resolve ();
 	}
 }
