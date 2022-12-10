@@ -403,7 +403,7 @@ class Dealer
 				cardRects [ victim ].translate ( trans ).rotate ( Vec.rad ( rot ) );
 
 				/* Get an object of query points, and the rectangles that they came from */
-				let queryPoints = [ { points : dealRect.corners (), rects : [] } ];
+				const queryPoints = [ { points : dealRect.corners (), rects : [] } ];
 				for ( let i = 0; i < cardRects.length; ++i )
 				{
 					/* Add the corners of this rectangle, and all intercepts with the deal area */

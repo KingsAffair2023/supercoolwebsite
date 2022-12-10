@@ -6,6 +6,10 @@
 		<script src="javascript/Vec.js" ></script>
 		<script src="javascript/Animations.js" ></script>
 		<script src="javascript/Dealer.js" ></script>
+		<script src="javascript/Card.js"></script>
+		<script src="javascript/GridManager.js" ></script>
+
+		<link rel="stylesheet" href="css/card.css"/>
 	</head>
 
 	<body>
@@ -17,7 +21,7 @@
 		</svg>
 		-->
 
-		<svg id="svg" viewBox="0 0 800 1000" style="width:100%">
+		<svg id="svg" style="width:100%" viewBox="0 0 0 0">
 
 		</svg>
 
@@ -46,36 +50,34 @@
 
 			const onload2 = () =>
 			{
-				const dealSize = new Vec ( 400, 120 );
+				const dealSize = new Vec ( 400, 150 );
 				const dealPos = new Vec ( 200, 100 );
 				const cardSize = new Vec ( 87, 122 ).mult ( 1.5 );
 
+				/*
 				d3.select ( "#svg" ).append ( "rect" )
 					.attr ( "x", dealPos.x )
 					.attr ( "y", dealPos.y )
 					.attr ( "width", dealSize.x )
 					.attr ( "height", dealSize.y );
 
-				const cards = d3.select ( "#svg" ).selectAll ( "image" )
-					.data ( [ ...Array ( 8 ).keys () ] )
-					.join ( "image" )
-					.attr ( "class", d => "card" + d )
-					.attr ( "href", "assets/card.jpeg" )
-					.attr ( "width", cardSize.x )
-					.attr ( "height", cardSize.y )
-					.attr ( "style", "transform-box: fill-box; transform-origin: center" );
+				 */
 
-				const dealer = new Dealer (
-					cards,
+				const cards = [];
+				for ( let i = 0; i < 8; ++i )
+					cards.push ( new Card (
+						d3.select ( "#svg" ),
+						"assets/card.jpeg",
+						cardSize
+					) );
+
+				const cm = new GridManager (
+					d3.select ( "#svg" ),
+					d3.selectAll ( ".card" ),
+					d3.select (),
 					cardSize,
-					dealPos,
-					dealSize,
-					new Vec ( -200, 0 )
-				);
-
-				const anim = dealer.createAnimation ( 100, 750 );
-
-				anim.animate ();
+					cardSize.mult ( new Vec ( 0.75, 0.2 ) ),
+					[ 1, 2, 4 ] );
 			}
 
 			window.onload = onload2;

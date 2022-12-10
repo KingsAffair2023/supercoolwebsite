@@ -36,6 +36,17 @@ class Vec
 
 
 	/**
+	 * @param {Vec} other
+	 * @returns {boolean} True iff this vector equals the other.
+	 */
+	equals ( other )
+	{
+		return this.x === other.x && this.y === other.y;
+	}
+
+
+
+	/**
 	 * @name add
 	 *
 	 * @param {Vec} other
