@@ -66,6 +66,23 @@ class GridManager
 	static verticalCardsMobile = 1.5;
 
 	/**
+	 * @public {Number}
+	 */
+	static titleAnimationEpsilon = 100;
+
+
+
+	/**
+	 * @public {Number} The delay between dealing cards.
+	 */
+	static dealDelay = 100;
+
+	/**
+	 * @public {Number} The time taken to draw a card.
+	 */
+	static dealDuration = 500;
+
+	/**
 	 * @public {Number} The time taken to reshuffle the grid.
 	 */
 	static gridReshuffleDuration = 500;
@@ -73,19 +90,19 @@ class GridManager
 
 
 	/**
-	 * @private {String|null}
-	 */
-	_state = null;
-
-	/**
-	 * @private {Vec|null}
+	 * @private {Vec}
 	 */
 	_currentScreenSize;
 
 	/**
-	 * @private {Vec|null}
+	 * @private {Vec}
 	 */
 	_currentGrid;
+
+	/**
+	 * @private {Number}
+	 */
+	_currentTitle;
 
 	/**
 	 * @private {Boolean} Whether we are busy with animations.
@@ -108,6 +125,12 @@ class GridManager
 	 * @private {Object}
 	 */
 	_cards;
+
+	/**
+	 * @private {Object}
+	 */
+	_titles;
+
 	/**
 	 * @private {Number}
 	 */
@@ -122,6 +145,11 @@ class GridManager
 	 * @private {Vec}
 	 */
 	_cardMarginFrac;
+
+	/**
+	 * @private {Vec[]}
+	 */
+	_titleRatios;
 
 	/**
 	 * @private {Number[]}
@@ -145,66 +173,91 @@ class GridManager
 	/**
 	 * @param {Object} svg The D3 selection for the svg container.
 	 * @param {Object} cards The D3 selection for the cards.
-	 * @param {Object} title The D3 selection for the title image.
+	 * @param {Object} titles The D3 selection for the title images.
 	 * @param {Vec} cardSize The size of the cards.
 	 * @param {Vec} cardMargin The margin for cards.
+	 * @param {Vec[]} titleSizes The size of each title in the selection.
 	 * @param {Number[]} gridWidthOptions The options for grid width.
 	 */
 	constructor (
 		svg,
 		cards,
-		title,
+		titles,
 		cardSize,
 		cardMargin,
+		titleSizes,
 		gridWidthOptions,
 	)
 	{
 		/* Save the parameters */
 		this._svg = svg;
+		this._titles = titles;
 		this._cards = cards;
-		this._gridWidthOptions = Object.freeze ( gridWidthOptions.sort ( ( l, r ) => r - l ) );
+		this._gridWidthOptions = gridWidthOptions.slice ().sort ( ( l, r ) => r - l );
 
-		/* Calculate extra size information */
+		/* Calculate card size information */
 		this._cardRatio = cardSize.x / cardSize.y;
 		this._cardRatioWithMargin = ( cardSize.x + cardMargin.x ) / ( cardSize.y + cardMargin.y );
 		this._cardMarginFrac = cardSize.add ( cardMargin ).div ( cardSize );
 
+		/* Calculate title ratio information */
+		if ( this._titles.size () !== titleSizes.length )
+			throw new Error ( "GridManager.constructor: titles and titleSizes should be the same length" );
+		this._titleRatios = titleSizes.map ( size => size.x / size.y );
+
+		/* Sort the title ratios */
+		this._titles = this._titles.data ( this._titleRatios ).sort ( ( l, r ) => r - l );
+		this._titleRatios.sort ( ( l, r ) => r - l );
+
 		/* Choose the number of visible vertical cards based on whether this a mobile device or not */
 		this._verticalCards = GridManager.mobileCheck () ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
 
-		/* Get the window size and grid size */
+		/* Get the layout and set up the memory attributes */
 		this._currentScreenSize = GridManager.getScreenSize ();
-		this._currentGrid = this._calculateGrid ( this._currentScreenSize );
-
-		/* Get the card positions */
-		const cardPositions = this._calculateCardPositions ( this._currentScreenSize, this._currentGrid );
+		const layout = this._calculateLayout ( this._currentScreenSize );
+		this._currentGrid = layout.grid;
+		this._currentTitle = layout.titleChoice;
 
 		/* Setup the svg */
 		this._svg
-			.style ( "aspect-ratio", cardPositions.viewBox.x + "/" + cardPositions.viewBox.y )
-			.attr ( "viewBox", "0 0 " + cardPositions.viewBox.x + " " + cardPositions.viewBox.y );
+			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
+			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
 
 		/* Possibly disable scrolling */
 		this._svg.node ().parentNode.style.overflow = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 
+		/* Ensure that the cards are on top */
+		this._cards.raise ();
+
+		/* Ensure that the titles are hidden */
+		this._titles.style ( "opacity", 0 );
+
 		/* Create a dealer */
 		this._dealer = new Dealer (
 			this._cards,
-			cardPositions.cardSize,
-			new Vec ( 250, cardPositions.titleHeight ),
-			new Vec ( 500, GridManager.svgWidth * GridManager.titleHeightFrac ),
-			new Vec ( -cardPositions.cardSize.x, 0 )
+			layout.cardSize,
+			layout.titlePos,
+			layout.titleSize,
+			new Vec ( -layout.cardSize.x, 0 )
 		);
 
 		/* Start the animation */
-		this._dealer.createAnimation ( 100, 500 ).addCallback ( () =>
+		this._dealer.createAnimation ( GridManager.dealDelay, GridManager.dealDuration ).addCallback ( () =>
 		{
-			/* Add an event listener for resizing */
-			window.addEventListener ( "resize", () => { this._cardsRequireRefresh = true; this.updateSVGPositions ( 0 ); } );
+			/* Show the title */
+			d3.select ( this._titles.nodes () [ this._currentTitle ] )
+				.attr ( "x", layout.titlePos.x )
+				.attr ( "y", layout.titlePos.y )
+				.attr ( "width", layout.titleSize.x )
+				.attr ( "height", layout.titleSize.y )
+				.style ( "opacity", 1 );
 
 			/* Update the SVG positions */
 			this._cardsRequireRefresh = true;
 			this.updateSVGPositions ( 0, true );
+
+			/* Add an event listener for resizing */
+			window.addEventListener ( "resize", () => { this._cardsRequireRefresh = true; this.updateSVGPositions ( 0 ); } );
 		} ).animate ();
 	}
 
@@ -227,13 +280,16 @@ class GridManager
 		this._cardsRequireRefresh = false;
 		this._animationBusy = true;
 
-		/* Calculate the grid */
-		const oldGrid = this._currentGrid;
-		this._currentGrid = this._calculateGrid ( this._currentScreenSize );
-		const gridChange = !oldGrid.equals ( this._currentGrid );
+		/* Calculate the new layout */
+		const layout = this._calculateLayout ( this._currentScreenSize );
 
-		/* Calculate the new card positions */
-		const cardPositions = this._calculateCardPositions ( this._currentScreenSize, this._currentGrid );
+		/* Get whether the grid has changed */
+		const gridChange = !this._currentGrid.equals ( layout.grid );
+		this._currentGrid = layout.grid;
+
+		/* Get save the title choice */
+		const oldTitle = this._currentTitle;
+		this._currentTitle = layout.titleChoice;
 
 		/* If there was a grid change, perform an initial update on the SVG view box */
 		if ( gridChange )
@@ -262,11 +318,37 @@ class GridManager
 			.transition ()
 			.duration ( animationDuration )
 			.ease ( d3.easeSinInOut )
-			.style ( "aspect-ratio", cardPositions.viewBox.x + "/" + cardPositions.viewBox.y )
-			.attr ( "viewBox", "0 0 " + cardPositions.viewBox.x + " " + cardPositions.viewBox.y );
+			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
+			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
+
+		/* If there is a new title, hide the old title and position the new title */
+		if ( oldTitle !== this._currentTitle )
+		{
+			d3.select ( this._titles.nodes () [ oldTitle ] )
+				.transition ()
+				.duration ( GridManager.titleAnimationEpsilon )
+				.ease ( d3.easeSinInOut )
+				.style ( "opacity", 0 );
+			d3.select ( this._titles.nodes () [ this._currentTitle ] )
+				.attr ( "x", layout.titlePos.x )
+				.attr ( "y", layout.titlePos.y )
+				.attr ( "width", layout.titleSize.x )
+				.attr ( "height", layout.titleSize.y )
+		}
+
+		/* Resize the current title */
+		d3.select ( this._titles.nodes () [ this._currentTitle ] )
+			.transition ()
+			.duration ( oldTitle !== this._currentTitle ? GridManager.titleAnimationEpsilon : animationDuration )
+			.ease ( d3.easeSinInOut )
+			.attr ( "x", layout.titlePos.x )
+			.attr ( "y", layout.titlePos.y )
+			.attr ( "width", layout.titleSize.x )
+			.attr ( "height", layout.titleSize.y )
+			.style ( "opacity", 1 );
 
 		/* Animate the cards moving */
-		new Anim ( this._cards, null, cardPositions.positions, d3.easeSinInOut, animationDuration )
+		new Anim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
 			.addCallback ( () =>
 			{
 				this._animationBusy = false;
@@ -279,12 +361,14 @@ class GridManager
 
 	/**
 	 * @param {Vec} screenSize
-	 * @param {Vec} grid
-	 * @returns {{cardSize: Vec, viewBox: Vec, positions: AnimParams[], titleHeight: Number}}
+	 * @returns {{grid: Vec, cardSize: Vec, viewBox: Vec, cardPositions: AnimParams[], titleChoice: Number, titleSize: Vec, titlePos: Vec}}
 	 * @private
 	 */
-	_calculateCardPositions ( screenSize, grid )
+	_calculateLayout ( screenSize )
 	{
+		/* Calculate the grid */
+		const grid = this._calculateGrid ( screenSize );
+
 		/* Calculate the dimensions of the visible SVG viewport */
 		const visibleSVGViewport = new Vec ( GridManager.svgWidth, GridManager.svgWidth * screenSize.y / screenSize.x );
 
@@ -301,29 +385,45 @@ class GridManager
 			( visibleSVGViewport.x - ( grid.x * cardSizeWithMargin.x ) + marginSize.x ) / 2,
 			visibleSVGViewport.y * ( GridManager.titleHeightFrac + GridManager.cardOuterMarginFrac + GridManager.titleMarginFrac * 2 ) + marginSize.y / 2 );
 
-		/* Create the positions */
-		const positions = [];
+		/* Create the card positions */
+		const cardPositions = [];
 		for ( let y = 0; y < grid.y; ++y )
 			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
-				positions.push ( new AnimParams (
+				cardPositions.push ( new AnimParams (
 					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) ),
 					cardSize,
 					0 ) );
 
-		/* Calculate the height of the top of title */
-		const titleHeight = visibleSVGViewport.y * GridManager.titleMarginFrac;
+		/* Calculate the height of the title and the area's aspect ratio */
+		const titleHeight = visibleSVGViewport.y * GridManager.titleHeightFrac;
+		const titleAreaRatio = GridManager.svgWidth / titleHeight;
+
+		/* Choose the best title to fit the space */
+		let titleChoice = null;
+		for ( let i = 0; i < this._titleRatios.length && titleChoice === null; ++i )
+			if ( this._titleRatios [ i ] < titleAreaRatio || i === this._titleRatios.length - 1 )
+				titleChoice = i;
+
+		/* Calculate the title position and size */
+		const titleSize = new Vec ( this._titleRatios [ titleChoice ] * titleHeight, titleHeight );
+		const titlePos = new Vec (
+			( GridManager.svgWidth - titleSize.x ) / 2,
+			visibleSVGViewport.y * GridManager.titleMarginFrac );
 
 		/* Calculate the final viewport dimensions */
 		const viewportDimensions = new Vec (
 			GridManager.svgWidth,
-			positions [ positions.length - 1 ].position.y + cardSize.y + marginSize.y / 2 + visibleSVGViewport.y * GridManager.cardOuterMarginFrac );
+			cardPositions [ cardPositions.length - 1 ].position.y + cardSize.y + marginSize.y / 2 + visibleSVGViewport.y * GridManager.cardOuterMarginFrac );
 
-		/* Return the information */
+		/* Return the layout information */
 		return {
+			grid: grid,
 			cardSize: cardSize,
 			viewBox: viewportDimensions,
-			positions: positions,
-			titleHeight: titleHeight
+			cardPositions: cardPositions,
+			titleChoice: titleChoice,
+			titleSize: titleSize,
+			titlePos: titlePos
 		};
 	}
 
@@ -351,13 +451,6 @@ class GridManager
 		const minGridWidth = this._gridWidthOptions [ this._gridWidthOptions.length - 1 ];
 		return new Vec ( minGridWidth, Math.ceil ( this._cards.size () / minGridWidth ) );
 	}
-
-
-
-
-
-
-
 
 
 

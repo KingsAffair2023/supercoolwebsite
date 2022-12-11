@@ -89,9 +89,9 @@ class Line
 
 	/**
 	 * @param {Line} other
-	 * @returns {Vec[]}
+	 * @returns {Vec|null}
 	 */
-	intercepts ( other )
+	intercept ( other )
 	{
 		/* Get a potential x intercept */
 		const x = ( this.b * other.c - other.b * this.c ) / ( this.a * other.b - this.b * other.a );
@@ -101,8 +101,8 @@ class Line
 		if ( isFinite ( x ) && isFinite ( y ) )
 			if ( x > this.domMin.x - Line.epsilon && x < this.domMax.x + Line.epsilon && x > other.domMin.x - Line.epsilon && x < other.domMax.x + Line.epsilon )
 				if ( y > this.domMin.y - Line.epsilon && y < this.domMax.y + Line.epsilon && y > other.domMin.y - Line.epsilon && y < other.domMax.y + Line.epsilon )
-					return [ new Vec ( x, y ) ];
-		return [];
+					return new Vec ( x, y );
+		return null;
 	}
 
 
@@ -226,13 +226,22 @@ class Rect
 
 	/**
 	 * @param {Rect} rect
+	 * @returns {Vec[]}
 	 */
 	allIntercepts ( rect )
 	{
-		let intercepts = [];
+		/* Return the corners if we are getting intercepts with itself */
+		if ( rect === this )
+			return this.corners ();
+
+		/* Otherwise iterate over boarders */
+		const intercepts = [];
 		for ( const b1 of this.boarders )
 			for ( const b2 of rect.boarders )
-				intercepts = intercepts.concat ( b1.intercepts ( b2 ) );
+			{
+				const intercept = b1.intercept ( b2 );
+				if ( intercept ) intercepts.push ( intercept );
+			}
 		return intercepts;
 	}
 
@@ -293,13 +302,13 @@ class Dealer
 	 * @description Create the animation to deal the cards.
 	 *
 	 * @param {Number} dealDelay The delay between throwing cards.
-	 * @param {Number} cardDelay The time for a card to reach its final position.
+	 * @param {Number} dealDuration The time for a card to reach its final position.
 	 * @param {Number} [transJitter] The maximum translation jitter on each iteration, as a multiple of the average card dimension.
 	 * @param {Number} [rotJitter] The maximum rotation jitter on each iteration, in degrees.
 	 * @param {Number} [iters] The number of iterations.
 	 * @public
 	 */
-	createAnimation ( dealDelay, cardDelay, transJitter= 0.1, rotJitter = 10, iters = 5 )
+	createAnimation ( dealDelay, dealDuration, transJitter= 0.1, rotJitter = 10, iters = 5 )
 	{
 		/* Get the minimum grid of cards required to cover the deal area */
 		const minGrid = new Vec ( Math.ceil ( this._dealSize.x / this._cardSize.x ), Math.ceil ( this._dealSize.y / this._cardSize.y ) );
@@ -360,7 +369,7 @@ class Dealer
 				.continueTo (
 					endParams [ i ],
 					d3.easeSinOut,
-					cardDelay );
+					dealDuration );
 		} );
 
 		/* Return a final animation */
@@ -388,6 +397,41 @@ class Dealer
 		const cardRects = endParams.map ( param =>
 			new Rect ( param.position.add ( this._cardSize.div ( 2 ) ), this._cardSize ) );
 
+		/* Calculate all intercepts between all cards */
+		const intercepts = [];
+		const interceptsByCard = cardRects.map ( _ => [] );
+		for ( let i = 0; i < cardRects.length; ++i )
+		{
+			/* Find intercepts with the deal area */
+			const dealIntercept = {
+				rect1 : cardRects [ i ],
+				rect2 : dealRect,
+				points : cardRects [ i ].allIntercepts ( dealRect ),
+				oldPoints : null
+			};
+
+			/* Push the intercepts to their respective arrays */
+			intercepts.push ( dealIntercept );
+			interceptsByCard [ i ].push ( dealIntercept );
+
+			/* Find the intercepts with other cards */
+			for ( let j = i; j < cardRects.length; ++j )
+			{
+				/* Calculate the intercepts */
+				const intercept = {
+					rect1 : cardRects [ i ],
+					rect2 : cardRects [ j ],
+					points : cardRects [ i ].allIntercepts ( cardRects [ j ] ),
+					oldPoints : null
+				};
+
+				/* Push the intercepts to their respective arrays */
+				intercepts.push ( intercept );
+				interceptsByCard [ i ].push ( intercept );
+				interceptsByCard [ j ].push ( intercept );
+			}
+		}
+
 		/* Iterate over victim rectangles */
 		for ( let its = 0; its < iters; ++its )
 			for ( let victim = 0; victim < cardRects.length; ++victim )
@@ -402,27 +446,18 @@ class Dealer
 				/* Move the victim */
 				cardRects [ victim ].translate ( trans ).rotate ( Vec.rad ( rot ) );
 
-				/* Get an object of query points, and the rectangles that they came from */
-				const queryPoints = [ { points : dealRect.corners (), rects : [] } ];
-				for ( let i = 0; i < cardRects.length; ++i )
+				/* Update the victim's intercepts */
+				for ( const intercept of interceptsByCard [ victim ] )
 				{
-					/* Add the corners of this rectangle, and all intercepts with the deal area */
-					queryPoints.push ( {
-						points : [ ...cardRects [ i ].corners (), ...cardRects [ i ].allIntercepts ( dealRect ) ],
-						rects : [ cardRects [ i ] ] } );
-
-					/* Add intercepts with other rectangles */
-					for ( let j = i + 1; j < cardRects.length; ++j )
-						queryPoints.push ( {
-							points : cardRects [ i ].allIntercepts ( cardRects [ j ] ),
-							rects : [ cardRects [ i ], cardRects [ j ] ] } );
+					intercept.oldPoints = intercept.points;
+					intercept.points = intercept.rect1.allIntercepts ( intercept.rect2 );
 				}
 
 				/* Check for bad points */
 				let badNoise = false;
-				for ( const queryPoint of queryPoints )
+				for ( const intercept of intercepts )
 				{
-					for ( const point of queryPoint.points )
+					for ( const point of intercept.points )
 					{
 						/* This point is fine if it is outside  the deal area */
 						if ( !dealRect.containsPoint ( point ) )
@@ -430,8 +465,9 @@ class Dealer
 
 						/* Test whether the point is covered */
 						let covered = false;
-						for ( let i = 0; i < cardRects.length && !covered; ++i )
-							covered = !queryPoint.rects.includes ( cardRects [ i ] ) && cardRects [ i ].containsPoint ( point );
+						for ( const rect of cardRects )
+							if ( ( covered = !( intercept.rect1 === rect ) && !( intercept.rect2 === rect ) && rect.containsPoint ( point ) ) )
+								break;
 
 						/* Break if the point was not covered */
 						if ( ( badNoise = !covered ) )
@@ -440,9 +476,13 @@ class Dealer
 					if ( badNoise ) break;
 				}
 
-				/* Undo the movement, if it was bad. Otherwise commit it. */
+				/* Undo the movement, if it was bad. Otherwise, commit it. */
 				if ( badNoise )
+				{
 					cardRects [ victim ].rotate ( -Vec.rad ( rot ) ).translate ( trans.neg () );
+					for ( const intercept of interceptsByCard [ victim ] )
+						intercept.points = intercept.oldPoints;
+				}
 				else
 					endParams [ victim ] = new AnimParams (
 						endParams [ victim ].position.add ( trans ),
