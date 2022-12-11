@@ -64,7 +64,6 @@
 					.attr ( "y", dealPos.y )
 					.attr ( "width", dealSize.x )
 					.attr ( "height", dealSize.y );
-
 				 */
 
 				const cards = [];
@@ -82,7 +81,8 @@
 					cardSize,
 					cardSize.mult ( new Vec ( 0.75, 0.2 ) ),
 					[ new Vec ( 3, 1 ), new Vec ( 5, 1 ), new Vec ( 12, 1 ) ],
-					[ 1, 2, 4 ] );
+					[ 1, 2, 4 ],
+					() => console.log ( "setup done" ) );
 			}
 
 			window.onload = onload2;

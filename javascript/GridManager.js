@@ -156,6 +156,11 @@ class GridManager
 	 */
 	_verticalCards;
 
+	/**
+	 * @private {(function():void)|null}
+	 */
+	_setupCallback;
+
 
 
 	/**
@@ -173,6 +178,7 @@ class GridManager
 	 * @param {Vec} cardMargin The margin for cards.
 	 * @param {Vec[]} titleSizes The size of each title in the selection.
 	 * @param {Number[]} gridWidthOptions The options for grid width.
+	 * @param {(function():void)|null} setupCallback A callback function for when the grid is first set up.
 	 */
 	constructor (
 		svg,
@@ -182,6 +188,7 @@ class GridManager
 		cardMargin,
 		titleSizes,
 		gridWidthOptions,
+		setupCallback
 	)
 	{
 		/* Save the parameters */
@@ -189,6 +196,7 @@ class GridManager
 		this._titles = titles;
 		this._cards = cards;
 		this._gridWidthOptions = gridWidthOptions.slice ().sort ( ( l, r ) => r - l );
+		this._setupCallback = setupCallback;
 
 		/* Calculate card size information */
 		this._cardRatio = cardSize.x / cardSize.y;
@@ -362,6 +370,10 @@ class GridManager
 		new Anim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
 			.addCallback ( () =>
 			{
+				/* Possibly call the setup callback if it exists */
+				if ( this._setupCallback ) this._setupCallback ();
+
+				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
 				this.updateSVGPositions ( animationDuration / 2 );
 			} )
