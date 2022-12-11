@@ -372,6 +372,7 @@ class GridManager
 			{
 				/* Possibly call the setup callback if it exists */
 				if ( this._setupCallback ) this._setupCallback ();
+				this._setupCallback = null;
 
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
