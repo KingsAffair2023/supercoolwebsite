@@ -65,11 +65,6 @@ class GridManager
 	 */
 	static verticalCardsMobile = 1.5;
 
-	/**
-	 * @public {Number}
-	 */
-	static titleAnimationEpsilon = 100;
-
 
 
 	/**
@@ -298,7 +293,7 @@ class GridManager
 		const newTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
 		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] )
 
-		/* If there was a grid change, perform an initial update on the SVG view and potentially the title */
+		/* If there was a grid change, perform some wizardry to keep sizes from jumping around */
 		if ( gridChange )
 		{
 			/* Get the current view box height */
@@ -316,14 +311,14 @@ class GridManager
 			/* Possibly disable scrolling */
 			this._svg.node ().parentNode.style.overflow = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 
-			/* If the title changed, also give special positioning to that */
+			/* If the title changed, we need to give special initial sizes to the new title */
 			if ( oldTitle !== this._currentTitle )
 			{
 				/* Get the old title's height and top position */
 				const oldTitleHeight = parseFloat ( oldTitleSel.attr ( "height" ) );
 				const oldTitleY = parseFloat ( oldTitleSel.attr ( "y" ) );
 
-				/* Calculate the size and position of the new title */
+				/* Calculate the size and position of the new title based on the old title */
 				const newTitleSize = new Vec ( this._titleRatios [ this._currentTitle ] * oldTitleHeight, oldTitleHeight );
 				const newTitlePos = new Vec ( ( modifiedViewBoxWidth - newTitleSize.x ) / 2 + modifiedViewBoxX, oldTitleY );
 
@@ -340,11 +335,7 @@ class GridManager
 		if ( oldTitle !== this._currentTitle )
 		{
 			/* Hide the old title */
-			oldTitleSel
-				.transition ()
-				.duration ( GridManager.titleAnimationEpsilon )
-				.ease ( d3.easeSinInOut )
-				.style ( "opacity", 0 );
+			oldTitleSel.style ( "opacity", 0 );
 
 			/* If there is not a new grid, position the new title (we already did this if there is a new grid) */
 			if ( !gridChange )
@@ -352,20 +343,20 @@ class GridManager
 					.attr ( "x", layout.titlePos.x )
 					.attr ( "y", layout.titlePos.y )
 					.attr ( "width", layout.titleSize.x )
-					.attr ( "height", layout.titleSize.y )
-					.style ( "opacity", 1 );
+					.attr ( "height", layout.titleSize.y );
 		}
 
 		/* Resize the current title */
 		newTitleSel
+			.style ( "opacity", 1 )
 			.transition ()
-			.duration ( gridChange ? animationDuration : oldTitle !== this._currentTitle ? GridManager.titleAnimationEpsilon : animationDuration )
+			.duration ( animationDuration )
 			.ease ( d3.easeSinInOut )
 			.attr ( "x", layout.titlePos.x )
 			.attr ( "y", layout.titlePos.y )
 			.attr ( "width", layout.titleSize.x )
 			.attr ( "height", layout.titleSize.y )
-			.style ( "opacity", 1 );
+
 
 		/* Animate the cards moving */
 		new Anim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
