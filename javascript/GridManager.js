@@ -287,59 +287,79 @@ class GridManager
 		const gridChange = !this._currentGrid.equals ( layout.grid );
 		this._currentGrid = layout.grid;
 
+		/* Calculate the animation duration */
+		const animationDuration = ( gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+
 		/* Get save the title choice */
 		const oldTitle = this._currentTitle;
 		this._currentTitle = layout.titleChoice;
 
-		/* If there was a grid change, perform an initial update on the SVG view box */
+		/* Get title selections */
+		const newTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
+		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] )
+
+		/* If there was a grid change, perform an initial update on the SVG view and potentially the title */
 		if ( gridChange )
 		{
 			/* Get the current view box height */
 			const currentViewBoxHeight = parseFloat ( this._svg.attr ( "viewBox" ).split ( " " ) [ 3 ] );
 
-			/* Calculate the initial new viewBox width and origin */
-			const initialViewBoxWidth = GridManager.svgWidth * this._currentScreenSize.x / oldScreenSize.x;
-			const initialViewBoxX = ( GridManager.svgWidth - initialViewBoxWidth ) / 2;
+			/* Calculate the modified new viewBox width and origin */
+			const modifiedViewBoxWidth = GridManager.svgWidth * this._currentScreenSize.x / oldScreenSize.x;
+			const modifiedViewBoxX = ( GridManager.svgWidth - modifiedViewBoxWidth ) / 2;
 
 			/* Transition the SVG element */
 			this._svg
-				.attr ( "viewBox", initialViewBoxX + " 0 " + initialViewBoxWidth + " " + currentViewBoxHeight )
-				.style ( "aspect-ratio", initialViewBoxWidth + "/" + currentViewBoxHeight );
+				.attr ( "viewBox", modifiedViewBoxX + " 0 " + modifiedViewBoxWidth + " " + currentViewBoxHeight )
+				.style ( "aspect-ratio", modifiedViewBoxWidth + "/" + currentViewBoxHeight );
 
 			/* Possibly disable scrolling */
 			this._svg.node ().parentNode.style.overflow = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+
+			/* If the title changed, also give special positioning to that */
+			if ( oldTitle !== this._currentTitle )
+			{
+				/* Get the old title's height and top position */
+				const oldTitleHeight = parseFloat ( oldTitleSel.attr ( "height" ) );
+				const oldTitleY = parseFloat ( oldTitleSel.attr ( "y" ) );
+
+				/* Calculate the size and position of the new title */
+				const newTitleSize = new Vec ( this._titleRatios [ this._currentTitle ] * oldTitleHeight, oldTitleHeight );
+				const newTitlePos = new Vec ( ( modifiedViewBoxWidth - newTitleSize.x ) / 2 + modifiedViewBoxX, oldTitleY );
+
+				/* Position the title */
+				newTitleSel
+					.attr ( "x", newTitlePos.x )
+					.attr ( "y", newTitlePos.y )
+					.attr ( "width", newTitleSize.x )
+					.attr ( "height", newTitleSize.y );
+			}
 		}
 
-		/* Calculate the animation duration */
-		const animationDuration = ( gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
-
-		/* Animate the view box changing */
-		this._svg
-			.transition ()
-			.duration ( animationDuration )
-			.ease ( d3.easeSinInOut )
-			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
-			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
-
-		/* If there is a new title, hide the old title and position the new title */
+		/* If there is a different title, hide the old title and position the new title */
 		if ( oldTitle !== this._currentTitle )
 		{
-			d3.select ( this._titles.nodes () [ oldTitle ] )
+			/* Hide the old title */
+			oldTitleSel
 				.transition ()
 				.duration ( GridManager.titleAnimationEpsilon )
 				.ease ( d3.easeSinInOut )
 				.style ( "opacity", 0 );
-			d3.select ( this._titles.nodes () [ this._currentTitle ] )
-				.attr ( "x", layout.titlePos.x )
-				.attr ( "y", layout.titlePos.y )
-				.attr ( "width", layout.titleSize.x )
-				.attr ( "height", layout.titleSize.y )
+
+			/* If there is not a new grid, position the new title (we already did this if there is a new grid) */
+			if ( !gridChange )
+				newTitleSel
+					.attr ( "x", layout.titlePos.x )
+					.attr ( "y", layout.titlePos.y )
+					.attr ( "width", layout.titleSize.x )
+					.attr ( "height", layout.titleSize.y )
+					.style ( "opacity", 1 );
 		}
 
 		/* Resize the current title */
-		d3.select ( this._titles.nodes () [ this._currentTitle ] )
+		newTitleSel
 			.transition ()
-			.duration ( oldTitle !== this._currentTitle ? GridManager.titleAnimationEpsilon : animationDuration )
+			.duration ( gridChange ? animationDuration : oldTitle !== this._currentTitle ? GridManager.titleAnimationEpsilon : animationDuration )
 			.ease ( d3.easeSinInOut )
 			.attr ( "x", layout.titlePos.x )
 			.attr ( "y", layout.titlePos.y )
@@ -355,6 +375,14 @@ class GridManager
 				this.updateSVGPositions ( animationDuration / 2 );
 			} )
 			.animate ();
+
+		/* Animate the view box changing */
+		this._svg
+			.transition ()
+			.duration ( animationDuration )
+			.ease ( d3.easeSinInOut )
+			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
+			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
 	}
 
 
