@@ -70,12 +70,12 @@ class GridManager
 	/**
 	 * @public {Number} The delay between dealing cards.
 	 */
-	static dealDelay = 100;
+	static dealDelay = 80;
 
 	/**
 	 * @public {Number} The time taken to draw a card.
 	 */
-	static dealDuration = 500;
+	static dealDuration = 400;
 
 	/**
 	 * @public {Number} The time taken to reshuffle the grid.
@@ -241,7 +241,7 @@ class GridManager
 			layout.cardSize,
 			layout.titlePos,
 			layout.titleSize,
-			new Vec ( -layout.cardSize.x, 0 )
+			new Vec ( -layout.cardSize.x, layout.titlePos.y )
 		);
 
 		/* Start the animation */

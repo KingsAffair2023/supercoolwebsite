@@ -308,7 +308,7 @@ class Dealer
 	 * @param {Number} [iters] The number of iterations.
 	 * @public
 	 */
-	createAnimation ( dealDelay, dealDuration, transJitter= 0.1, rotJitter = 10, iters = 5 )
+	createAnimation ( dealDelay, dealDuration, transJitter= 0.1, rotJitter = 10, iters = 10 )
 	{
 		/* Get the minimum grid of cards required to cover the deal area */
 		const minGrid = new Vec ( Math.ceil ( this._dealSize.x / this._cardSize.x ), Math.ceil ( this._dealSize.y / this._cardSize.y ) );
