@@ -13,7 +13,8 @@
 
 .card-div > *
 {
-    position: absolute;
+    margin: 0;
+    position: fixed;
 }
 
 .card-div > p
