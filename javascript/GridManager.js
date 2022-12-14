@@ -85,6 +85,13 @@ class GridManager
 
 
 	/**
+	 * @public {Boolean} Whether we are on mobile.
+	 */
+	static mobile = GridManager.mobileCheck ();
+
+
+
+	/**
 	 * @private {Vec}
 	 */
 	_currentScreenSize;
@@ -213,7 +220,7 @@ class GridManager
 		this._titleRatios.sort ( ( l, r ) => r - l );
 
 		/* Choose the number of visible vertical cards based on whether this a mobile device or not */
-		this._verticalCards = GridManager.mobileCheck () ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
+		this._verticalCards = GridManager.mobile ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
 
 		/* Get the layout and set up the memory attributes */
 		this._currentScreenSize = GridManager.getScreenSize ();
@@ -349,7 +356,7 @@ class GridManager
 		/* ANIMATE */
 
 		/* Calculate the animation duration */
-		const animationDuration = ( !oldGrid.equals ( this._currentGrid ) || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+		const animationDuration = ( GridManager.mobile || !oldGrid.equals ( this._currentGrid ) || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
 
 		/* Resize the current title */
 		newTitleSel
