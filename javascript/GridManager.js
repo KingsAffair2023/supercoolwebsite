@@ -361,7 +361,7 @@ class GridManager
 
 		/* If on mobile and there is a grid change, scroll to the top of the page */
 		if ( gridChange && GridManager.mobile )
-			window.scrollTo ( 0, 0 );
+			document.scrollingElement.scrollTop = 0;
 
 		/* Resize the current title */
 		newTitleSel
@@ -380,6 +380,10 @@ class GridManager
 				/* Possibly call the setup callback if it exists */
 				if ( this._setupCallback ) this._setupCallback ();
 				this._setupCallback = null;
+
+				/* Make sure we scrolled to the top */
+				if ( gridChange && GridManager.mobile )
+					document.scrollingElement.scrollTop = 0;
 
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
