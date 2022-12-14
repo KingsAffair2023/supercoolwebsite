@@ -232,7 +232,7 @@ class Anim
 			.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
 			.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
 			.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } )
-			.style ( "transform", function ( d ) { return d.rotation ? "rotate(" + d.rotation + "deg)" : this.getAttribute ( "transform" ); } );
+			//.style ( "transform", function ( d ) { return d.rotation ? "rotate(" + d.rotation + "deg)" : this.getAttribute ( "transform" ); } );
 
 		/* Animate */
 		if ( this.startParams )
