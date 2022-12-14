@@ -70,7 +70,7 @@ class Card
 		this.hideCardsOnClick = hideCardsOnClick;
 
 		/* Create the foreign object */
-		this.card = this.svg.append ( "g" ).append ( "foreignObject" )
+		this.card = this.svg.append ( "foreignObject" )
 			.classed ( "card", true )
 			.attr ( "width", this.size.x )
 			.attr ( "height", this.size.y );
