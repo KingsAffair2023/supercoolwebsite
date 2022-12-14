@@ -80,7 +80,7 @@ class GridManager
 	/**
 	 * @public {Number} The time taken to reshuffle the grid.
 	 */
-	static gridReshuffleDuration = 500;
+	static gridReshuffleDuration = 400;
 
 
 
@@ -224,10 +224,11 @@ class GridManager
 		/* Setup the svg */
 		this._svg
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
-			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
+			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y )
+			.style ( "width", function () { return this.parentNode.getBoundingClientRect().width; } );
 
 		/* Possibly disable scrolling */
-		this._svg.node ().parentNode.style.overflow = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+		document.body.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 
 		/* Ensure that the cards are on top */
 		this._cards.raise ();
@@ -271,13 +272,17 @@ class GridManager
 	 */
 	updateSVGPositions ( prevAnimationDuration = 0, forceFullAnimation = false )
 	{
-		/* Get the new screen size and change in width */
-		const oldScreenSize = this._currentScreenSize;
-		this._currentScreenSize = GridManager.getScreenSize ();
-
 		/* Don't do anything if a reshuffle is in progress, or no change occurred */
 		if ( this._animationBusy || !this._cardsRequireRefresh )
 			return;
+
+
+
+		/* GATHER PARAMETERS */
+
+		/* Get the new screen size and change in width */
+		const oldScreenSize = this._currentScreenSize;
+		this._currentScreenSize = GridManager.getScreenSize ();
 
 		/* Notify that cards no longer require refresh, and that we are now busy with animations */
 		this._cardsRequireRefresh = false;
@@ -286,14 +291,11 @@ class GridManager
 		/* Calculate the new layout */
 		const layout = this._calculateLayout ( this._currentScreenSize );
 
-		/* Get whether the grid has changed */
-		const gridChange = !this._currentGrid.equals ( layout.grid );
+		/* Set the new grid */
+		const oldGrid = this._currentGrid;
 		this._currentGrid = layout.grid;
 
-		/* Calculate the animation duration */
-		const animationDuration = ( gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
-
-		/* Get save the title choice */
+		/* Get save the old title choice */
 		const oldTitle = this._currentTitle;
 		this._currentTitle = layout.titleChoice;
 
@@ -301,8 +303,9 @@ class GridManager
 		const newTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
 		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] )
 
-		/* If there was a grid change, perform some wizardry to keep sizes from jumping around */
-		if ( gridChange )
+
+
+		/* RESIZE THE SVG AND TITLE(S) */
 		{
 			/* Get the current view box height */
 			const currentViewBoxHeight = parseFloat ( this._svg.attr ( "viewBox" ).split ( " " ) [ 3 ] );
@@ -314,10 +317,8 @@ class GridManager
 			/* Transition the SVG element */
 			this._svg
 				.attr ( "viewBox", modifiedViewBoxX + " 0 " + modifiedViewBoxWidth + " " + currentViewBoxHeight )
+				.style ( "width", function () { return this.parentNode.getBoundingClientRect ().width; } )
 				.style ( "aspect-ratio", modifiedViewBoxWidth + "/" + currentViewBoxHeight );
-
-			/* Possibly disable scrolling */
-			this._svg.node ().parentNode.style.overflow = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 
 			/* If the title changed, we need to give special initial sizes to the new title */
 			if ( oldTitle !== this._currentTitle )
@@ -332,31 +333,26 @@ class GridManager
 
 				/* Position the title */
 				newTitleSel
+					.style ( "opacity", 1 )
 					.attr ( "x", newTitlePos.x )
 					.attr ( "y", newTitlePos.y )
 					.attr ( "width", newTitleSize.x )
 					.attr ( "height", newTitleSize.y );
+
+				/* Hide the old title */
+				oldTitleSel.style ( "opacity", 0 );
 			}
 		}
 
-		/* If there is a different title, hide the old title and position the new title */
-		if ( oldTitle !== this._currentTitle )
-		{
-			/* Hide the old title */
-			oldTitleSel.style ( "opacity", 0 );
 
-			/* If there is not a new grid, position the new title (we already did this if there is a new grid) */
-			if ( !gridChange )
-				newTitleSel
-					.attr ( "x", layout.titlePos.x )
-					.attr ( "y", layout.titlePos.y )
-					.attr ( "width", layout.titleSize.x )
-					.attr ( "height", layout.titleSize.y );
-		}
+
+		/* ANIMATE */
+
+		/* Calculate the animation duration */
+		const animationDuration = ( !oldGrid.equals ( this._currentGrid ) || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
 
 		/* Resize the current title */
 		newTitleSel
-			.style ( "opacity", 1 )
 			.transition ()
 			.duration ( animationDuration )
 			.ease ( d3.easeSinInOut )
@@ -364,7 +360,6 @@ class GridManager
 			.attr ( "y", layout.titlePos.y )
 			.attr ( "width", layout.titleSize.x )
 			.attr ( "height", layout.titleSize.y )
-
 
 		/* Animate the cards moving */
 		new Anim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
@@ -376,7 +371,7 @@ class GridManager
 
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
-				this.updateSVGPositions ( animationDuration / 2 );
+				this.updateSVGPositions ( animationDuration );
 			} )
 			.animate ();
 
@@ -387,6 +382,9 @@ class GridManager
 			.ease ( d3.easeSinInOut )
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
+
+		/* Possibly disable scrolling */
+		document.body.style.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 	}
 
 
