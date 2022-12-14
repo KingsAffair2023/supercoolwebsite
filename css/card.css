@@ -14,7 +14,9 @@
 .card-div > *
 {
     margin: 0;
-    position: fixed;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .card-div > p
