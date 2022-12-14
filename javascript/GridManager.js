@@ -235,7 +235,10 @@ class GridManager
 			.style ( "width", this._currentScreenSize.x );
 
 		/* Possibly disable scrolling */
-		document.body.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+		document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+
+		/* Scroll to the top */
+		document.scrollingElement.scrollTop = 0;
 
 		/* Ensure that the cards are on top */
 		this._cards.raise ();
@@ -381,6 +384,9 @@ class GridManager
 				if ( gridChange && GridManager.mobile )
 					document.scrollingElement.scrollTop = 0;
 
+				/* Possibly disable scrolling */
+				document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
 				this.updateSVGPositions ( animationDuration );
@@ -394,9 +400,6 @@ class GridManager
 			.ease ( d3.easeSinInOut )
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
-
-		/* Possibly disable scrolling */
-		document.body.style.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 	}
 
 
