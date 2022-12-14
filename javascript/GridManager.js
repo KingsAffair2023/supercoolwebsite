@@ -85,6 +85,13 @@ class GridManager
 
 
 	/**
+	 * @public {Boolean} Whether we are on mobile.
+	 */
+	static mobile = GridManager.mobileCheck ();
+
+
+
+	/**
 	 * @private {Vec}
 	 */
 	_currentScreenSize;
@@ -213,7 +220,7 @@ class GridManager
 		this._titleRatios.sort ( ( l, r ) => r - l );
 
 		/* Choose the number of visible vertical cards based on whether this a mobile device or not */
-		this._verticalCards = GridManager.mobileCheck () ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
+		this._verticalCards = GridManager.mobile ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
 
 		/* Get the layout and set up the memory attributes */
 		this._currentScreenSize = GridManager.getScreenSize ();
@@ -225,10 +232,13 @@ class GridManager
 		this._svg
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y )
-			.style ( "width", function () { return this.parentNode.getBoundingClientRect().width; } );
+			.style ( "width", this._currentScreenSize.x );
 
 		/* Possibly disable scrolling */
-		document.body.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+		document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+
+		/* Scroll to the top */
+		document.scrollingElement.scrollTop = 0;
 
 		/* Ensure that the cards are on top */
 		this._cards.raise ();
@@ -293,6 +303,7 @@ class GridManager
 
 		/* Set the new grid */
 		const oldGrid = this._currentGrid;
+		const gridChange = !oldGrid.equals ( layout.grid );
 		this._currentGrid = layout.grid;
 
 		/* Get save the old title choice */
@@ -317,7 +328,7 @@ class GridManager
 			/* Transition the SVG element */
 			this._svg
 				.attr ( "viewBox", modifiedViewBoxX + " 0 " + modifiedViewBoxWidth + " " + currentViewBoxHeight )
-				.style ( "width", function () { return this.parentNode.getBoundingClientRect ().width; } )
+				.style ( "width", this._currentScreenSize.x )
 				.style ( "aspect-ratio", modifiedViewBoxWidth + "/" + currentViewBoxHeight );
 
 			/* If the title changed, we need to give special initial sizes to the new title */
@@ -349,7 +360,7 @@ class GridManager
 		/* ANIMATE */
 
 		/* Calculate the animation duration */
-		const animationDuration = ( !oldGrid.equals ( this._currentGrid ) || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+		const animationDuration = ( GridManager.mobile || gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
 
 		/* Resize the current title */
 		newTitleSel
@@ -369,6 +380,13 @@ class GridManager
 				if ( this._setupCallback ) this._setupCallback ();
 				this._setupCallback = null;
 
+				/* Make sure we scrolled to the top */
+				if ( gridChange && GridManager.mobile )
+					document.scrollingElement.scrollTop = 0;
+
+				/* Possibly disable scrolling */
+				document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
 				this.updateSVGPositions ( animationDuration );
@@ -382,9 +400,6 @@ class GridManager
 			.ease ( d3.easeSinInOut )
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
-
-		/* Possibly disable scrolling */
-		document.body.style.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
 	}
 
 

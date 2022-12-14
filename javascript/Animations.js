@@ -107,6 +107,11 @@ class Anim
 		this.duration = duration;
 		this.dependsOn = dependsOn.slice ();
 		this.callback = callback;
+
+		/* Select all parent nodes */
+		const parents = [];
+		this.selection.each ( function () { parents.push ( this.parentNode ) } );
+		this.parentSelection = d3.selectAll ( parents );
 	}
 
 
@@ -227,28 +232,34 @@ class Anim
 		let promise;
 
 		/* Set the attributes of a selection */
-		const applyAnimParams = selection => selection
-			.attr ( "x", function ( d ) { return d.position?.x ?? this.getAttribute ( "x" ) } )
-			.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
-			.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
-			.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } )
-			.style ( "transform", function ( d ) { return d.rotation ? "rotate(" + d.rotation + "deg)" : this.getAttribute ( "transform" ); } );
+		const applyAnimParams = ( selection, parentSelection ) =>
+		{
+			selection = selection
+				.attr ( "x", function ( d ) { return d.position?.x ?? this.getAttribute ( "x" ) } )
+				.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
+				.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
+				.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } );
+			parentSelection
+				.attr ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + ")" : this.getAttribute ( "transform" ); } );
+			return selection;
+		}
 
 		/* Animate */
 		if ( this.startParams )
 			applyAnimParams (
-				this.selection
-					.data ( this.startParams )
-					.join () );
+				this.selection.data ( this.startParams ).join (),
+				this.parentSelection.data ( this.startParams ).join () );
 		if ( this.endParams )
 			promise = applyAnimParams (
-				this.selection
-					.data ( this.endParams )
-					.join ()
+				this.selection.data ( this.endParams ).join ()
+					.transition ()
+					.duration ( this.duration )
+					.ease ( this.ease ),
+				this.parentSelection.data ( this.endParams ).join ()
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease ) )
-				.end ()
+				.end ();
 		else promise = new Promise ( res => setTimeout ( res, this.duration ) );
 
 		/* Add the callback and return */
