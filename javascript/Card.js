@@ -76,7 +76,7 @@ class Card
 			.attr ( "height", this.size.y );
 
 		/* Append the div */
-		this.cardDiv = this.card.append ( "xhtml:div" )
+		this.cardDiv = this.card.append ( "xhtml:body" )
 			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
 			.classed ( "card-div", true );
 
