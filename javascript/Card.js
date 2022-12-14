@@ -69,21 +69,34 @@ class Card
 		this.onClick = onClick;
 		this.hideCardsOnClick = hideCardsOnClick;
 
+		this.cardImg = this.svg.append ( "image" )
+			.classed ( "card", true )
+			.attr ( "href", this.src );
+2
 		/* Create the foreign object */
+		/*
 		this.card = this.svg.append ( "foreignObject" )
 			.classed ( "card", true )
 			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
 			.attr ( "width", this.size.x )
 			.attr ( "height", this.size.y );
 
+		 */
+
 		/* Append the div */
+		/*
 		this.cardDiv = this.card.append ( "xhtml:div" )
 			.classed ( "card-div", true );
 
+		 */
+
 		/* Append the image */
+		/*
 		this.cardImg = this.cardDiv.append ( "xhtml:img" )
 			.classed ( "card-img", true )
 			.attr ( "src", this.src );
+
+		 */
 	}
 
 }
