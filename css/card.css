@@ -1,8 +1,7 @@
 
 .card
 {
-    transform-box: fill-box;
-    transform-origin: center;
+    position: relative;
 }
 
 .card-div
