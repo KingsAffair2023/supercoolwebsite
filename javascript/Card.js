@@ -69,6 +69,14 @@ class Card
 		this.onClick = onClick;
 		this.hideCardsOnClick = hideCardsOnClick;
 
+		this.card = this.svg.append ( "image" )
+			.classed ( "card", true )
+			.attr ( "width", this.size.x )
+			.attr ( "height", this.size.y )
+			.attr ( "href", this.src );
+
+		return;
+
 		/* Create the foreign object */
 		this.card = this.svg.append ( "foreignObject" )
 			.classed ( "card", true )
