@@ -72,12 +72,12 @@ class Card
 		/* Create the foreign object */
 		this.card = this.svg.append ( "foreignObject" )
 			.classed ( "card", true )
-			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
 			.attr ( "width", this.size.x )
 			.attr ( "height", this.size.y );
 
 		/* Append the div */
-		this.cardDiv = this.card.append ( "xhtml:body" )
+		this.cardDiv = this.card.append ( "xhtml:div" )
+			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
 			.classed ( "card-div", true );
 
 		/* Append the image */
