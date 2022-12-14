@@ -300,6 +300,7 @@ class GridManager
 
 		/* Set the new grid */
 		const oldGrid = this._currentGrid;
+		const gridChange = !oldGrid.equals ( layout.grid );
 		this._currentGrid = layout.grid;
 
 		/* Get save the old title choice */
@@ -356,7 +357,11 @@ class GridManager
 		/* ANIMATE */
 
 		/* Calculate the animation duration */
-		const animationDuration = ( GridManager.mobile || !oldGrid.equals ( this._currentGrid ) || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+		const animationDuration = ( GridManager.mobile || gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+
+		/* If on mobile and there is a grid change, scroll to the top of the page */
+		if ( gridChange && GridManager.mobile )
+			window.scrollTo ( 0, 0 );
 
 		/* Resize the current title */
 		newTitleSel

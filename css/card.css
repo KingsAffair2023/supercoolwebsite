@@ -1,4 +1,9 @@
 
+html
+{
+    scroll-behavior: smooth;
+}
+
 .card-wrapper
 {
     transform-box: fill-box;
