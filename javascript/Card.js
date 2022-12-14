@@ -77,7 +77,7 @@ class Card
 			.attr ( "height", this.size.y );
 
 		/* Append the div */
-		this.cardDiv = this.card.append ( "xhtml:div" )
+		this.cardDiv = this.card.append ( "xhtml:body" )
 			.classed ( "card-div", true );
 
 		/* Append the image */
