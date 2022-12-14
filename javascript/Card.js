@@ -80,7 +80,7 @@ class Card
 		/* Append the image */
 		this.cardImg = this.card.append ( "xhtml:img" )
 			.classed ( "card-img", true )
-			.attr ( "src", this.src );
+			.attr ( "src", this.src + "_" );
 	}
 
 }
