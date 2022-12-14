@@ -5,36 +5,8 @@
     transform-origin: center;
 }
 
-.card-div
-{
-    position: fixed;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-}
-
-.card-div > *
-{
-    position: fixed;
-}
-
-.card-div > p
-{
-    top: 50%;
-    left: 50%;
-    transform: translate( -50%, -50% );
-    margin: 0;
-    color: orange;
-    font-size: 30px;
-}
-
 .card-img
 {
-    position: fixed;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
 }

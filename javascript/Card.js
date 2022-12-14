@@ -72,23 +72,15 @@ class Card
 		/* Create the foreign object */
 		this.card = this.svg.append ( "g" )
 			.classed ( "card-wrapper", true )
-			.append ( "svg" )
+			.append ( "foreignObject" )
 				.classed ( "card", true )
 				.attr ( "width", this.size.x )
 				.attr ( "height", this.size.y )
-				.attr ( "viewBox", "0 0 " + this.size.x + " " + this.size.y );
-
-		this.cardDiv = this.card.append ( "svg" )
-			.attr ( "width", this.size.x )
-			.attr ( "height", this.size.y )
-			.attr ( "viewBox", "0 0 " + this.size.x + " " + this.size.y );
 
 		/* Append the image */
-		this.cardImg = this.card.append ( "image" )
+		this.cardImg = this.card.append ( "xhtml:img" )
 			.classed ( "card-img", true )
-			.attr ( "href", this.src )
-			.attr ( "width", this.size.x )
-			.attr ( "height", this.size.y );
+			.attr ( "src", this.src );
 	}
 
 }
