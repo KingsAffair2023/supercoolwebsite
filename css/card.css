@@ -1,7 +1,8 @@
 
-.card
+.card-wrapper
 {
-    position: relative;
+    transform-box: fill-box;
+    transform-origin: center;
 }
 
 .card-div

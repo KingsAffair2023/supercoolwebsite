@@ -70,20 +70,25 @@ class Card
 		this.hideCardsOnClick = hideCardsOnClick;
 
 		/* Create the foreign object */
-		this.card = this.svg.append ( "foreignObject" )
-			.classed ( "card", true )
-			.attr ( "width", this.size.x )
-			.attr ( "height", this.size.y );
+		this.card = this.svg.append ( "g" )
+			.classed ( "card-wrapper", true )
+			.append ( "svg" )
+				.classed ( "card", true )
+				.attr ( "width", this.size.x )
+				.attr ( "height", this.size.y )
+				.attr ( "viewBox", "0 0 " + this.size.x + " " + this.size.y );
 
-		/* Append the div */
-		this.cardDiv = this.card.append ( "xhtml:body" )
-			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
-			.classed ( "card-div", true );
+		this.cardDiv = this.card.append ( "svg" )
+			.attr ( "width", this.size.x )
+			.attr ( "height", this.size.y )
+			.attr ( "viewBox", "0 0 " + this.size.x + " " + this.size.y );
 
 		/* Append the image */
-		this.cardImg = this.cardDiv.append ( "xhtml:img" )
+		this.cardImg = this.card.append ( "image" )
 			.classed ( "card-img", true )
-			.attr ( "src", this.src );
+			.attr ( "href", this.src )
+			.attr ( "width", this.size.x )
+			.attr ( "height", this.size.y );
 	}
 
 }
