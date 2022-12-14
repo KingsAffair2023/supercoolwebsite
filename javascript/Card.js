@@ -76,15 +76,12 @@ class Card
 			.attr ( "height", this.size.y );
 
 		/* Append the div */
-		/*
-		this.cardDiv = this.card.append ( "xhtml:div" )
+		this.cardDiv = this.card.append ( "xhtml:body" )
 			.attr ( "xmlns", "http://www.w3.org/1999/xhtml" )
 			.classed ( "card-div", true );
-			*/
-
 
 		/* Append the image */
-		this.cardImg = this.card.append ( "xhtml:img" )
+		this.cardImg = this.cardDiv.append ( "xhtml:img" )
 			.classed ( "card-img", true )
 			.attr ( "src", this.src );
 	}
