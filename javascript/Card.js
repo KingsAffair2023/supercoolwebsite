@@ -1,3 +1,8 @@
+// Quick hackery to make multiple classes of card - sorry Louis
+const position = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
+// Bonus values for future extension
+let counter = 0;
+
 /**
  * @class Card
  *
@@ -76,9 +81,16 @@ class Card
 				.classed ( "card", true )
 				.attr ( "width", this.size.x )
 				.attr ( "height", this.size.y )
+			.append("xhtml:div")
+				.classed(position[counter++], true)
+				.attr ( "width", this.size.x )
+				.attr ( "height", this.size.y )
 
 		/* Append the image */
 		this.cardImg = this.card.append ( "xhtml:img" )
+			.classed ( "card-img", true )
+			.attr ( "src", this.src );
+			this.card.append ( "xhtml:img" )
 			.classed ( "card-img", true )
 			.attr ( "src", this.src );
 	}
