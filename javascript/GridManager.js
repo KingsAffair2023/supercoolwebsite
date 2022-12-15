@@ -232,7 +232,7 @@ class GridManager
 		this._svg
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y )
-			.style ( "width", this._currentScreenSize.x );
+			.style ( "width", this._currentScreenSize.x + "px" );
 
 		/* Possibly disable scrolling */
 		document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
@@ -328,7 +328,7 @@ class GridManager
 			/* Transition the SVG element */
 			this._svg
 				.attr ( "viewBox", modifiedViewBoxX + " 0 " + modifiedViewBoxWidth + " " + currentViewBoxHeight )
-				.style ( "width", this._currentScreenSize.x )
+				.style ( "width", this._currentScreenSize.x + "px" )
 				.style ( "aspect-ratio", modifiedViewBoxWidth + "/" + currentViewBoxHeight );
 
 			/* If the title changed, we need to give special initial sizes to the new title */
