@@ -33,15 +33,18 @@ class AnimParams
 
 
 /**
- * @class Anim
+ * @class CardAnim
  *
  * @description Forms the nodes of an animation dependency graph.
  */
-class Anim
+class CardAnim
 {
 
-	/** @public */
+	/** @public {Object} */
 	selection;
+
+	/** @public {Object} */
+	transformSelection;
 
 	/** @public {AnimParams[]|null} */
 	startParams;
@@ -55,7 +58,7 @@ class Anim
 	/** @public {Number} */
 	duration;
 
-	/** @public {Anim[]} */
+	/** @public {CardAnim[]} */
 	dependsOn;
 
 	/** @public {(function():void)|null} */
@@ -69,7 +72,7 @@ class Anim
 	 * @param {AnimParams|AnimParams[]|null} endParams
 	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
 	 * @param {Number} duration
-	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
+	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 * @param {(function():void)|null} callback
 	 */
 	constructor (
@@ -91,13 +94,13 @@ class Anim
 		{
 			arrayParams = Array.isArray ( startParams );
 			if ( endParams && Array.isArray ( endParams ) !== arrayParams )
-				throw new Error ( "ParallelAnimation.constructor: startParams and endParams must both be an array, or both objects" );
+				throw new Error ( "CardAnim.constructor: startParams and endParams must both be an array, or both objects" );
 		}
 
 		/* Check cardinalities */
 		if ( arrayParams )
 			if ( ( startParams && selection.size () !== startParams.length ) || ( endParams && selection.size () !== endParams.length ) )
-				throw new Error ( "ParallelAnimation.constructor: Assertion 'selection.size () == startParams.length == endParams.length' failed" );
+				throw new Error ( "CardAnim.constructor: Assertion 'selection.size () == startParams.length == endParams.length' failed" );
 
 		/* Turn the animation parameters into arrays and set the attributes */
 		this.selection = selection;
@@ -108,10 +111,21 @@ class Anim
 		this.dependsOn = dependsOn.slice ();
 		this.callback = callback;
 
-		/* Select all parent nodes */
-		const parents = [];
-		this.selection.each ( function () { parents.push ( this.parentNode ) } );
-		this.parentSelection = d3.selectAll ( parents );
+		/* Find the nodes which can be transformed */
+		const transformNodes = [];
+		this.selection.each ( function ()
+		{
+			/* Detect a foreignObject element */
+			if ( this instanceof SVGForeignObjectElement )
+			{
+				/* Check that the foreignObject is wrapped in a unique group */
+				if ( !( this.parentNode instanceof SVGGElement ) || transformNodes.includes ( this.parentNode ) )
+					throw new Error ( "CardAnim.constructor: foreignObject elements must be wrapped in a unique group" );
+				transformNodes.push ( this.parentNode );
+			} else
+				transformNodes.push ( this );
+		} );
+		this.transformSelection = d3.selectAll ( transformNodes );
 	}
 
 
@@ -119,8 +133,8 @@ class Anim
 	/**
 	 * @description Animate the entire dependency tree.
 	 *
-	 * @param {Map<Anim, Promise<void>>} [promises = new Map ()] A map with SingleAnimation objects as keys, storing promises for their respective animations.
-	 * @returns {Map<Anim, Promise<void>>} The updated promises map.
+	 * @param {Map<CardAnim, Promise<void>>} [promises = new Map ()] A map with SingleAnimation objects as keys, storing promises for their respective animations.
+	 * @returns {Map<CardAnim, Promise<void>>} The updated promises map.
 	 * @public
 	 */
 	animate ( promises= new Map () )
@@ -145,8 +159,8 @@ class Anim
 
 
 	/**
-	 * @param {Anim} anim
-	 * @returns {Anim}
+	 * @param {CardAnim} anim
+	 * @returns {CardAnim}
 	 */
 	followedBy ( anim )
 	{
@@ -157,8 +171,8 @@ class Anim
 
 
 	/**
-	 * @param {Anim} anim
-	 * @returns {Anim}
+	 * @param {CardAnim} anim
+	 * @returns {CardAnim}
 	 */
 	addDependency ( anim )
 	{
@@ -172,12 +186,12 @@ class Anim
 	 * @param {AnimParams|AnimParams[]|null} endParams
 	 * @param {Object|null} [ease = null]
 	 * @param {Number|null} [duration = null]
-	 * @returns {Anim}
+	 * @returns {CardAnim}
 	 * @public
 	 */
 	continueTo ( endParams, ease= null, duration= null )
 	{
-		return new Anim (
+		return new CardAnim (
 			this.selection,
 			null, endParams,
 			ease ?? this.ease,
@@ -193,12 +207,12 @@ class Anim
 	 * @param {AnimParams|AnimParams[]|null} endParams
 	 * @param {Object|null} [ease = null]
 	 * @param {Number|null} [duration = null]
-	 * @returns {Anim}
+	 * @returns {CardAnim}
 	 * @public
 	 */
 	singleContinueTo ( index, endParams, ease= null, duration= null )
 	{
-		return new Anim (
+		return new CardAnim (
 			this.selection.filter ( ( d, i ) => i === index ),
 			null,
 			endParams,
@@ -232,14 +246,14 @@ class Anim
 		let promise;
 
 		/* Set the attributes of a selection */
-		const applyAnimParams = ( selection, parentSelection ) =>
+		const applyAnimParams = ( selection, transformSelection ) =>
 		{
 			selection = selection
 				.attr ( "x", function ( d ) { return d.position?.x ?? this.getAttribute ( "x" ) } )
 				.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
 				.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
 				.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } );
-			parentSelection
+			transformSelection
 				.attr ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + ")" : this.getAttribute ( "transform" ); } );
 			return selection;
 		}
@@ -248,14 +262,14 @@ class Anim
 		if ( this.startParams )
 			applyAnimParams (
 				this.selection.data ( this.startParams ).join (),
-				this.parentSelection.data ( this.startParams ).join () );
+				this.transformSelection.data ( this.startParams ).join () );
 		if ( this.endParams )
 			promise = applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease ),
-				this.parentSelection.data ( this.endParams ).join ()
+				this.transformSelection.data ( this.endParams ).join ()
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease ) )
@@ -272,7 +286,7 @@ class Anim
 	 * @param {Object} selection The D3 selection which the animation should act on.
 	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
 	 * @param {Number} duration
-	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
+	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 * @constructor
 	 */
 	static Delay ( selection, ease, duration, dependsOn = [] )
@@ -285,17 +299,17 @@ class Anim
 
 /**
  * @class DelayAnim
- * @extends Anim
+ * @extends CardAnim
  *
  * @description An animation which performs no transition, but will still take some duration.
  */
-class DelayAnim extends Anim
+class DelayAnim extends CardAnim
 {
 	/**
 	 * @param {Object} selection The D3 selection which the animation should act on.
 	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
 	 * @param {Number} duration
-	 * @param {Anim[]} [dependsOn = []] Any animations which the start of this animation depends on.
+	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 */
 	constructor ( selection, ease, duration, dependsOn = [] )
 	{

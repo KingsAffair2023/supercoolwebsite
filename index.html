@@ -40,7 +40,7 @@
 				let params2 = new AnimParams ( new Vec ( 500, 400 ), null, 359 );
 				let params3 = new AnimParams ( new Vec ( 100, 200 ), null, 420 );
 
-				let sanim = Anim.Setup ( d3.selectAll ( ".duck" ), d3.easeSin, 1000 )
+				let sanim = CardAnim.Setup ( d3.selectAll ( ".duck" ), d3.easeSin, 1000 )
 					.continueTo ( pparams1 )
 					.continueTo ( pparams2 )
 					.addCallback ( () => console.log ( "callback 1" ) )

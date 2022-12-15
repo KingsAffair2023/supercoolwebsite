@@ -360,7 +360,7 @@ class Dealer
 
 		/* Return the animation */
 		this._cards.each ( function ( d, i ) {
-			animations [ i ] = new Anim (
+			animations [ i ] = new CardAnim (
 					d3.select ( this ),
 					startParams [ i ],
 					null,
@@ -373,7 +373,7 @@ class Dealer
 		} );
 
 		/* Return a final animation */
-		return Anim.Delay ( this._cards, d3.easeSinOut, 0, animations );
+		return CardAnim.Delay ( this._cards, d3.easeSinOut, 0, animations );
 	}
 
 
