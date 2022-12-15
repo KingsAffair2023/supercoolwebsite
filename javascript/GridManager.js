@@ -373,7 +373,7 @@ class GridManager
 			.attr ( "height", layout.titleSize.y )
 
 		/* Animate the cards moving */
-		new Anim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
+		new CardAnim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
 			.addCallback ( () =>
 			{
 				/* Possibly call the setup callback if it exists */
