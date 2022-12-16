@@ -1,4 +1,3 @@
-// Quick hackery to make multiple classes of card - sorry Louis
 const position = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
 // Bonus values for future extension
 let counter = 0;
