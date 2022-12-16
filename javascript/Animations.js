@@ -8,11 +8,11 @@ class AnimParams
 	/** @public {?Vec} */
 	position;
 
-	/** @public {?Number} */
-	rotation;
+	/** @public {?Vec} */
+	size;
 
 	/** @public {?Number} */
-	scale;
+	rotation;
 
 
 

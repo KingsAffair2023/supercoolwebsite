@@ -36,6 +36,13 @@ class GridManager
 
 
 	/**
+	 * @public {Boolean} Whether we are on mobile.
+	 */
+	static mobile = GridManager.mobileCheck ();
+
+
+
+	/**
 	 * @public {number} The width of the viewport. The height is assigned dynamically.
 	 */
 	static svgWidth = 1000;
@@ -65,6 +72,11 @@ class GridManager
 	 */
 	static verticalCardsMobile = 1.5;
 
+	/**
+	 * @private {Number} The number of vertical cards
+	 */
+	static verticalCards = GridManager.mobile ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
+
 
 
 	/**
@@ -85,13 +97,6 @@ class GridManager
 
 
 	/**
-	 * @public {Boolean} Whether we are on mobile.
-	 */
-	static mobile = GridManager.mobileCheck ();
-
-
-
-	/**
 	 * @private {Vec}
 	 */
 	_currentScreenSize;
@@ -102,7 +107,7 @@ class GridManager
 	_currentGrid;
 
 	/**
-	 * @private {Number}
+	 * @private {Number} As an index of _titles.
 	 */
 	_currentTitle;
 
@@ -144,12 +149,12 @@ class GridManager
 	_cardRatioWithMargin;
 
 	/**
-	 * @private {Vec}
+	 * @private {Vec} cardSize / cardSizeWithMargin
 	 */
 	_cardMarginFrac;
 
 	/**
-	 * @private {Vec[]}
+	 * @private {Vec[]} Ascpect ratios for the titles in decreasing order.
 	 */
 	_titleRatios;
 
@@ -157,11 +162,6 @@ class GridManager
 	 * @private {Number[]}
 	 */
 	_gridWidthOptions;
-
-	/**
-	 * @private {Number}
-	 */
-	_verticalCards;
 
 	/**
 	 * @private {(function():void)|null}
@@ -174,6 +174,16 @@ class GridManager
 	 * @private {Dealer}
 	 */
 	_dealer;
+
+	/**
+	 * @private {String}
+	 */
+	_state;
+
+	/**
+	 * @private {String}
+	 */
+	_nextState;
 
 
 
@@ -198,6 +208,8 @@ class GridManager
 		setupCallback
 	)
 	{
+		/* PARAMETER SETUP */
+
 		/* Save the parameters */
 		this._svg = svg;
 		this._titles = titles;
@@ -219,8 +231,12 @@ class GridManager
 		this._titles = this._titles.data ( this._titleRatios ).sort ( ( l, r ) => r - l );
 		this._titleRatios.sort ( ( l, r ) => r - l );
 
-		/* Choose the number of visible vertical cards based on whether this a mobile device or not */
-		this._verticalCards = GridManager.mobile ? GridManager.verticalCardsMobile : GridManager.verticalCardsDesktop;
+		/* Ensure that the cards are still on top */
+		this._cards.raise ();
+
+
+
+		/* INITIAL SVG SETUP */
 
 		/* Get the layout and set up the memory attributes */
 		this._currentScreenSize = GridManager.getScreenSize ();
@@ -234,17 +250,16 @@ class GridManager
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y )
 			.style ( "width", this._currentScreenSize.x + "px" );
 
-		/* Possibly disable scrolling */
-		document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
-
-		/* Scroll to the top */
+		/* Possibly disable scrolling and scroll to the top */
+		document.scrollingElement.overflowY = ( this._currentGrid.y <= GridManager.verticalCards ? "hidden" : "" );
 		document.scrollingElement.scrollTop = 0;
-
-		/* Ensure that the cards are on top */
-		this._cards.raise ();
 
 		/* Ensure that the titles are hidden */
 		this._titles.style ( "opacity", 0 );
+
+
+
+		/* DEAL ANIMATION */
 
 		/* Create a dealer */
 		this._dealer = new Dealer (
@@ -266,6 +281,9 @@ class GridManager
 				.attr ( "height", layout.titleSize.y )
 				.style ( "opacity", 1 );
 
+			/* Set the current state to grid */
+			this._nextState = this._state = GridManager.states.GRID;
+
 			/* Update the SVG positions */
 			this._cardsRequireRefresh = true;
 			this.updateSVGPositions ( 0, true );
@@ -273,6 +291,28 @@ class GridManager
 			/* Add an event listener for resizing */
 			window.addEventListener ( "resize", () => { this._cardsRequireRefresh = true; this.updateSVGPositions ( 0 ); } );
 		} ).animate ();
+	}
+
+
+
+	/**
+	 * @description Request that the cards are hidden off the screen.
+	 */
+	hideCards ()
+	{
+		this._nextState = GridManager.states.HIDDEN;
+		this._cardsRequireRefresh = true;
+		this.updateSVGPositions ();
+	}
+
+	/**
+	 * @description Request that the cards are not hidden off the screen.
+	 */
+	showCards ()
+	{
+		this._nextState = GridManager.states.GRID;
+		this._cardsRequireRefresh = true;
+		this.updateSVGPositions ();
 	}
 
 
@@ -294,9 +334,8 @@ class GridManager
 		const oldScreenSize = this._currentScreenSize;
 		this._currentScreenSize = GridManager.getScreenSize ();
 
-		/* Notify that cards no longer require refresh, and that we are now busy with animations */
+		/* Notify that cards no longer require refresh */
 		this._cardsRequireRefresh = false;
-		this._animationBusy = true;
 
 		/* Calculate the new layout */
 		const layout = this._calculateLayout ( this._currentScreenSize );
@@ -312,11 +351,39 @@ class GridManager
 
 		/* Get title selections */
 		const newTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
-		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] )
+		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] );
 
 
 
-		/* RESIZE THE SVG AND TITLE(S) */
+		/* INITIAL RESIZING */
+
+		/* If the cards are hidden, we can simply jump to the new SVG settings */
+		if ( this._state === GridManager.states.HIDDEN )
+		{
+			/* Reposition the cards */
+			new CardAnim ( this._cards, layout.hiddenCardPositions, null, d3.easeSinInOut, 0 ).animate ();
+
+			/* Set up the SVG */
+			this._svg
+				.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
+				.style ( "width", this._currentScreenSize.x + "px" )
+				.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
+
+			/* Position the title */
+			newTitleSel
+				.style ( "opacity", 1 )
+				.attr ( "x", layout.titlePos.x )
+				.attr ( "y", layout.titlePos.y )
+				.attr ( "width", layout.titleSize.x )
+				.attr ( "height", layout.titleSize.y );
+
+			/* Hide any old title */
+			if ( oldTitle !== this._currentTitle )
+				oldTitleSel.style ( "opacity", 0 );
+		}
+
+		/* The cards are not hidden, so we need to perform some careful resizing */
+		else
 		{
 			/* Get the current view box height */
 			const currentViewBoxHeight = parseFloat ( this._svg.attr ( "viewBox" ).split ( " " ) [ 3 ] );
@@ -359,8 +426,14 @@ class GridManager
 
 		/* ANIMATE */
 
+		/* If we are going from a hidden state to a hidden state, we don't need to animate */
+		if ( this._state === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN )
+			return;
+
 		/* Calculate the animation duration */
-		const animationDuration = ( GridManager.mobile || gridChange || forceFullAnimation ) ? GridManager.gridReshuffleDuration : prevAnimationDuration / 2;
+		const animationDuration = ( GridManager.mobile || gridChange || this._nextState !== this._state || forceFullAnimation ) ?
+			GridManager.gridReshuffleDuration :
+			prevAnimationDuration / 2;
 
 		/* Resize the current title */
 		newTitleSel
@@ -373,7 +446,12 @@ class GridManager
 			.attr ( "height", layout.titleSize.y )
 
 		/* Animate the cards moving */
-		new CardAnim ( this._cards, null, layout.cardPositions, d3.easeSinInOut, animationDuration )
+		new CardAnim (
+			this._cards,
+			null,
+			this._nextState === GridManager.states.GRID ? layout.cardPositions : layout.hiddenCardPositions,
+			this._nextState === GridManager.states.GRID ? ( this._state === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSin,
+			animationDuration )
 			.addCallback ( () =>
 			{
 				/* Possibly call the setup callback if it exists */
@@ -385,7 +463,7 @@ class GridManager
 					document.scrollingElement.scrollTop = 0;
 
 				/* Possibly disable scrolling */
-				document.scrollingElement.overflowY = ( this._currentGrid.y <= this._verticalCards ? "hidden" : "" );
+				document.scrollingElement.overflowY = ( this._currentGrid.y <= GridManager.verticalCards ? "hidden" : "" );
 
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
@@ -400,17 +478,27 @@ class GridManager
 			.ease ( d3.easeSinInOut )
 			.style ( "aspect-ratio", layout.viewBox.x + "/" + layout.viewBox.y )
 			.attr ( "viewBox", "0 0 " + layout.viewBox.x + " " + layout.viewBox.y );
+
+		/* Set the new state */
+		this._state = this._nextState;
+
+		/* Notify that animations are now in progress */
+		this._animationBusy = true;
 	}
 
 
 
 	/**
 	 * @param {Vec} screenSize
-	 * @returns {{grid: Vec, cardSize: Vec, viewBox: Vec, cardPositions: AnimParams[], titleChoice: Number, titleSize: Vec, titlePos: Vec}}
+	 * @param {Number} hiddenCardPositionJitter The maximum position jitter of hidden cards, as a fraction of the average card dimension.
+	 * @param {Number} hiddenCardAngleJitter The absolute maximum angle of hidden cards, in degrees.
+	 * @returns {{grid: Vec, cardSize: Vec, viewBox: Vec, cardPositions: AnimParams[], hiddenCardPositions: AnimParams[], titleChoice: Number, titleSize: Vec, titlePos: Vec}}
 	 * @private
 	 */
-	_calculateLayout ( screenSize )
+	_calculateLayout ( screenSize, hiddenCardPositionJitter = 1, hiddenCardAngleJitter = 45 )
 	{
+		/* CALCULATE CARD AND VIEWPORT SIZES */
+
 		/* Calculate the grid */
 		const grid = this._calculateGrid ( screenSize );
 
@@ -418,19 +506,23 @@ class GridManager
 		const visibleSVGViewport = new Vec ( GridManager.svgWidth, GridManager.svgWidth * screenSize.y / screenSize.x );
 
 		/* Calculate the size of a card with its margin */
-		const cardHeightWithMargin = visibleSVGViewport.y * ( 1 - GridManager.titleHeightFrac - 2 * GridManager.cardOuterMarginFrac - 2 * GridManager.titleMarginFrac ) / this._verticalCards;
+		const cardHeightWithMargin = visibleSVGViewport.y * ( 1 - GridManager.titleHeightFrac - 2 * GridManager.cardOuterMarginFrac - 2 * GridManager.titleMarginFrac ) / GridManager.verticalCards;
 		const cardSizeWithMargin = new Vec ( this._cardRatioWithMargin * cardHeightWithMargin, cardHeightWithMargin );
 
 		/* Calculate the margin size */
 		const cardSize = cardSizeWithMargin.div ( this._cardMarginFrac );
 		const marginSize = cardSizeWithMargin.sub ( cardSize );
 
-		/* Calculate the corner offset */
+
+
+		/* CALCULATE CARD POSITIONS */
+
+		/* Calculate the corner offset for cards in the grid */
 		const cornerOffset = new Vec (
 			( visibleSVGViewport.x - ( grid.x * cardSizeWithMargin.x ) + marginSize.x ) / 2,
 			visibleSVGViewport.y * ( GridManager.titleHeightFrac + GridManager.cardOuterMarginFrac + GridManager.titleMarginFrac * 2 ) + marginSize.y / 2 );
 
-		/* Create the card positions */
+		/* Calculate the card positions */
 		const cardPositions = [];
 		for ( let y = 0; y < grid.y; ++y )
 			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
@@ -438,6 +530,19 @@ class GridManager
 					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) ),
 					cardSize,
 					0 ) );
+
+
+
+		/* CALCULATE VIEWBOX DIMENSIONS */
+
+		/* Calculate the final view box dimensions */
+		const viewBoxDimensions = new Vec (
+			GridManager.svgWidth,
+			cardPositions [ cardPositions.length - 1 ].position.y + cardSize.y + marginSize.y / 2 + visibleSVGViewport.y * GridManager.cardOuterMarginFrac );
+
+
+
+		/* CHOOSE A TITLE AND CALCULATE ITS SIZE AND POSITION */
 
 		/* Calculate the height of the title and the area's aspect ratio */
 		const titleHeight = visibleSVGViewport.y * GridManager.titleHeightFrac;
@@ -455,17 +560,71 @@ class GridManager
 			( GridManager.svgWidth - titleSize.x ) / 2,
 			visibleSVGViewport.y * GridManager.titleMarginFrac );
 
-		/* Calculate the final viewport dimensions */
-		const viewportDimensions = new Vec (
-			GridManager.svgWidth,
-			cardPositions [ cardPositions.length - 1 ].position.y + cardSize.y + marginSize.y / 2 + visibleSVGViewport.y * GridManager.cardOuterMarginFrac );
+
+
+		/* CALCULATE HIDDEN CARD POSITIONS */
+
+		/* Get whether the grid layout is longer horizontally than it is vertically. Favour vertical. */
+		const gridIsHorizontal = grid.x > grid.y;
+
+		/* Get the size of a card from corner to corner */
+		const cardCornerToCorner = Math.sqrt ( cardSize.x ** 2 + cardSize.y ** 2 );
+
+		/* Get hidden card position interpolators */
+		const hiddenCardPositionInterpolators = gridIsHorizontal ?
+			[
+				new Vec ( 0, -cardCornerToCorner ).interpolateTo ( new Vec ( viewBoxDimensions.x - cardSize.x, -cardCornerToCorner ) ),
+				new Vec ( 0, viewBoxDimensions.y + cardCornerToCorner - cardSize.y ).interpolateTo ( new Vec ( viewBoxDimensions.x - cardSize.x,viewBoxDimensions.y + cardCornerToCorner - cardSize.y ) ),
+			] :
+			[
+				new Vec ( -cardCornerToCorner, 0 ).interpolateTo ( new Vec ( -cardCornerToCorner, viewBoxDimensions.y - cardSize.y ) ),
+				new Vec ( viewBoxDimensions.x + cardCornerToCorner - cardSize.x, 0 ).interpolateTo ( new Vec ( viewBoxDimensions.x + cardCornerToCorner - cardSize.x, viewBoxDimensions.y - cardSize.y ) )
+			];
+
+		/* Calculate hidden card positions */
+		const hiddenCardPositions = [];
+		for ( let y = 0; y < grid.y; ++y )
+			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
+			{
+				/* Get the card index */
+				const i = y * grid.x + x;
+
+				/* Calculate which edge the card should be hidden on */
+				const hideCardOnPositiveEdge = gridIsHorizontal ?
+					y > ( ( grid.y / 2 ) - 0.5 ) + ( 0.1 * ( -1 ) ** x ):
+					x > ( ( grid.x / 2 ) - 0.5 ) + ( 0.1 * ( -1 ) ** y );
+
+				/* Calculate the fraction along the edge that card should be */
+				const hideCardAtFractionAlongEdge = gridIsHorizontal ?
+					x / ( grid.x - 1 ) :
+					y / ( grid.y - 1 );
+
+				/* Random number generator */
+				const rand = () => ( Math.random () * 2 - 1 );
+
+				/* Calculate the position jitter */
+				const positionJitter = new Vec ( hiddenCardPositionJitter * ( cardSize.x + cardSize.y ) * 0.5 * rand () )
+					.mult ( new Vec ( gridIsHorizontal ? 1 : 0, gridIsHorizontal ? 0 : 1 ) );
+
+				/* Set the card position */
+				hiddenCardPositions [ i ] = new AnimParams (
+					hiddenCardPositionInterpolators [ hideCardOnPositiveEdge ? 1 : 0 ] ( hideCardAtFractionAlongEdge )
+						.add ( positionJitter ),
+					cardSize,
+					hiddenCardAngleJitter * rand () );
+			}
+
+
+
+		/* RETURN */
 
 		/* Return the layout information */
 		return {
 			grid: grid,
 			cardSize: cardSize,
-			viewBox: viewportDimensions,
+			viewBox: viewBoxDimensions,
 			cardPositions: cardPositions,
+			hiddenCardPositions: hiddenCardPositions,
 			titleChoice: titleChoice,
 			titleSize: titleSize,
 			titlePos: titlePos
@@ -485,7 +644,7 @@ class GridManager
 		const cardAreaRatio = ( screenSize.x / screenSize.y ) / ( 1 - GridManager.titleHeightFrac - 2 * GridManager.cardOuterMarginFrac - 2 * GridManager.titleMarginFrac );
 
 		/* Get the maximum number of horizontal cards */
-		const hCards = cardAreaRatio * this._verticalCards / this._cardRatioWithMargin;
+		const hCards = cardAreaRatio * GridManager.verticalCards / this._cardRatioWithMargin;
 
 		/* Find the best option */
 		for ( const widthOption of this._gridWidthOptions )

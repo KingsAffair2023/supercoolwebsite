@@ -31,6 +31,8 @@
 
 		<script>
 
+			let cm;
+
 			const onload1 = () =>
 			{
 				let pparams1 = [ new AnimParams ( null, new Vec ( 50 ), null ),  new AnimParams ( null, new Vec ( 50 ), null ) ];
@@ -74,7 +76,7 @@
 						cardSize
 					) );
 
-				const cm = new GridManager (
+				cm = new GridManager (
 					d3.select ( "#svg" ),
 					d3.selectAll ( ".card" ),
 					d3.selectAll ( ".title" ),
@@ -83,6 +85,12 @@
 					[ new Vec ( 3, 1 ), new Vec ( 5, 1 ), new Vec ( 12, 1 ) ],
 					[ 1, 2, 4 ],
 					() => console.log ( "setup done" ) );
+
+				cards [ 0 ].card.on ( "click", () =>
+				{
+					cm.hideCards ();
+					setTimeout ( () => cm.showCards (), 2000 );
+				} )
 			}
 
 			window.onload = onload2;
