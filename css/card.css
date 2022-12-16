@@ -55,9 +55,13 @@ html
   .card-back {
     background-color: #bbb;
     color: black;
+    margin:0;
+    padding:0 0 0 0;
+    text-align: center;
   }
   
   /* Style the back side */
   .card-face {
     transform: rotateY(270deg);
+    overflow:hidden;
   }
