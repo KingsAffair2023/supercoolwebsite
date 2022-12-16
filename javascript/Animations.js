@@ -43,9 +43,6 @@ class CardAnim
 	/** @public {Object} */
 	selection;
 
-	/** @public {Object} */
-	transformSelection;
-
 	/** @public {AnimParams[]|null} */
 	startParams;
 
@@ -110,22 +107,6 @@ class CardAnim
 		this.duration = duration;
 		this.dependsOn = dependsOn.slice ();
 		this.callback = callback;
-
-		/* Find the nodes which can be transformed */
-		const transformNodes = [];
-		this.selection.each ( function ()
-		{
-			/* Detect a foreignObject element */
-			if ( this instanceof SVGForeignObjectElement )
-			{
-				/* Check that the foreignObject is wrapped in a unique group */
-				if ( !( this.parentNode instanceof SVGGElement ) || transformNodes.includes ( this.parentNode ) )
-					throw new Error ( "CardAnim.constructor: foreignObject elements must be wrapped in a unique group" );
-				transformNodes.push ( this.parentNode );
-			} else
-				transformNodes.push ( this );
-		} );
-		this.transformSelection = d3.selectAll ( transformNodes );
 	}
 
 
@@ -246,30 +227,19 @@ class CardAnim
 		let promise;
 
 		/* Set the attributes of a selection */
-		const applyAnimParams = ( selection, transformSelection ) =>
-		{
-			selection = selection
-				.attr ( "x", function ( d ) { return d.position?.x ?? this.getAttribute ( "x" ) } )
-				.attr ( "y", function ( d ) { return d.position?.y ?? this.getAttribute ( "y" ) } )
-				.attr ( "width", function ( d ) { return d.size?.x ?? this.getAttribute ( "width" ) } )
-				.attr ( "height", function ( d ) { return d.size?.y ?? this.getAttribute ( "height" ) } );
-			transformSelection
-				.attr ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + ")" : this.getAttribute ( "transform" ); } );
-			return selection;
-		}
+		const applyAnimParams = selection => selection
+				.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
+				.style ( "top", function ( d ) { return d.position?.y != null ? d.position.y + "px" : this.style.top } )
+				.style ( "width", function ( d ) { return d.size?.x != null ? d.size.x + "px" : this.style.width } )
+				.style ( "height", function ( d ) { return d.size?.y != null ? d.size.y + "px" : this.style.height } )
+				.style ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + "deg)" : this.style.transform; } );
 
 		/* Animate */
 		if ( this.startParams )
-			applyAnimParams (
-				this.selection.data ( this.startParams ).join (),
-				this.transformSelection.data ( this.startParams ).join () );
+			applyAnimParams ( this.selection.data ( this.startParams ).join () )
 		if ( this.endParams )
 			promise = applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.transition ()
-					.duration ( this.duration )
-					.ease ( this.ease ),
-				this.transformSelection.data ( this.endParams ).join ()
 					.transition ()
 					.duration ( this.duration )
 					.ease ( this.ease ) )

@@ -21,14 +21,13 @@
 		</svg>
 		-->
 
-		<svg id="svg" viewBox="0 0 0 0" style="position: absolute; left: 50%; transform: translate(-50%, 0)" requiredExtensions="http://www.w3.org/1999/xhtml" >
+		<div id="canvas">
 
-			<image class="title" href="assets/title3.jpg" width="100" height="100"></image>
-			<image class="title" href="assets/title5.jpg" width="100" height="100"></image>
-			<image class="title" href="assets/title12.jpg" width="100" height="100"></image>
+			<img class="title" src="assets/title3.jpg"/>
+			<img class="title" src="assets/title5.jpg"/>
+			<img class="title" src="assets/title12.jpg"/>
 
-		</svg>
-
+		</div>
 		<script>
 
 			let cm;
@@ -71,13 +70,13 @@
 				const cards = [];
 				for ( let i = 0; i < 8; ++i )
 					cards.push ( new Card (
-						d3.select ( "#svg" ),
+						d3.select ( "#canvas" ),
 						"assets/card.jpeg",
 						cardSize
 					) );
 
 				cm = new GridManager (
-					d3.select ( "#svg" ),
+					d3.select ( "#canvas" ),
 					d3.selectAll ( ".card" ),
 					d3.selectAll ( ".title" ),
 					cardSize,
@@ -86,8 +85,8 @@
 					[ 1, 2, 4 ],
 					() => {
 						document.getElementById("card-face first").innerHTML = "<p style='background-color: dodgerblue'>Test Text</p>";
-						var element = document.getElementById("card-inner first");
-						element.setAttribute("style", "transition: transform 1.0s;transform: rotateY(180deg);");
+						document.getElementById("card-back first").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-in; transform: rotateY(90deg);");
+						document.getElementById("card-face first").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-out; transition-delay: 0.5s; transform: rotateY(360deg);");
 					} );
 
 				cards [ 0 ].card.on ( "click", () =>
