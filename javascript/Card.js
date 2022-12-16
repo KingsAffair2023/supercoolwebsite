@@ -76,23 +76,34 @@ class Card
 
 		/* Create the foreign object */
 		this.card = this.svg.append ( "g" )
-			.classed ( "card-wrapper", true )
+			.classed ( "card-wrapper " + position[counter], true )
 			.append ( "foreignObject" )
 				.classed ( "card", true )
 				.attr ( "width", this.size.x )
-				.attr ( "height", this.size.y )
-			.append("xhtml:div")
-				.classed(position[counter++], true)
-				.attr ( "width", this.size.x )
-				.attr ( "height", this.size.y )
+				.attr ( "height", this.size.y );
 
+		this.cardInner = this.card.append ("xhtml:div" )
+			.classed ( "card-inner " + position[counter], true)
+			.attr ("id", "card-inner " + position[counter]);
+
+		this.cardBack = this.cardInner.append("xhtml:div")
+			.classed("card-back " + position[counter], true)
+			.attr ( "id", "card-back " + position[counter])
+			.attr ( "height", "100%")
+			.attr ( "width", "100%");
+			
 		/* Append the image */
-		this.cardImg = this.card.append ( "xhtml:img" )
-			.classed ( "card-img", true )
+		this.cardImg = this.cardBack.append ( "xhtml:img" )
+			.classed ( "card-img " + position[counter], true )
+			.attr ( "id", "card-img "+position[counter])
 			.attr ( "src", this.src );
-			this.card.append ( "xhtml:img" )
-			.classed ( "card-img", true )
-			.attr ( "src", this.src );
+
+		this.cardFace = this.cardInner.append("xhtml:div")
+			.classed("card-face " + position[counter], true)
+			.attr ( "id", "card-face " + position[counter++])
+			.attr ( "height", "100%")
+			.attr ( "width", "100%");
 	}
+
 
 }
