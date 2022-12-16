@@ -211,7 +211,7 @@ class CardAnim
 	addCallback ( f )
 	{
 		const oldCallback = this.callback;
-		this.callback = ( this.callback ? () => { oldCallback (); f () } : f );
+		this.callback = ( oldCallback ? () => { oldCallback (); f (); } : f );
 		return this;
 	}
 

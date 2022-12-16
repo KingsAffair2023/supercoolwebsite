@@ -436,7 +436,7 @@ class GridManager
 			this._cards,
 			null,
 			this._nextState === GridManager.states.GRID ? layout.cardPositions : layout.hiddenCardPositions,
-			this._nextState === GridManager.states.GRID ? ( this._currentState === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSin,
+			this._nextState === GridManager.states.GRID ? ( this._currentState === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSinIn,
 			animationDuration )
 			.addCallback ( () =>
 			{
