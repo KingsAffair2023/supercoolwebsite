@@ -84,13 +84,18 @@
 					cardSize.mult ( new Vec ( 0.65, 0.2 ) ),
 					[ new Vec ( 3, 1 ), new Vec ( 5, 1 ), new Vec ( 12, 1 ) ],
 					[ 1, 2, 4 ],
-					() => console.log ( "setup done" ) );
+					() => {
+						document.getElementById("card-face first").innerHTML = "<p style='background-color: dodgerblue'>Test Text</p>";
+						var element = document.getElementById("card-inner first");
+						element.setAttribute("style", "transition: transform 1.0s;transform: rotateY(180deg);");
+					} );
 
 				cards [ 0 ].card.on ( "click", () =>
 				{
 					cm.hideCards ();
 					setTimeout ( () => cm.showCards (), 2000 );
 				} )
+
 			}
 
 			window.onload = onload2;
