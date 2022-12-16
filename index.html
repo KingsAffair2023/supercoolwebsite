@@ -87,11 +87,20 @@
 					[ new Vec ( 3, 1 ), new Vec ( 5, 1 ), new Vec ( 12, 1 ) ],
 					[ 1, 2, 4 ],
 					() => {
-						document.getElementById("card-face first").innerHTML = "<div style ='height: 100%; width: 100%; background-image: url(\" assets/yellow.jpg\"); position: inherit;'><p style='cursor: pointer; height: 100%; width:100%; font-size: 5.5vh'>Test Text</p></div>";
+						// Card 1
+						document.getElementById("card-face first").innerHTML = `
+							<div style ='height: 100%; width: 100%; background-image: url(\" assets/yellow.jpg\"); position: inherit;'>
+								<p style='cursor: pointer; height: 100%; width:100%; font-size: 5.5vh'>Test Text</p>
+							</div>`;
+
 						document.getElementById("card-back first").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-in; transform: rotateY(90deg);");
 						document.getElementById("card-face first").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-out; transition-delay: 0.5s; transform: rotateY(360deg);");
+						
 
-						document.getElementById("card-face second").innerHTML = "<img style='height: 100%; width: 100%' src='assets/card.jpeg'>";
+						// Card 2
+						document.getElementById("card-face second").innerHTML = `
+							<img style='height: 100%; width: 100%' src='assets/card.jpeg'>`;
+
 						document.getElementById("card-back second").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-in; transform: rotateY(90deg);");
 						document.getElementById("card-face second").setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-out; transition-delay: 0.5s; transform: rotateY(360deg);");
 					} );
