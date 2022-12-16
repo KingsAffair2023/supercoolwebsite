@@ -89,6 +89,11 @@ class GridManager
 	 */
 	static gridReshuffleDuration = 400;
 
+	/**
+	 * @public {Number} The period at which to refresh the grid (just in case).
+	 */
+	static positionUpdateInterval = 1500;
+
 
 
 	/**
@@ -173,7 +178,7 @@ class GridManager
 	/**
 	 * @private {String}
 	 */
-	_state;
+	_currentState;
 
 	/**
 	 * @private {String}
@@ -231,13 +236,17 @@ class GridManager
 
 
 
-		/* INITIAL SVG SETUP */
+		/* INITIAL CANVAS SETUP */
 
 		/* Get the layout and set up the memory attributes */
 		this._currentScreenSize = GridManager.getScreenSize ();
 		const layout = this._calculateLayout ( this._currentScreenSize );
 		this._currentGrid = layout.grid;
 		this._currentTitle = layout.titleChoice;
+
+		/* Set the states */
+		this._currentState = null;
+		this._nextState = GridManager.states.GRID;
 
 		/* Setup the canvas */
 		this._canvas
@@ -265,6 +274,7 @@ class GridManager
 		);
 
 		/* Start the animation */
+		this._animationBusy = true;
 		this._dealer.createAnimation ( GridManager.dealDelay, GridManager.dealDuration ).addCallback ( () =>
 		{
 			/* Show the title */
@@ -275,15 +285,15 @@ class GridManager
 				.style ( "height", layout.titleSize.y + "px" )
 				.style ( "opacity", 1 );
 
-			/* Set the current state to grid */
-			this._nextState = this._state = GridManager.states.GRID;
-
-			/* Update the SVG positions */
-			this._cardsRequireRefresh = true;
-			this.updateSVGPositions ( 0, true );
+			/* Update the card positions */
+			this._animationBusy = false;
+			this.forceUpdatePositions ();
 
 			/* Add an event listener for resizing */
-			window.addEventListener ( "resize", () => { this._cardsRequireRefresh = true; this.updateSVGPositions ( 0 ); } );
+			window.addEventListener ( "resize", () => this.forceUpdatePositions () );
+
+			/* Add an interval for updating positions */
+			setInterval ( () => this.forceUpdatePositions (), GridManager.positionUpdateInterval );
 		} ).animate ();
 	}
 
@@ -295,8 +305,7 @@ class GridManager
 	hideCards ()
 	{
 		this._nextState = GridManager.states.HIDDEN;
-		this._cardsRequireRefresh = true;
-		this.updateSVGPositions ();
+		this.forceUpdatePositions ();
 	}
 
 	/**
@@ -305,16 +314,16 @@ class GridManager
 	showCards ()
 	{
 		this._nextState = GridManager.states.GRID;
-		this._cardsRequireRefresh = true;
-		this.updateSVGPositions ();
+		this.forceUpdatePositions ();
 	}
 
 
 
 	/**
-	 * @public
+	 * @description Reposition the canvas and animate the cards and title, transitioning from state to nextState.
+	 * @param {Number} prevAnimationDuration The duration of the previous animation.
 	 */
-	updateSVGPositions ( prevAnimationDuration = 0, forceFullAnimation = false )
+	updatePositions ( prevAnimationDuration = 0 )
 	{
 		/* Don't do anything if a reshuffle is in progress, or no change occurred */
 		if ( this._animationBusy || !this._cardsRequireRefresh )
@@ -324,35 +333,26 @@ class GridManager
 
 		/* GATHER PARAMETERS */
 
-		/* Get the new screen size and change in width */
-		const oldScreenSize = this._currentScreenSize;
+		/* Get the new screen size */
 		this._currentScreenSize = GridManager.getScreenSize ();
-
-		/* Notify that cards no longer require refresh */
-		this._cardsRequireRefresh = false;
 
 		/* Calculate the new layout */
 		const layout = this._calculateLayout ( this._currentScreenSize );
 
-		/* Set the new grid */
-		const oldGrid = this._currentGrid;
-		const gridChange = !oldGrid.equals ( layout.grid );
-		this._currentGrid = layout.grid;
-
-		/* Get save the old title choice */
-		const oldTitle = this._currentTitle;
-		this._currentTitle = layout.titleChoice;
+		/* Get whether the grid and title have changed */
+		const gridChange = !this._currentGrid.equals ( layout.grid );
+		const titleChange = ( this._currentTitle !== layout.titleChoice );
 
 		/* Get title selections */
-		const newTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
-		const oldTitleSel = d3.select ( this._titles.nodes () [ oldTitle ] );
+		const newTitleSel = d3.select ( this._titles.nodes () [ layout.titleChoice ] );
+		const oldTitleSel = d3.select ( this._titles.nodes () [ this._currentTitle ] );
 
 
 
 		/* INITIAL RESIZING */
 
-		/* If the cards are hidden, we can simply jump to the new SVG settings */
-		if ( this._state === GridManager.states.HIDDEN )
+		/* If the cards are hidden, we can simply jump to the new canvas settings */
+		if ( this._currentState === GridManager.states.HIDDEN )
 		{
 			/* Reposition the cards */
 			new CardAnim ( this._cards, layout.hiddenCardPositions, null, d3.easeSinInOut, 0 ).animate ();
@@ -369,14 +369,13 @@ class GridManager
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
 				.style ( "height", layout.titleSize.y + "px" );
-
-			/* Hide any old title */
-			if ( oldTitle !== this._currentTitle )
-				oldTitleSel.style ( "opacity", 0 );
 		}
 
-		/* If we have changed title, we need to give the title a special initial position and size */
-		if ( oldTitle !== this._currentTitle )
+		/* If the cards are not hidden, we will animate the canvas changing.
+		 * Therefore, if we have also changed title,
+		 * we need to give the new title a special initial position and size.
+		 */
+		else if ( titleChange )
 		{
 			/* Get the old canvas size */
 			const oldCanvasWidth = parseFloat ( this._canvas.style ( "width" ) );
@@ -386,7 +385,7 @@ class GridManager
 			const oldTitleY = parseFloat ( oldTitleSel.style ( "top" ) );
 
 			/* Calculate the size and position of the new title based on the old title */
-			const newTitleSize = new Vec ( this._titleRatios [ this._currentTitle ] * oldTitleHeight, oldTitleHeight );
+			const newTitleSize = new Vec ( this._titleRatios [ layout.titleChoice ] * oldTitleHeight, oldTitleHeight );
 			const newTitlePos = new Vec ( ( oldCanvasWidth - newTitleSize.x ) / 2, oldTitleY );
 
 			/* Position the title */
@@ -396,40 +395,48 @@ class GridManager
 				.style ( "top", newTitlePos.y + "px" )
 				.style ( "width", newTitleSize.x + "px" )
 				.style ( "height", newTitleSize.y + "px" );
-
-			/* Hide the old title */
-			oldTitleSel.style ( "opacity", 0 );
 		}
+
+		/* Hide any old title */
+		if ( titleChange )
+			oldTitleSel.style ( "opacity", 0 );
 
 
 
 		/* ANIMATE */
 
+		/* Notify that cards no longer require refresh */
+		this._cardsRequireRefresh = false;
+
 		/* If we are going from a hidden state to a hidden state, we don't need to animate */
-		if ( this._state === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN )
+		if ( this._currentState === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN )
 			return;
 
+		/* Notify that animations are now in progress */
+		this._animationBusy = true;
+
 		/* Calculate the animation duration */
-		const animationDuration = ( GridManager.mobile || gridChange || this._nextState !== this._state || forceFullAnimation ) ?
+		const animationDuration = ( GridManager.mobile || gridChange || this._nextState !== this._currentState ) ?
 			GridManager.gridReshuffleDuration :
 			prevAnimationDuration / 2;
 
-		/* Resize the current title */
-		newTitleSel
-			.transition ()
-			.duration ( animationDuration )
-			.ease ( d3.easeSinInOut )
-			.style ( "left", layout.titlePos.x + "px" )
-			.style ( "top", layout.titlePos.y + "px" )
-			.style ( "width", layout.titleSize.x + "px" )
-			.style ( "height", layout.titleSize.y + "px" )
+		/* Resize the current title if we haven't already */
+		if ( this._currentState !== GridManager.states.HIDDEN )
+			newTitleSel
+				.transition ()
+				.duration ( animationDuration )
+				.ease ( d3.easeSinInOut )
+				.style ( "left", layout.titlePos.x + "px" )
+				.style ( "top", layout.titlePos.y + "px" )
+				.style ( "width", layout.titleSize.x + "px" )
+				.style ( "height", layout.titleSize.y + "px" )
 
 		/* Animate the cards moving */
 		new CardAnim (
 			this._cards,
 			null,
 			this._nextState === GridManager.states.GRID ? layout.cardPositions : layout.hiddenCardPositions,
-			this._nextState === GridManager.states.GRID ? ( this._state === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSin,
+			this._nextState === GridManager.states.GRID ? ( this._currentState === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSin,
 			animationDuration )
 			.addCallback ( () =>
 			{
@@ -442,11 +449,11 @@ class GridManager
 					document.scrollingElement.scrollTop = 0;
 
 				/* Possibly disable scrolling */
-				document.scrollingElement.overflowY = ( this._currentGrid.y <= GridManager.verticalCards ? "hidden" : "" );
+				document.scrollingElement.overflowY = ( layout.grid.y <= GridManager.verticalCards ? "hidden" : "" );
 
 				/* Check that positions are still correct after the animation */
 				this._animationBusy = false;
-				this.updateSVGPositions ( animationDuration );
+				this.updatePositions ( animationDuration );
 			} )
 			.animate ();
 
@@ -459,10 +466,21 @@ class GridManager
 			.style ( "height", layout.canvasDimensions.y + "px" )
 
 		/* Set the new state */
-		this._state = this._nextState;
+		this._currentState = this._nextState;
+		this._currentGrid = layout.grid;
+		this._currentTitle = layout.titleChoice;
+	}
 
-		/* Notify that animations are now in progress */
-		this._animationBusy = true;
+
+
+	/**
+	 * @description Same as updatePositions, except the canvas will be refreshed even if _cardsRequireRefresh is false.
+	 * @param {Number} prevAnimationDuration The duration of the previous animation.
+	 */
+	forceUpdatePositions ( prevAnimationDuration = 0 )
+	{
+		this._cardsRequireRefresh = true;
+		this.updatePositions ( prevAnimationDuration );
 	}
 
 
