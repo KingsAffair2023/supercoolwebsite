@@ -6,6 +6,7 @@ html
 
 .card-wrapper
 {
+    position: fixed;
     transform-box: fill-box;
     transform-origin: center;
 }
