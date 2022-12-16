@@ -248,7 +248,7 @@ class GridManager
 		this._currentState = null;
 		this._nextState = GridManager.states.GRID;
 
-		/* Setup the canvas */
+		/* Set up the canvas */
 		this._canvas
 			.style ( "width", layout.canvasDimensions.x + "px" )
 			.style ( "height", layout.canvasDimensions.y + "px" );
@@ -429,7 +429,7 @@ class GridManager
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" )
+				.style ( "height", layout.titleSize.y + "px" );
 
 		/* Animate the cards moving */
 		new CardAnim (
@@ -463,7 +463,7 @@ class GridManager
 			.duration ( animationDuration )
 			.ease ( d3.easeSinInOut )
 			.style ( "width", layout.canvasDimensions.x + "px" )
-			.style ( "height", layout.canvasDimensions.y + "px" )
+			.style ( "height", layout.canvasDimensions.y + "px" );
 
 		/* Set the new state */
 		this._currentState = this._nextState;
@@ -565,12 +565,10 @@ class GridManager
 		const cardCornerToCorner = Math.sqrt ( cardSize.x ** 2 + cardSize.y ** 2 );
 
 		/* Get hidden card position interpolators */
-		const hiddenCardPositionInterpolators = gridIsHorizontal ?
-			[
+		const hiddenCardPositionInterpolators = gridIsHorizontal ? [
 				new Vec ( 0, -cardCornerToCorner ).interpolateTo ( new Vec ( screenSize.x - cardSize.x, -cardCornerToCorner ) ),
 				new Vec ( 0, screenSize.y + cardCornerToCorner - cardSize.y ).interpolateTo ( new Vec ( screenSize.x - cardSize.x,screenSize.y + cardCornerToCorner - cardSize.y ) ),
-			] :
-			[
+			] : [
 				new Vec ( -cardCornerToCorner, 0 ).interpolateTo ( new Vec ( -cardCornerToCorner, screenSize.y - cardSize.y ) ),
 				new Vec ( screenSize.x + cardCornerToCorner - cardSize.x, 0 ).interpolateTo ( new Vec ( screenSize.x + cardCornerToCorner - cardSize.x, screenSize.y - cardSize.y ) )
 			];
@@ -593,19 +591,18 @@ class GridManager
 					x / ( grid.x - 1 ) :
 					y / ( grid.y - 1 );
 
-				/* Random number generator */
+				/* Calculate jitter */
 				const rand = () => ( Math.random () * 2 - 1 );
-
-				/* Calculate the position jitter */
 				const positionJitter = new Vec ( hiddenCardPositionJitter * ( cardSize.x + cardSize.y ) * 0.5 * rand () )
 					.mult ( new Vec ( gridIsHorizontal ? 1 : 0, gridIsHorizontal ? 0 : 1 ) );
+				const rotationJitter = hiddenCardAngleJitter * rand ();
 
 				/* Set the card position */
 				hiddenCardPositions [ i ] = new AnimParams (
 					hiddenCardPositionInterpolators [ hideCardOnPositiveEdge ? 1 : 0 ] ( hideCardAtFractionAlongEdge )
 						.add ( positionJitter ),
 					cardSize,
-					hiddenCardAngleJitter * rand () );
+					rotationJitter );
 			}
 
 
