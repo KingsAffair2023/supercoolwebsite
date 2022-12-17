@@ -566,11 +566,11 @@ class GridManager
 
 		/* Get hidden card position interpolators */
 		const hiddenCardPositionInterpolators = gridIsHorizontal ? [
-				new Vec ( 0, -cardCornerToCorner ).interpolateTo ( new Vec ( screenSize.x - cardSize.x, -cardCornerToCorner ) ),
-				new Vec ( 0, screenSize.y + cardCornerToCorner - cardSize.y ).interpolateTo ( new Vec ( screenSize.x - cardSize.x,screenSize.y + cardCornerToCorner - cardSize.y ) ),
+				new Vec ( 0, -cardCornerToCorner ).interpolateTo ( new Vec ( canvasDimensions.x - cardSize.x, -cardCornerToCorner ) ),
+				new Vec ( 0, canvasDimensions.y + cardCornerToCorner - cardSize.y ).interpolateTo ( new Vec ( canvasDimensions.x - cardSize.x, canvasDimensions.y + cardCornerToCorner - cardSize.y ) ),
 			] : [
-				new Vec ( -cardCornerToCorner, 0 ).interpolateTo ( new Vec ( -cardCornerToCorner, screenSize.y - cardSize.y ) ),
-				new Vec ( screenSize.x + cardCornerToCorner - cardSize.x, 0 ).interpolateTo ( new Vec ( screenSize.x + cardCornerToCorner - cardSize.x, screenSize.y - cardSize.y ) )
+				new Vec ( -cardCornerToCorner, 0 ).interpolateTo ( new Vec ( -cardCornerToCorner, canvasDimensions.y - cardSize.y ) ),
+				new Vec ( canvasDimensions.x + cardCornerToCorner - cardSize.x, 0 ).interpolateTo ( new Vec ( canvasDimensions.x + cardCornerToCorner - cardSize.x, screenSize.y - cardSize.y ) )
 			];
 
 		/* Calculate hidden card positions */
