@@ -69,13 +69,31 @@ class CardFaceManager
 				setTimeout ( () =>
 				{
 					/* Class the card */
-					cardFace.classed ( "card-active", true );
+					cardFace.classed ( "card-active", true )
+						.classed ( "card-inactive", false );
 				},  i * cardFlipDelay + cardFlipDuration );
 			}
 			else
 			{
-				/* Class the card */
-				cardFace.classed ( "card-inactive", true );
+				/* Flip the card */
+				cardFace
+					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
+					.style ( "transition-timing-function", "ease-out" )
+					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
+					.style ( "transform", "rotateY(270deg)" );
+				cardBack
+					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
+					.style ( "transition-timing-function", "ease-in" )
+					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
+					.style ( "transform", "rotateY(0deg)" );
+
+				/* Set a timeout for when the flip is done */
+				setTimeout ( () =>
+				{
+					/* Class the card */
+					cardFace.classed ( "card-inactive", true )
+						.classed ( "card-active", false );
+				},  i * cardFlipDelay + cardFlipDuration );
 			}
 		} );
 	}
