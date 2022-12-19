@@ -99,6 +99,11 @@ class Card
 			.attr ( "id", "card-face " + position[counter++])
 			.attr ( "height", "100%")
 			.attr ( "width", "100%");
+
+		this.cardFace.append ( "img" )
+			.classed ( "card-img " + position[counter], true )
+			.attr ( "id", "card-img "+position[counter])
+			.attr ( "src", "/assets/duck.png" );
 	}
 
 

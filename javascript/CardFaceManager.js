@@ -8,8 +8,6 @@ class CardFaceManager
 	/** @public {Number} The duration a card takes to flip */
 	static cardFlipDuration = 400;
 
-	static position = [ "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth" ];
-
 
 
 	/** @private {Object} A D3 selection for the cards */
@@ -45,15 +43,9 @@ class CardFaceManager
 			const cardFace = cardInner.select ( ".card-face" );
 			const cardBack = cardInner.select ( ".card-back" );
 
-			/* Animate them flipping */
+			/* Flip the card */
 			if ( i < numFlips )
 			{
-				/* Fetch the contents */
-				fetch ( "/faces/" + CardFaceManager.position [ i ] + ".html" )
-					.then ( r => r.text () )
-					.then ( c => cardFace.html ( c ) );
-
-				/* Flip the card */
 				cardBack
 					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
 					.style ( "transition-timing-function", "ease-in" )
@@ -64,37 +56,28 @@ class CardFaceManager
 					.style ( "transition-timing-function", "ease-out" )
 					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
 					.style ( "transform", "rotateY(360deg)" );
-
-				/* Set a timeout for when the flip is done */
-				setTimeout ( () =>
-				{
-					/* Class the card */
-					cardFace.classed ( "card-active", true )
-						.classed ( "card-inactive", false );
-				},  i * cardFlipDelay + cardFlipDuration );
 			}
 			else
 			{
-				/* Flip the card */
 				cardFace
 					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-out" )
+					.style ( "transition-timing-function", "ease-in" )
 					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
 					.style ( "transform", "rotateY(270deg)" );
 				cardBack
 					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-in" )
+					.style ( "transition-timing-function", "ease-out" )
 					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
 					.style ( "transform", "rotateY(0deg)" );
-
-				/* Set a timeout for when the flip is done */
-				setTimeout ( () =>
-				{
-					/* Class the card */
-					cardFace.classed ( "card-inactive", true )
-						.classed ( "card-active", false );
-				},  i * cardFlipDelay + cardFlipDuration );
 			}
+
+			/* Set a timeout for when the flip is done */
+			setTimeout ( () =>
+			{
+				/* Class the card */
+				cardInner.classed ( "card-inactive", i >= numFlips )
+					.classed ( "card-active", i < numFlips );
+			},  i * cardFlipDelay + cardFlipDuration );
 		} );
 	}
 }
