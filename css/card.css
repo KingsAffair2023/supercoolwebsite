@@ -2,6 +2,7 @@
 html
 {
     scroll-behavior: smooth;
+    background-color: black;
 }
 
 #canvas
@@ -18,13 +19,6 @@ html
     position: absolute;
 }
 
-.card-wrapper
-{
-    position: fixed;
-    transform-box: fill-box;
-    transform-origin: center;
-}
-
 .card-img
 {
     width: 100%;
@@ -37,31 +31,34 @@ html
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
     transform-style: preserve-3d;
     perspective: 80vh;
-  }
+}
   
+
   
-  
-  /* Position the front and back side */
-  .card-back, .card-face {
+/* Position the front and back side */
+.card-back, .card-face
+{
     position: absolute;
     width: 100%;
     height: 100%;
-  }
+    border-radius: 2%;
+    overflow: hidden;
+}
   
-  /* Style the front side (fallback if image is missing) */
-  .card-back {
+/* Style the front side (fallback if image is missing) */
+.card-back
+{
     background-color: #bbb;
     color: black;
     margin:0;
     padding:0 0 0 0;
     text-align: center;
-  }
-  
-  /* Style the back side */
-  .card-face {
+}
+
+/* Style the back side */
+.card-face
+{
     transform: rotateY(270deg);
-    overflow:hidden;
-  }
+}

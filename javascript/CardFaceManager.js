@@ -1,18 +1,82 @@
 
 class CardFaceManager
 {
- static position = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
- static populate(number){
-    if(number<0 || number > 12){
-        throw new Error("Don't think you should be using our functions buddy")
-    }
-    for(let i = 0; i < number; i ++){
-        fetch("/faces/"+position[i]+".html")
-            .then(response => response.text())
-            .then(content => document.getElementById("card-face "+ position[i]).innerHTML = content)
-            .then(() => document.getElementById("card-back "+position[i]).setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-in; transition-delay: "+(i*0.5)+"s; transform: rotateY(90deg);"))
-            .then(() => document.getElementById("card-face "+position[i]).setAttribute("style", "transition: transform 0.5s; transition-timing-function: ease-out; transition-delay: "+(i*0.5 + 0.5)+"s; transform: rotateY(360deg);"))
-            .then(()=> console.log("it worked"));
-    }
-}
+
+	/** @public {Number} The delay between cards flipping */
+	static cardFlipDelay = 100;
+
+	/** @public {Number} The duration a card takes to flip */
+	static cardFlipDuration = 400;
+
+	static position = [ "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth" ];
+
+
+
+	/** @private {Object} A D3 selection for the cards */
+	_cards;
+
+
+
+	/**
+	 * @param {Object} cards A D3 selection for the cards
+	 *
+	 */
+	constructor ( cards )
+	{
+		/* Save the parameters */
+		this._cards = cards;
+	}
+
+
+
+	/**
+	 * @description Actually flip the cards.
+	 * @param {Number} numFlips The number of cards that should flip
+	 * @param {Number} [cardFlipDelay] The delay between cards flipping
+	 * @param {Number} [cardFlipDuration] The duration a card takes to flip
+	 */
+	flip ( numFlips, cardFlipDelay = CardFaceManager.cardFlipDelay, cardFlipDuration = CardFaceManager.cardFlipDuration )
+	{
+		/* Iterate over the cards */
+		this._cards.each ( function ( d, i )
+		{
+			/* Select the front and back faces */
+			const cardInner = d3.select ( this ).select ( ".card-inner" );
+			const cardFace = cardInner.select ( ".card-face" );
+			const cardBack = cardInner.select ( ".card-back" );
+
+			/* Animate them flipping */
+			if ( i < numFlips )
+			{
+				/* Fetch the contents */
+				fetch ( "/faces/" + CardFaceManager.position [ i ] + ".html" )
+					.then ( r => r.text () )
+					.then ( c => cardFace.html ( c ) );
+
+				/* Flip the card */
+				cardBack
+					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
+					.style ( "transition-timing-function", "ease-in" )
+					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
+					.style ( "transform", "rotateY(90deg)" );
+				cardFace
+					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
+					.style ( "transition-timing-function", "ease-out" )
+					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
+					.style ( "transform", "rotateY(360deg)" );
+
+				/* Set a timeout for when the flip is done */
+				setTimeout ( () =>
+				{
+					/* Class the card */
+					cardFace.classed ( "card-active", true );
+				},  i * cardFlipDelay + cardFlipDuration );
+			}
+			else
+			{
+				/* Class the card */
+				cardFace.classed ( "card-inactive", true );
+			}
+		} );
+	}
 }
