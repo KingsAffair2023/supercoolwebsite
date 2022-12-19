@@ -85,6 +85,11 @@ class GridManager
 	static dealDuration = 400;
 
 	/**
+	 * @public {Number} The time taken to form the grid initially.
+	 */
+	static initialGridFormationDuration = 500;
+
+	/**
 	 * @public {Number} The time taken to reshuffle the grid.
 	 */
 	static gridReshuffleDuration = 400;
@@ -425,11 +430,17 @@ class GridManager
 		/* Notify that animations are now in progress */
 		this._animationBusy = true;
 
-		/* Calculate the animation duration */
+		/* Calculate the animation position, duration, and ease */
+		let animationPosition = layout.cardPositions;
 		let animationDuration = GridManager.mobile ? GridManager.mobileSmoothingDuration : prevAnimationDuration / 2;
-		if ( this._nextState === GridManager.states.HIDDEN || this._currentState === GridManager.states.HIDDEN )
-			animationDuration = GridManager.hideShowCardDuration;
-		else if ( !this._currentState || gridChange )
+		let animationEase = d3.easeSinInOut;
+		if ( this._nextState === GridManager.states.HIDDEN )
+			[ animationPosition, animationDuration, animationEase ] = [ layout.hiddenCardPositions, GridManager.hideShowCardDuration, d3.easeSinIn ];
+		else if ( this._currentState === GridManager.states.HIDDEN )
+			[ animationDuration, animationEase ] = [ GridManager.hideShowCardDuration, d3.easeSinOut ];
+		else if ( !this._currentState )
+			animationDuration = GridManager.initialGridFormationDuration;
+		else if ( gridChange )
 			animationDuration = GridManager.gridReshuffleDuration;
 
 		/* Resize the current title if we haven't already */
@@ -447,8 +458,8 @@ class GridManager
 		new CardAnim (
 			this._cards,
 			null,
-			this._nextState === GridManager.states.GRID ? layout.cardPositions : layout.hiddenCardPositions,
-			this._nextState === GridManager.states.GRID ? ( this._currentState === GridManager.states.GRID ? d3.easeSinInOut : d3.easeSinOut ) : d3.easeSinIn,
+			animationPosition,
+			animationEase,
 			animationDuration )
 			.addCallback ( () =>
 			{
