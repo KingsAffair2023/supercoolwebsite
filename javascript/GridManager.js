@@ -131,11 +131,6 @@ class GridManager
 	 */
 	_animationBusy = false;
 
-	/**
-	 * @private {Boolean}
-	 */
-	_cardsRequireRefresh = false;
-
 
 
 	/**
@@ -302,13 +297,11 @@ class GridManager
 
 			/* Update the card positions */
 			this._animationBusy = false;
-			this.forceUpdatePositions ();
+			this.updatePositions ();
 
-			/* Add an event listener for resizing */
-			window.addEventListener ( "resize", () => this.forceUpdatePositions () );
-
-			/* Add an interval for updating positions */
-			setInterval ( () => this.forceUpdatePositions (), GridManager.positionUpdateInterval );
+			/* Add an event listener for screen resizing and an interval */
+			window.addEventListener ( "resize", () => this.updatePositions () );
+			setInterval ( () => this.updatePositions (), GridManager.positionUpdateInterval );
 		} ).animate ();
 	}
 
@@ -320,7 +313,7 @@ class GridManager
 	hideCards ()
 	{
 		this._nextState = GridManager.states.HIDDEN;
-		this.forceUpdatePositions ();
+		this.updatePositions ();
 	}
 
 	/**
@@ -329,7 +322,7 @@ class GridManager
 	showCards ()
 	{
 		this._nextState = GridManager.states.GRID;
-		this.forceUpdatePositions ();
+		this.updatePositions ();
 	}
 
 
@@ -340,16 +333,19 @@ class GridManager
 	 */
 	updatePositions ( prevAnimationDuration = 0 )
 	{
-		/* Don't do anything if a reshuffle is in progress, or no change occurred */
-		if ( this._animationBusy || !this._cardsRequireRefresh )
+		/* Get the new screen size */
+		const newScreenSize = GridManager.getScreenSize ();
+
+		/* Don't do anything if a reshuffle is in progress, or if there is no need */
+		if ( this._animationBusy || ( this._nextState === this._currentState && newScreenSize.equals ( this._currentScreenSize ) ) )
 			return;
 
 
 
 		/* GATHER PARAMETERS */
 
-		/* Get the new screen size */
-		this._currentScreenSize = GridManager.getScreenSize ();
+		/* Set the new screen size */
+		this._currentScreenSize = newScreenSize;
 
 		/* Calculate the new layout */
 		const layout = this._calculateLayout ( this._currentScreenSize );
@@ -420,9 +416,6 @@ class GridManager
 
 		/* ANIMATE */
 
-		/* Notify that cards no longer require refresh */
-		this._cardsRequireRefresh = false;
-
 		/* If we are going from a hidden state to a hidden state, we don't need to animate */
 		if ( this._currentState === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN )
 			return;
@@ -492,18 +485,6 @@ class GridManager
 		this._currentState = this._nextState;
 		this._currentGrid = layout.grid;
 		this._currentTitle = layout.titleChoice;
-	}
-
-
-
-	/**
-	 * @description Same as updatePositions, except the canvas will be refreshed even if _cardsRequireRefresh is false.
-	 * @param {Number} prevAnimationDuration The duration of the previous animation.
-	 */
-	forceUpdatePositions ( prevAnimationDuration = 0 )
-	{
-		this._cardsRequireRefresh = true;
-		this.updatePositions ( prevAnimationDuration );
 	}
 
 
