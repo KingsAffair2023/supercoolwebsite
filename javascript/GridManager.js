@@ -90,6 +90,16 @@ class GridManager
 	static gridReshuffleDuration = 400;
 
 	/**
+	 * @public {Number} The time taken to hide and show cards.
+	 */
+	static hideShowCardDuration = 250;
+
+	/**
+	 * @public {Number} The time taken to perform animations on mobile.
+	 */
+	static mobileSmoothingDuration = 400;
+
+	/**
 	 * @public {Number} The period at which to refresh the grid (just in case).
 	 */
 	static positionUpdateInterval = 1500;
@@ -416,9 +426,11 @@ class GridManager
 		this._animationBusy = true;
 
 		/* Calculate the animation duration */
-		const animationDuration = ( GridManager.mobile || gridChange || this._nextState !== this._currentState ) ?
-			GridManager.gridReshuffleDuration :
-			prevAnimationDuration / 2;
+		let animationDuration = GridManager.mobile ? GridManager.mobileSmoothingDuration : prevAnimationDuration / 2;
+		if ( this._nextState === GridManager.states.HIDDEN || this._currentState === GridManager.states.HIDDEN )
+			animationDuration = GridManager.hideShowCardDuration;
+		else if ( !this._currentState || gridChange )
+			animationDuration = GridManager.gridReshuffleDuration;
 
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
