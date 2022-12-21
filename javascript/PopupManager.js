@@ -117,9 +117,9 @@ class PopupManager
 		{
 			/* Actually animate */
 			this._canvas
-				.style ( "transition", "bottom" )
+				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
-				.style ( "bottom", this._nextState === PopupManager.states.OPEN ? "0vh" : "-100vh" );
+				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" );
 
 			/* Hide or show the cards */
 			if ( this._nextState === PopupManager.states.CLOSED )
