@@ -12,9 +12,11 @@
 		<script src="javascript/Card.js"></script>
 		<script src="javascript/GridManager.js" ></script>
 		<script src="javascript/CardFaceManager.js"></script>
+		<script src="javascript/PopupManager.js"></script>
 
 
 		<link rel="stylesheet" href="css/card.css"/>
+		<link rel="stylesheet" href="css/popup.css"/>
 	</head>
 
 	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden">
@@ -26,10 +28,24 @@
 			<img class="title" src="assets/title10.png"/>
 
 		</div>
+
+		<div id="popup-canvas" class="popup-canvas">
+			<div id="popup" class="popup">
+
+			</div>
+		</div>
+
+		<template id="duck">
+			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
+			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
+			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
+			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
+		</template>
+
 		<script>
 
 
-			let gm, cfm;
+			let gm, cfm, pm;
 
 			const onload1 = () =>
 			{
@@ -93,6 +109,16 @@
 					gm.hideCards ();
 					setTimeout ( () => gm.showCards (), 2000 );
 				} )
+
+				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), gm );
+
+
+				cards [ 1 ].card.on ( "click", () =>
+				{
+					pm.openPopup ( document.getElementById ( "duck" ).content.cloneNode ( true ) );
+					setTimeout ( () => pm.closePopup (), 2000 );
+				} );
+
 
 			}
 

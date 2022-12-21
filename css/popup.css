@@ -1,0 +1,36 @@
+
+.popup-canvas
+{
+    position: fixed;
+    width: 100vw;
+    max-height: 100vh;
+    height: 100vh;
+    bottom: -100vh;
+    overflow: auto;
+}
+
+.popup
+{
+    margin-bottom: 100px;
+}
+
+.popup
+{
+    position: absolute;
+    margin: 5% 5%;
+    width: 90%;
+    background: white;
+    border-radius: 1vh;
+    border: 3px solid white;
+}
+
+.popup:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 1vh;
+    border: 3px solid black;
+}
