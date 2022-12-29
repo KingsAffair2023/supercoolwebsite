@@ -17,11 +17,16 @@ class PopupManager
 	/** @public {Number} */
 	static backgroundBlur = 4;
 
+	/** @public {Number} */
+	static overscrollCloseAmount = 100;
 
 
 
 	/** @private {GridManager} */
 	_gridManager;
+
+	/** @private {OverscrollDetector} */
+	_overscrollDetector;
 
 
 
@@ -60,6 +65,16 @@ class PopupManager
 
 		/* Set the state to closed */
 		this._currentState = this._nextState = PopupManager.states.CLOSED;
+
+		/* Create the overscroll detector */
+		this._overscrollDetector = new OverscrollDetector (
+			this._canvas,
+			overscroll =>
+			{
+				if ( this._currentState === PopupManager.states.OPEN && overscroll.y < 0 )
+					this.closePopup ();
+			},
+			new Vec ( Infinity, PopupManager.overscrollCloseAmount ) );
 	}
 
 	/**
@@ -117,6 +132,7 @@ class PopupManager
 		{
 			/* Actually animate */
 			this._canvas
+				.style ( "visibility", "visible" )
 				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
 				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" );
@@ -139,16 +155,23 @@ class PopupManager
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
 				.style ( "filter", "blur(" + ( this._nextState === PopupManager.states.CLOSED ? 0 : PopupManager.backgroundBlur ) + "px)" );
 
-			/* Notify that an animation is occurring, and transition after completing the animation */
+			/* Notify that an animation is occurring */
 			this._animationBusy = true;
-			setTimeout ( () =>
-			{
-				this._animationBusy = false;
-				this._transitionPopup ();
-			}, PopupManager.animationDuration );
 
 			/* Set the state */
 			this._currentState = this._nextState;
+
+			/* Set a timeout for the end of the animation */
+			setTimeout ( () =>
+			{
+				/* Possibly hide the popup */
+				if ( this._currentState === PopupManager.states.CLOSED )
+					this._canvas.style ( "visibility", "hidden" );
+
+				/* Check we do not need to transition again */
+				this._animationBusy = false;
+				this._transitionPopup ();
+			}, PopupManager.animationDuration );
 		}
 	}
 

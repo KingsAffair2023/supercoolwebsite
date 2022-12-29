@@ -13,6 +13,7 @@
 		<script src="javascript/GridManager.js" ></script>
 		<script src="javascript/CardFaceManager.js"></script>
 		<script src="javascript/PopupManager.js"></script>
+		<script src="javascript/OverscrollDetector.js"></script>
 
 
 		<link rel="stylesheet" href="css/card.css"/>
@@ -116,9 +117,8 @@
 				cards [ 1 ].card.on ( "click", () =>
 				{
 					pm.openPopup ( document.getElementById ( "duck" ).content.cloneNode ( true ) );
-					setTimeout ( () => pm.closePopup (), 2000 );
+					//setTimeout ( () => pm.closePopup (), 2000 );
 				} );
-
 
 			}
 
