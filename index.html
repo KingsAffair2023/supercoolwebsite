@@ -28,6 +28,134 @@
 			<img class="title" src="assets/title5.png"/>
 			<img class="title" src="assets/title10.png"/>
 
+
+		<!--
+ ________________________________________
+/ And thus spoke the villain "Thou shalt \
+| populate thine card faces within the   |
+| index file!" and all fell silent with  |
+\ sorrow...                              /
+ ----------------------------------------
+        \   ^__^
+         \  (--)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+		-->
+
+	<div class="card first" id="card-outer first">
+			<div class="card-inner first" id="card-inner first">
+					<div class="card-back first" id="card-back first" height="100%" width="100%">
+							<img class="card-img first" id="card-img first" src="assets/card.jpeg">
+					</div>
+					<div class="card-face first" id="card-face first" height="100%" width="100%">
+						<!--Template Me-->
+						<div style ='height: 100%; width: 100%; background-image: url("assets/yellow.jpg"); position: inherit;'>
+							<p style='cursor: pointer; height: 100%; width:100%; font-size: 5.5vh'>Test Text</p>
+						</div>
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card second" id="card-outer second">
+			<div class="card-inner second" id="card-inner second">
+					<div class="card-back second" id="card-back second" height="100%" width="100%">
+							<img class="card-img second" id="card-img second" src="assets/card.jpeg">
+					</div>
+					<div class="card-face second" id="card-face second" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card third" id="card-outer third">
+			<div class="card-inner third" id="card-inner third">
+					<div class="card-back third" id="card-back third" height="100%" width="100%">
+							<img class="card-img third" id="card-img third" src="assets/card.jpeg">
+					</div>
+					<div class="card-face third" id="card-face third" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card fourth" id="card-outer fourth">
+			<div class="card-inner fourth" id="card-inner fourth">
+					<div class="card-back fourth" id="card-back fourth" height="100%" width="100%">
+							<img class="card-img fourth" id="card-img fourth" src="assets/card.jpeg">
+					</div>
+					<div class="card-face fourth" id="card-face fourth" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card fifth" id="card-outer fifth">
+			<div class="card-inner fifth" id="card-inner fifth">
+					<div class="card-back fifth" id="card-back fifth" height="100%" width="100%">
+							<img class="card-img fifth" id="card-img fifth" src="assets/card.jpeg">
+					</div>
+					<div class="card-face fifth" id="card-face fifth" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card sixth" id="card-outer sixth">
+			<div class="card-inner sixth" id="card-inner sixth">
+					<div class="card-back sixth" id="card-back sixth" height="100%" width="100%">
+							<img class="card-img sixth" id="card-img sixth" src="assets/card.jpeg">
+					</div>
+					<div class="card-face sixth" id="card-face sixth" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card seventh" id="card-outer seventh">
+			<div class="card-inner seventh" id="card-inner seventh">
+					<div class="card-back seventh" id="card-back seventh" height="100%" width="100%">
+							<img class="card-img seventh" id="card-img seventh" src="assets/card.jpeg">
+					</div>
+					<div class="card-face seventh" id="card-face seventh" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
+
+	<div class="card eigthth" id="card-outer eigthth">
+			<div class="card-inner eigthth" id="card-inner eigthth">
+					<div class="card-back eigthth" id="card-back eigthth" height="100%" width="100%">
+							<img class="card-img eigthth" id="card-img eigthth" src="assets/card.jpeg">
+					</div>
+					<div class="card-face eigthth" id="card-face eigthth" height="100%" width="100%">
+
+						<!--Template Me-->
+
+					</div>
+			</div>
+	</div>
+
 		</div>
 
 		<div id="popup-canvas" class="popup-canvas">
@@ -42,6 +170,10 @@
 			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
 			<img src="assets/duck.png" style="position: relative; width: 50vh; max-width: 100%;"/>
 		</template>
+
+
+
+
 
 		<script>
 
@@ -82,7 +214,7 @@
 					.attr ( "width", dealSize.x )
 					.attr ( "height", dealSize.y );
 				 */
-
+				/*
 				const cards = [];
 				for ( let i = 0; i < 8; ++i )
 					cards.push ( new Card (
@@ -90,7 +222,7 @@
 						"assets/card.jpeg",
 						cardSize
 					) );
-
+				*/
 				gm = new GridManager (
 					d3.select ( "#canvas" ),
 					d3.selectAll ( ".card" ),
@@ -105,20 +237,20 @@
 						cfm.flip ( 3 );
 					} );
 
-				cards [ 0 ].card.on ( "click", () =>
+				document.getElementById("card-face first").onclick = () =>
 				{
 					gm.hideCards ();
 					setTimeout ( () => gm.showCards (), 2000 );
-				} )
+				};
 
 				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), gm );
 
 
-				cards [ 1 ].card.on ( "click", () =>
+				document.getElementById("card-face second").onclick = () =>
 				{
 					pm.openPopup ( document.getElementById ( "duck" ).content.cloneNode ( true ) );
 					//setTimeout ( () => pm.closePopup (), 2000 );
-				} );
+				};
 
 			}
 
