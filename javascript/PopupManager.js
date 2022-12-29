@@ -66,15 +66,16 @@ class PopupManager
 		/* Set the state to closed */
 		this._currentState = this._nextState = PopupManager.states.CLOSED;
 
-		/* Create the overscroll detector */
-		this._overscrollDetector = new OverscrollDetector (
-			this._canvas,
-			overscroll =>
-			{
-				if ( this._currentState === PopupManager.states.OPEN && overscroll.y < 0 )
-					this.closePopup ();
-			},
-			new Vec ( Infinity, PopupManager.overscrollCloseAmount ) );
+		/* Create the overscroll detector, only if we are on mobile */
+		if ( GridManager.mobile )
+			this._overscrollDetector = new OverscrollDetector (
+				this._canvas,
+				overscroll =>
+				{
+					if ( this._currentState === PopupManager.states.OPEN && overscroll.y < 0 )
+						this.closePopup ();
+				},
+				new Vec ( Infinity, PopupManager.overscrollCloseAmount ) );
 	}
 
 	/**
