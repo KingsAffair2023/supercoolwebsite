@@ -83,8 +83,8 @@ class OverscrollDetector
 
 		/* If either scroll direction is not at an extreme, then we cannot be over-scrolling in that direction */
 		this._touchStart = new Vec (
-			scrollFrac.x === 0 || scrollFrac.x === 1 ? this._touchStart.x : touchNew.x,
-			scrollFrac.y === 0 || scrollFrac.y === 1 ? this._touchStart.y : touchNew.y );
+			scrollFrac.x <= 0 || scrollFrac.x >= 1 ? this._touchStart.x : touchNew.x,
+			scrollFrac.y <= 0 || scrollFrac.y >= 1 ? this._touchStart.y : touchNew.y );
 		this._scrollStart = new Vec (
 			scrollFrac.x === 0 || scrollFrac.x === 1 ? this._scrollStart.x : scrollNew.x,
 			scrollFrac.y === 0 || scrollFrac.y === 1 ? this._scrollStart.y : scrollNew.y );
