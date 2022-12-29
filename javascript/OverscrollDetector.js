@@ -86,8 +86,8 @@ class OverscrollDetector
 			scrollFrac.x <= 0 || scrollFrac.x >= 1 ? this._touchStart.x : touchNew.x,
 			scrollFrac.y <= 0 || scrollFrac.y >= 1 ? this._touchStart.y : touchNew.y );
 		this._scrollStart = new Vec (
-			scrollFrac.x <= 0 || scrollFrac.x >= 1 ? this._scrollStart.x : scrollNew.x,
-			scrollFrac.y <= 0 || scrollFrac.y >= 1 ? this._scrollStart.y : scrollNew.y );
+			scrollFrac.x === 0 || scrollFrac.x === 1 ? this._scrollStart.x : scrollNew.x,
+			scrollFrac.y === 0 || scrollFrac.y === 1 ? this._scrollStart.y : scrollNew.y );
 
 		/* Calculate the overscroll */
 		const overscroll = scrollNew.sub ( this._scrollStart ).add ( touchNew.sub ( this._touchStart ) ).neg ();
