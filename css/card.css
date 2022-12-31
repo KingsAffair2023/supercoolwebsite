@@ -47,6 +47,8 @@ html
     height: 100%;
     border-radius: 1vh;
     overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
   
 /* Style the front side (fallback if image is missing) */
@@ -66,5 +68,5 @@ html
 /* Style the back side */
 .card-face
 {
-    transform: rotateY(270deg);
+    transform: rotateY(180deg);
 }

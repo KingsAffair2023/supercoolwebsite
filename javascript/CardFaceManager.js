@@ -3,7 +3,7 @@ class CardFaceManager
 {
 
 	/** @public {Number} The delay between cards flipping */
-	static cardFlipDelay = 100;
+	static cardFlipDelay = 150;
 
 	/** @public {Number} The duration a card takes to flip */
 	static cardFlipDuration = 400;
@@ -47,27 +47,28 @@ class CardFaceManager
 			if ( i < numFlips )
 			{
 				cardBack
-					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-in" )
+					.style ( "transition", "transform " + cardFlipDuration + "ms" )
+					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
-					.style ( "transform", "rotateY(90deg)" );
+					.style ( "transform", "rotateY(180deg)" );
 				cardFace
-					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-out" )
-					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
+					.style ( "visibility", "visible" )
+					.style ( "transition", "transform " + cardFlipDuration + "ms" )
+					.style ( "transition-timing-function", "ease" )
+					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(360deg)" );
 			}
 			else
 			{
 				cardFace
-					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-in" )
-					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
-					.style ( "transform", "rotateY(270deg)" );
+					.style ( "transition", "transform " + cardFlipDuration + "ms" )
+					.style ( "transition-timing-function", "ease" )
+					.style ( "transition-delay", i * cardFlipDelay + "ms" )
+					.style ( "transform", "rotateY(180deg)" );
 				cardBack
-					.style ( "transition", "transform " + ( cardFlipDuration / 2 ) + "ms" )
-					.style ( "transition-timing-function", "ease-out" )
-					.style ( "transition-delay", ( i * cardFlipDelay + cardFlipDuration / 2 ) + "ms" )
+					.style ( "transition", "transform " + cardFlipDuration + "ms" )
+					.style ( "transition-timing-function", "ease" )
+					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(0deg)" );
 			}
 
