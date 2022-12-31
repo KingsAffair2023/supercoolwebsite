@@ -20,7 +20,7 @@
 		<link rel="stylesheet" href="css/popup.css"/>
 	</head>
 
-	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden; background-image: url('assets/background.png'); background-size: 100%;">
+	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden;">
 
 		<div id="canvas">
 
@@ -45,12 +45,12 @@
 
 	<div class="card first" id="card-outer first">
 			<div class="card-inner first" id="card-inner first">
-					<div class="card-back first" id="card-back first" height="100%" width="100%">
+					<div class="card-back first" id="card-back first">
 							<img class="card-img first" id="card-img first" src="assets/back.svg">
 					</div>
-					<div class="card-face first" id="card-face first" height="100%" width="100%">
+					<div class="card-face first" id="card-face first">
 						<!--Template Me-->
-						<div style ='height: 100%; width: 100%; background-image: url("assets/1.png") ; background-size: 100%; position: inherit;'>
+						<div style ='height: 100%; width: 100%; background-image: url("assets/1.small.png") ; background-size: 100%; position: inherit;'>
 							<p style='cursor: pointer; height: 100%; width:100%; font-size: 5.5vh; color: white'>Test Text</p>
 						</div>
 
@@ -61,12 +61,12 @@
 
 	<div class="card second" id="card-outer second">
 			<div class="card-inner second" id="card-inner second">
-					<div class="card-back second" id="card-back second" height="100%" width="100%">
+					<div class="card-back second" id="card-back second">
 							<img class="card-img second" id="card-img second" src="assets/back.svg">
 					</div>
-					<div class="card-face second" id="card-face second" height="100%" width="100%">
+					<div class="card-face second" id="card-face second">
 
-						<img src="assets/2.png" style ='height: 100%; width: 100%'>
+						<img src="assets/2.small.png" style ='height: 100%; width: 100%'>
 
 						<!--Template Me-->
 
@@ -77,10 +77,10 @@
 
 	<div class="card third" id="card-outer third">
 			<div class="card-inner third" id="card-inner third">
-					<div class="card-back third" id="card-back third" height="100%" width="100%">
+					<div class="card-back third" id="card-back third">
 							<img class="card-img third" id="card-img third" src="assets/back.svg">
 					</div>
-					<div class="card-face third" id="card-face third" height="100%" width="100%">
+					<div class="card-face third" id="card-face third">
 
 						<!--Template Me-->
 
@@ -91,10 +91,10 @@
 
 	<div class="card fourth" id="card-outer fourth">
 			<div class="card-inner fourth" id="card-inner fourth">
-					<div class="card-back fourth" id="card-back fourth" height="100%" width="100%">
+					<div class="card-back fourth" id="card-back fourth">
 							<img class="card-img fourth" id="card-img fourth" src="assets/back.svg">
 					</div>
-					<div class="card-face fourth" id="card-face fourth" height="100%" width="100%">
+					<div class="card-face fourth" id="card-face fourth">
 
 						<!--Template Me-->
 
@@ -105,10 +105,10 @@
 
 	<div class="card fifth" id="card-outer fifth">
 			<div class="card-inner fifth" id="card-inner fifth">
-					<div class="card-back fifth" id="card-back fifth" height="100%" width="100%">
+					<div class="card-back fifth" id="card-back fifth">
 							<img class="card-img fifth" id="card-img fifth" src="assets/back.svg">
 					</div>
-					<div class="card-face fifth" id="card-face fifth" height="100%" width="100%">
+					<div class="card-face fifth" id="card-face fifth">
 
 						<!--Template Me-->
 
@@ -119,10 +119,10 @@
 
 	<div class="card sixth" id="card-outer sixth">
 			<div class="card-inner sixth" id="card-inner sixth">
-					<div class="card-back sixth" id="card-back sixth" height="100%" width="100%">
+					<div class="card-back sixth" id="card-back sixth">
 							<img class="card-img sixth" id="card-img sixth" src="assets/back.svg">
 					</div>
-					<div class="card-face sixth" id="card-face sixth" height="100%" width="100%">
+					<div class="card-face sixth" id="card-face sixth">
 
 						<!--Template Me-->
 
@@ -133,10 +133,10 @@
 
 	<div class="card seventh" id="card-outer seventh">
 			<div class="card-inner seventh" id="card-inner seventh">
-					<div class="card-back seventh" id="card-back seventh" height="100%" width="100%">
+					<div class="card-back seventh" id="card-back seventh">
 							<img class="card-img seventh" id="card-img seventh" src="assets/back.svg">
 					</div>
-					<div class="card-face seventh" id="card-face seventh" height="100%" width="100%">
+					<div class="card-face seventh" id="card-face seventh">
 
 						<!--Template Me-->
 
@@ -147,10 +147,10 @@
 
 	<div class="card eigthth" id="card-outer eigthth">
 			<div class="card-inner eigthth" id="card-inner eigthth">
-					<div class="card-back eigthth" id="card-back eigthth" height="100%" width="100%">
+					<div class="card-back eigthth" id="card-back eigthth">
 							<img class="card-img eigthth" id="card-img eigthth" src="assets/back.svg">
 					</div>
-					<div class="card-face eigthth" id="card-face eigthth" height="100%" width="100%">
+					<div class="card-face eigthth" id="card-face eigthth">
 
 						<!--Template Me-->
 
@@ -191,7 +191,7 @@
 				let params2 = new AnimParams ( new Vec ( 500, 400 ), null, 359 );
 				let params3 = new AnimParams ( new Vec ( 100, 200 ), null, 420 );
 
-				let sanim = CardAnim.Setup ( d3.selectAll ( ".duck" ), d3.easeSin, 1000 )
+				let sanim = CardAnim.Setup ( d3.selectAll ( ".duck" ), "ease-in", 1000 )
 					.continueTo ( pparams1 )
 					.continueTo ( pparams2 )
 					.addCallback ( () => console.log ( "callback 1" ) )
@@ -236,7 +236,7 @@
 					() => {
 
 						cfm = new CardFaceManager ( d3.selectAll ( ".card" ) );
-						cfm.flip ( 3 );
+						cfm.flip ( 8 );
 					} );
 
 				document.getElementById("card-face first").onclick = () =>
