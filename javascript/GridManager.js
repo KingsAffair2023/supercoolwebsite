@@ -366,7 +366,7 @@ class GridManager
 		if ( this._currentState === GridManager.states.HIDDEN )
 		{
 			/* Reposition the cards */
-			new CardAnim ( this._cards, layout.hiddenCardPositions, null, d3.easeSinInOut, 0 ).animate ();
+			new CardAnim ( this._cards, layout.hiddenCardPositions, null, "ease-in-out", 0 ).animate ();
 
 			/* Set up the canvas */
 			this._canvas
@@ -426,11 +426,11 @@ class GridManager
 		/* Calculate the animation position, duration, and ease */
 		let animationPosition = layout.cardPositions;
 		let animationDuration = GridManager.mobile ? GridManager.mobileSmoothingDuration : prevAnimationDuration / 2;
-		let animationEase = d3.easeSinInOut;
+		let animationEase = "ease-in-out";
 		if ( this._nextState === GridManager.states.HIDDEN )
-			[ animationPosition, animationDuration, animationEase ] = [ layout.hiddenCardPositions, GridManager.hideShowCardDuration, d3.easeSinIn ];
+			[ animationPosition, animationDuration, animationEase ] = [ layout.hiddenCardPositions, GridManager.hideShowCardDuration, "ease-in" ];
 		else if ( this._currentState === GridManager.states.HIDDEN )
-			[ animationDuration, animationEase ] = [ GridManager.hideShowCardDuration, d3.easeSinOut ];
+			[ animationDuration, animationEase ] = [ GridManager.hideShowCardDuration, "ease-out" ];
 		else if ( !this._currentState )
 			animationDuration = GridManager.initialGridFormationDuration;
 		else if ( gridChange )
@@ -439,9 +439,8 @@ class GridManager
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
 			newTitleSel
-				.transition ()
-				.duration ( animationDuration )
-				.ease ( d3.easeSinInOut )
+				.style ( "transition", `left ${animationDuration}ms, top ${animationDuration}ms, width ${animationDuration}ms, height ${animationDuration}ms` )
+				.style ( "transition-timing-function", "ease-in-out" )
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
@@ -475,9 +474,8 @@ class GridManager
 
 		/* Animate the canvas changing */
 		this._canvas
-			.transition ()
-			.duration ( animationDuration )
-			.ease ( d3.easeSinInOut )
+			.style ( "transition", `width ${animationDuration}ms, height ${animationDuration}ms` )
+			.style ( "transition-timing-function", "ease-in-out" )
 			.style ( "width", layout.canvasDimensions.x + "px" )
 			.style ( "height", layout.canvasDimensions.y + "px" );
 

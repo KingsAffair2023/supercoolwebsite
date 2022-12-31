@@ -49,7 +49,7 @@ class CardAnim
 	/** @public {AnimParams[]|null} */
 	endParams;
 
-	/** @public {Object} */
+	/** @public {String} */
 	ease;
 
 	/** @public {Number} */
@@ -67,7 +67,7 @@ class CardAnim
 	 * @param {Object} selection The D3 selection which the animation should act on.
 	 * @param {AnimParams|AnimParams[]|null} startParams
 	 * @param {AnimParams|AnimParams[]|null} endParams
-	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
+	 * @param {String} ease The ease of the animation
 	 * @param {Number} duration
 	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 * @param {(function():void)|null} callback
@@ -165,7 +165,7 @@ class CardAnim
 
 	/**
 	 * @param {AnimParams|AnimParams[]|null} endParams
-	 * @param {Object|null} [ease = null]
+	 * @param {String|null} [ease = null]
 	 * @param {Number|null} [duration = null]
 	 * @returns {CardAnim}
 	 * @public
@@ -186,7 +186,7 @@ class CardAnim
 	/**
 	 * @param {Number} index
 	 * @param {AnimParams|AnimParams[]|null} endParams
-	 * @param {Object|null} [ease = null]
+	 * @param {String|null} [ease = null]
 	 * @param {Number|null} [duration = null]
 	 * @returns {CardAnim}
 	 * @public
@@ -223,9 +223,6 @@ class CardAnim
 	 */
 	_animate ()
 	{
-		/* The return animation */
-		let promise;
-
 		/* Set the attributes of a selection */
 		const applyAnimParams = selection => selection
 				.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
@@ -238,23 +235,20 @@ class CardAnim
 		if ( this.startParams )
 			applyAnimParams ( this.selection.data ( this.startParams ).join () )
 		if ( this.endParams )
-			promise = applyAnimParams (
-				this.selection.data ( this.endParams ).join ()
-					.transition ()
-					.duration ( this.duration )
-					.ease ( this.ease ) )
-				.end ();
-		else promise = new Promise ( res => setTimeout ( res, this.duration ) );
+			applyAnimParams ( this.selection.data ( this.endParams ).join ()
+				.style ( "transition", `left ${this.duration}ms, top ${this.duration}ms, width ${this.duration}ms, height ${this.duration}ms, transform ${this.duration}ms` )
+				.style ( "transition-timing-function", this.ease ) );
 
 		/* Add the callback and return */
-		return promise.then ( () => { if ( this.callback ) this.callback (); } );
+		return  new Promise ( res => setTimeout ( res, this.duration ) )
+			.then ( () => { if ( this.callback ) this.callback (); } );
 	}
 
 
 
 	/**
 	 * @param {Object} selection The D3 selection which the animation should act on.
-	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
+	 * @param {String} ease The animation easing function.
 	 * @param {Number} duration
 	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 * @constructor
@@ -277,7 +271,7 @@ class DelayAnim extends CardAnim
 {
 	/**
 	 * @param {Object} selection The D3 selection which the animation should act on.
-	 * @param {Object} ease A D3 ease object, which describes the interpolation function for the animation.
+	 * @param {String} ease The animation easing function.
 	 * @param {Number} duration
 	 * @param {CardAnim[]} [dependsOn = []] Any animations which the start of this animation depends on.
 	 */

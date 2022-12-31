@@ -364,16 +364,16 @@ class Dealer
 					d3.select ( this ),
 					startParams [ i ],
 					null,
-					d3.easeSinOut,
+					"ease-out",
 					i * dealDelay )
 				.continueTo (
 					endParams [ i ],
-					d3.easeSinOut,
+					"ease-out",
 					dealDuration );
 		} );
 
 		/* Return a final animation */
-		return CardAnim.Delay ( this._cards, d3.easeSinOut, 0, animations );
+		return CardAnim.Delay ( this._cards, "ease-out", 0, animations );
 	}
 
 
