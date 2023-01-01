@@ -238,7 +238,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "left, top, transform" )
+					.style ( "transition-property", "left, top, width, height, transform" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 
