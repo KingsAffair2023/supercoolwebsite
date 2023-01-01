@@ -238,13 +238,6 @@ class CardAnim
 				/* Parse the transform */
 				const transform = parseTransform ( this.style.transform );
 
-				/* Get the scale */
-				const scale = d.size
-					? ( d.size ).div ( Vec.parse ( this.offsetWidth, this.offsetHeight ) )
-					: transform.scale
-						? Vec.parse.apply ( transform.scale.split ( "," ) )
-						: new Vec ( 1 );
-
 				/* Get the position */
 				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
 
@@ -252,8 +245,10 @@ class CardAnim
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
 
 				/* Apply the transformation */
-				return `translate(${translation.x}px,${translation.y}px) translate(50%, 50%) scale(${scale.x}, ${scale.y}) rotate(${rotation}deg) translate(-50%, -50%)`;
-			} );
+				return `translate3D(${translation.x}px,${translation.y}px, 0) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+			} )
+			.style ( "width", function ( d ) { return d.size ? d.size.x + "px" : this.style.width; } )
+			.style ( "height", function ( d ) { return d.size ? d.size.y + "px" : this.style.height; } );
 
 		/* Animate */
 		if ( this.startParams )
@@ -262,7 +257,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "transform" )
+					.style ( "transition-property", "transform, width, height" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 

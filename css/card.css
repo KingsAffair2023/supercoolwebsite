@@ -2,9 +2,9 @@
 /* General HTML styles */
 html
 {
-    /*background-image: url("/assets/background.crop.small.png");*/
+    background-image: url("/assets/background.crop.small.png");
     background-color: black;
-    /*background-repeat: repeat;*/
+    background-repeat: repeat;
     scroll-behavior: smooth;
     overflow-x: hidden;
 }
@@ -24,14 +24,7 @@ html
 {
     position: absolute;
     will-change: transform;
-}
-
-.card
-{
-    width: 800px;
-    height: 1120px;
     transform-origin: top left;
-    will-change: transform;
 }
 
 /* Make card contents span the entire card */
