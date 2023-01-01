@@ -225,11 +225,14 @@ class CardAnim
 	{
 		/* Set the attributes of a selection */
 		const applyAnimParams = selection => selection
-				.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
-				.style ( "top", function ( d ) { return d.position?.y != null ? d.position.y + "px" : this.style.top } )
+				//.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
+				//.style ( "top", function ( d ) { return d.position?.y != null ? d.position.y + "px" : this.style.top } )
 				.style ( "width", function ( d ) { return d.size?.x != null ? d.size.x + "px" : this.style.width } )
 				.style ( "height", function ( d ) { return d.size?.y != null ? d.size.y + "px" : this.style.height } )
-				.style ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + "deg)" : this.style.transform; } );
+				.style ( "transform", function ( d )
+				{
+					return "translate(" + d.position.x + "px," + d.position.y + "px) rotate(" + d.rotation + "deg)"
+				} );
 
 		/* Animate */
 		if ( this.startParams )
@@ -238,7 +241,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "left, top, width, height, transform" )
+					.style ( "transition-property", "width, height, transform" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 
