@@ -2,9 +2,9 @@
 /* General HTML styles */
 html
 {
-    background-image: url("/assets/background.crop.small.png");
+    /*background-image: url("/assets/background.crop.small.png");*/
     background-color: black;
-    background-repeat: repeat;
+    /*background-repeat: repeat;*/
     scroll-behavior: smooth;
     overflow-x: hidden;
 }
