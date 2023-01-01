@@ -255,7 +255,9 @@ class CardAnim
 
 				/* Apply the transformation */
 				return `translate3d(0,0,0) translate(${translation.x}px,${translation.y}px) scale(${scale.x},${scale.y}) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
-			} );
+			} )
+			.style ( "width", d => d.size.x + "px" )
+			.style ( "height", d => d.size.y + "px" );
 
 		/* Animate */
 		if ( this.startParams )
