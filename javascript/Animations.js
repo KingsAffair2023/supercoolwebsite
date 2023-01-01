@@ -254,8 +254,6 @@ class CardAnim
 				/* Apply the transformation */
 				return `translate(${translation.x}px,${translation.y}px) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
 			} )
-			.transition ()
-			.duration ( this.duration )
 			.style ( "width", function ( d ) { return d.size ? d.size.x + "px" : this.style.width; } )
 			.style ( "height", function ( d ) { return d.size ? d.size.y + "px" : this.style.height; } );
 
@@ -266,7 +264,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "transform" )
+					.style ( "transition-property", "transform, width, height" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 
