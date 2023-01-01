@@ -56,6 +56,11 @@ class CardFaceManager
 					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(360deg)" );
+
+				setTimeout ( () =>
+				{
+					cardBack.style ( "display", "none" );
+				}, i * cardFlipDelay + cardFlipDuration );
 			}
 			else
 			{
@@ -69,6 +74,11 @@ class CardFaceManager
 					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(0deg)" );
+
+				setTimeout ( () =>
+				{
+					cardFace.style ( "display", "none" );
+				}, i * cardFlipDelay + cardFlipDuration );
 			}
 
 			/* Set a timeout for when the flip is done */
