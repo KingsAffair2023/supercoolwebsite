@@ -233,7 +233,8 @@ class CardAnim
 
 		/* Animate */
 		if ( this.startParams )
-			applyAnimParams ( this.selection.data ( this.startParams ).join () )
+			applyAnimParams ( this.selection.data ( this.startParams ).join ()
+				.style ( "transition", `left ${0}ms, top ${0}ms, width ${0}ms, height ${0}ms, transform ${0}ms` ) );
 		if ( this.endParams )
 			applyAnimParams ( this.selection.data ( this.endParams ).join ()
 				.style ( "transition", `left ${this.duration}ms, top ${this.duration}ms, width ${this.duration}ms, height ${this.duration}ms, transform ${this.duration}ms` )
