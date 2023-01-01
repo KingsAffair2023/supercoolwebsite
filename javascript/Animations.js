@@ -245,7 +245,7 @@ class CardAnim
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
 
 				/* Apply the transformation */
-				return `translate(${translation.x}px,${translation.y}px) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+				return `translate3D(${translation.x}px,${translation.y}px, 0) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
 			} )
 			.style ( "width", function ( d ) { return d.size ? d.size.x + "px" : this.style.width; } )
 			.style ( "height", function ( d ) { return d.size ? d.size.y + "px" : this.style.height; } );
