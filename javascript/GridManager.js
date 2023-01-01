@@ -290,9 +290,10 @@ class GridManager
 			/* Show the title */
 			d3.select ( this._titles.nodes () [ this._currentTitle ] )
 				.style ( "transition-duration", "0s" )
+				.style ( "left", layout.titlePos.x + "px" )
+				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
 				.style ( "height", layout.titleSize.y + "px" )
-				.style ( "transform", `translate(${layout.titlePos.x}px,${layout.titlePos.y}px)` )
 				.style ( "visibility", "visible" );
 
 			/* Update the card positions */
@@ -378,9 +379,10 @@ class GridManager
 			newTitleSel
 				.style ( "transition-duration", "0s" )
 				.style ( "visibility", "visible" )
+				.style ( "left", layout.titlePos.x + "px" )
+				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" )
-				.style ( "transform", `translate(${layout.titlePos.x}px,${layout.titlePos.y}px)` );
+				.style ( "height", layout.titleSize.y + "px" );
 		}
 
 		/* If the cards are not hidden, we will animate the canvas changing.
@@ -404,9 +406,10 @@ class GridManager
 			newTitleSel
 				.style ( "transition-duration", "0s" )
 				.style ( "visibility", "visible" )
+				.style ( "left", newTitlePos.x + "px" )
+				.style ( "top", newTitlePos.y + "px" )
 				.style ( "width", newTitleSize.x + "px" )
-				.style ( "height", newTitleSize.y + "px" )
-				.style ( "transform", `translate(${layout.titlePos.x}px,${layout.titlePos.y}px)` );
+				.style ( "height", newTitleSize.y + "px" );
 		}
 
 		/* Hide any old title */
@@ -442,12 +445,13 @@ class GridManager
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
 			setTimeout ( () => newTitleSel
-				.style ( "transition-property", "width, height, transform" )
+				.style ( "transition-property", "left, top, width, height" )
 				.style ( "transition-duration", animationDuration + "ms" )
 				.style ( "transition-timing-function", "ease-in-out" )
+				.style ( "left", layout.titlePos.x + "px" )
+				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" )
-				.style ( "transform", `translate(${layout.titlePos.x}px,${layout.titlePos.y}px)` ) );
+				.style ( "height", layout.titleSize.y + "px" ) );
 
 		/* Animate the cards moving */
 		new CardAnim (
