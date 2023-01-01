@@ -444,14 +444,17 @@ class GridManager
 
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
-			setTimeout ( () => newTitleSel
-				.style ( "transition-property", "left, top, width, height" )
-				.style ( "transition-duration", animationDuration + "ms" )
-				.style ( "transition-timing-function", "ease-in-out" )
+			newTitleSel
+				.transition ()
+				//.style ( "transition-property", "left, top, width, height" )
+				//.style ( "transition-duration", animationDuration + "ms" )
+				//.style ( "transition-timing-function", "ease-in-out" )
+				.duration ( animationDuration )
+				.ease ( d3.easeSinInOut )
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" ) );
+				.style ( "height", layout.titleSize.y + "px" );
 
 		/* Animate the cards moving */
 		new CardAnim (
@@ -480,12 +483,15 @@ class GridManager
 			.animate ();
 
 		/* Animate the canvas changing */
-		setTimeout ( () => this._canvas
-			.style ( "transition-property", "width, height" )
-			.style ( "transition-duration", animationDuration + "ms" )
-			.style ( "transition-timing-function", "ease-in-out" )
+		this._canvas
+			.transition ()
+			.duration ( animationDuration )
+			.ease ( d3.easeSinInOut )
+			//.style ( "transition-property", "width, height" )
+			//.style ( "transition-duration", animationDuration + "ms" )
+			//.style ( "transition-timing-function", "ease-in-out" )
 			.style ( "width", layout.canvasDimensions.x + "px" )
-			.style ( "height", layout.canvasDimensions.y + "px" ) );
+			.style ( "height", layout.canvasDimensions.y + "px" );
 
 		/* Set the new state */
 		this._currentState = this._nextState;
