@@ -234,11 +234,13 @@ class CardAnim
 		/* Animate */
 		if ( this.startParams )
 			applyAnimParams ( this.selection.data ( this.startParams ).join ()
-				.style ( "transition", `left ${0}ms, top ${0}ms, width ${0}ms, height ${0}ms, transform ${0}ms` ) );
+				.style ( "transition-duration", "0s" ) );
 		if ( this.endParams )
-			applyAnimParams ( this.selection.data ( this.endParams ).join ()
-				.style ( "transition", `left ${this.duration}ms, top ${this.duration}ms, width ${this.duration}ms, height ${this.duration}ms, transform ${this.duration}ms` )
-				.style ( "transition-timing-function", this.ease ) );
+			setTimeout ( () => applyAnimParams (
+				this.selection.data ( this.endParams ).join ()
+					.style ( "transition-property", "left, top, width, height, transform" )
+					.style ( "transition-duration", this.duration + "ms" )
+					.style ( "transition-timing-function", this.ease ) ) );
 
 		/* Add the callback and return */
 		return  new Promise ( res => setTimeout ( res, this.duration ) )

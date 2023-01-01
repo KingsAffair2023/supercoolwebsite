@@ -268,7 +268,7 @@ class GridManager
 		document.scrollingElement.scrollTop = 0;
 
 		/* Ensure that the titles are hidden */
-		this._titles.style ( "opacity", 0 );
+		this._titles.style ( "visibility", "hidden" );
 
 
 
@@ -293,7 +293,7 @@ class GridManager
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
 				.style ( "height", layout.titleSize.y + "px" )
-				.style ( "opacity", 1 );
+				.style ( "visibility", "visible" );
 
 			/* Update the card positions */
 			this._animationBusy = false;
@@ -370,12 +370,14 @@ class GridManager
 
 			/* Set up the canvas */
 			this._canvas
+				.style ( "transition-duration", "0s" )
 				.style ( "width", layout.canvasDimensions.x + "px" )
 				.style ( "height", layout.canvasDimensions.y + "px" );
 
 			/* Position the title */
 			newTitleSel
-				.style ( "opacity", 1 )
+				.style ( "transition-duration", "0s" )
+				.style ( "visibility", "visible" )
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
@@ -401,7 +403,8 @@ class GridManager
 
 			/* Position the title */
 			newTitleSel
-				.style ( "opacity", 1 )
+				.style ( "transition-duration", "0s" )
+				.style ( "visibility", "visible" )
 				.style ( "left", newTitlePos.x + "px" )
 				.style ( "top", newTitlePos.y + "px" )
 				.style ( "width", newTitleSize.x + "px" )
@@ -410,7 +413,9 @@ class GridManager
 
 		/* Hide any old title */
 		if ( titleChange )
-			oldTitleSel.style ( "opacity", 0 );
+			oldTitleSel
+				.style ( "transition-duration", "0s" )
+				.style ( "visibility", "hidden" );
 
 
 
@@ -438,13 +443,14 @@ class GridManager
 
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
-			newTitleSel
-				.style ( "transition", `left ${animationDuration}ms, top ${animationDuration}ms, width ${animationDuration}ms, height ${animationDuration}ms` )
+			setTimeout ( () => newTitleSel
+				.style ( "transition-property", "left, top, width, height" )
+				.style ( "transition-duration", animationDuration + "ms" )
 				.style ( "transition-timing-function", "ease-in-out" )
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" );
+				.style ( "height", layout.titleSize.y + "px" ) );
 
 		/* Animate the cards moving */
 		new CardAnim (
@@ -473,11 +479,12 @@ class GridManager
 			.animate ();
 
 		/* Animate the canvas changing */
-		this._canvas
-			.style ( "transition", `width ${animationDuration}ms, height ${animationDuration}ms` )
+		setTimeout ( () => this._canvas
+			.style ( "transition-property", "width, height" )
+			.style ( "transition-duration", animationDuration + "ms" )
 			.style ( "transition-timing-function", "ease-in-out" )
 			.style ( "width", layout.canvasDimensions.x + "px" )
-			.style ( "height", layout.canvasDimensions.y + "px" );
+			.style ( "height", layout.canvasDimensions.y + "px" ) );
 
 		/* Set the new state */
 		this._currentState = this._nextState;
