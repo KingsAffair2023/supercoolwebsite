@@ -252,7 +252,7 @@ class CardAnim
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
 
 				/* Apply the transformation */
-				return `translate(${translation.x}px,${translation.y}px)`;
+				return `translate(${translation.x}px,${translation.y}px) scale(${scale.x}, ${scale.y}) rotate(${rotation}deg)`;
 			} );
 
 		/* Animate */
