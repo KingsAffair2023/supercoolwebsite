@@ -239,7 +239,7 @@ class CardAnim
 				const transform = parseTransform ( this.style.transform );
 
 				/* Get the scale */
-				const scale = new Vec ( 1 );
+				const scale = new Vec ( 0.3 );
 
 				/* Get the position */
 				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
