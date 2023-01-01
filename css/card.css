@@ -23,6 +23,7 @@ html
 #canvas > *
 {
     position: absolute;
+    will-change: transform;
 }
 
 /* Make card contents span the entire card */
@@ -48,6 +49,7 @@ html
     overflow: hidden;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    will-change: transform;
 }
 
 /* Style the back side (fallback if image is missing) */
