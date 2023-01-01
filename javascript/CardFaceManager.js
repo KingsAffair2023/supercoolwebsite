@@ -52,14 +52,16 @@ class CardFaceManager
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(180deg)" );
 				cardFace
+					.style ( "visibility", "visible" )
 					.style ( "transition", "transform " + cardFlipDuration + "ms" )
 					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(360deg)" );
 
+				/* Hide the card when the flip is complete */
 				setTimeout ( () =>
 				{
-					cardBack.style ( "display", "none" );
+					cardBack.style ( "visibility", "hidden" );
 				}, i * cardFlipDelay + cardFlipDuration );
 			}
 			else
@@ -70,14 +72,16 @@ class CardFaceManager
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(180deg)" );
 				cardBack
+					.style ( "visibility", "visible" )
 					.style ( "transition", "transform " + cardFlipDuration + "ms" )
 					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(0deg)" );
 
+				/* Hide the card when the flip is complete */
 				setTimeout ( () =>
 				{
-					cardFace.style ( "display", "none" );
+					cardFace.style ( "visibility", "hidden" );
 				}, i * cardFlipDelay + cardFlipDuration );
 			}
 
