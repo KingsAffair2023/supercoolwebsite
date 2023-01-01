@@ -239,7 +239,11 @@ class CardAnim
 				const transform = parseTransform ( this.style.transform );
 
 				/* Get the scale */
-				const scale = new Vec ( 0.3 );
+				const scale = d.size
+					? ( d.size ).div ( Vec.parse ( this.offsetWidth, this.offsetHeight ) )
+					: transform.scale
+						? Vec.parse.apply ( transform.scale.split ( "," ) )
+						: new Vec ( 1 );
 
 				/* Get the position */
 				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
@@ -248,8 +252,10 @@ class CardAnim
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
 
 				/* Apply the transformation */
-				return `translate(${translation.x}px,${translation.y}px) scale(${scale.x}, ${scale.y}) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
-			} );
+				return `translate(${translation.x}px,${translation.y}px) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+			} )
+			.style ( "width", d => d.size.x + "px" )
+			.style ( "height", d => d.size.y + "px" )
 
 		/* Animate */
 		if ( this.startParams )
