@@ -223,16 +223,37 @@ class CardAnim
 	 */
 	_animate ()
 	{
+		/** @see{@link https://stackoverflow.com/questions/60813162/extract-the-different-css-transformations-from-a-transform-string} */
+		const parseTransform = transform =>
+			Array.from ( transform.matchAll ( /(\w+)\((.+?)\)/gm ) )
+				.reduce( ( agg, [, fn, val] ) => ( {
+						...agg,
+						[fn]: val
+					} )
+					, {} );
+
 		/* Set the attributes of a selection */
-		const applyAnimParams = selection => selection
-				//.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
-				//.style ( "top", function ( d ) { return d.position?.y != null ? d.position.y + "px" : this.style.top } )
-				.style ( "width", function ( d ) { return d.size?.x != null ? d.size.x + "px" : this.style.width } )
-				.style ( "height", function ( d ) { return d.size?.y != null ? d.size.y + "px" : this.style.height } )
-				.style ( "transform", function ( d )
-				{
-					return "translate(" + d.position.x + "px," + d.position.y + "px) rotate(" + d.rotation + "deg)"
-				} );
+		const applyAnimParams = selection => selection.style ( "transform", function ( d )
+			{
+				/* Parse the transform */
+				const transform = parseTransform ( this.style.transform );
+
+				/* Get the scale */
+				const scale = d.size
+					? ( d.size ).div ( Vec.parse ( this.offsetWidth, this.offsetHeight ) )
+					: transform.scale
+						? Vec.parse.apply ( transform.scale.split ( "," ) )
+						: new Vec ( 1 );
+
+				/* Get the position */
+				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
+
+				/* Get the rotation */
+				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
+
+				/* Apply the transformation */
+				return `translate(${translation.x}px,${translation.y}px) scale(${scale.x}, ${scale.y}) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+			} );
 
 		/* Animate */
 		if ( this.startParams )
@@ -241,7 +262,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "width, height, transform" )
+					.style ( "transition-property", "transform" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 

@@ -289,6 +289,7 @@ class GridManager
 		{
 			/* Show the title */
 			d3.select ( this._titles.nodes () [ this._currentTitle ] )
+				.style ( "transition-duration", "0s" )
 				.style ( "left", layout.titlePos.x + "px" )
 				.style ( "top", layout.titlePos.y + "px" )
 				.style ( "width", layout.titleSize.x + "px" )

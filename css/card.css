@@ -17,6 +17,7 @@ html
     left: 50%;
     transform: translate(-50%,0);
     overflow: hidden;
+    transform-origin: top left;
 }
 
 /* Absolutely position children of the canvas */
@@ -24,6 +25,14 @@ html
 {
     position: absolute;
     will-change: transform;
+}
+
+.card
+{
+    width: 800px;
+    height: 1120px;
+    transform-origin: top left;
+    transform-box: content-box;
 }
 
 /* Make card contents span the entire card */

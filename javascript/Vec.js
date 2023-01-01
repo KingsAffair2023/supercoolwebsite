@@ -251,6 +251,19 @@ class Vec
 	}
 
 	/**
+	 * @name parse
+	 *
+	 * @description A static factory method, that creates a Vec from parsing its parameters
+	 *
+	 * @param {String} x
+	 * @param {String} [y=x]
+	 */
+	static parse ( x, y = x )
+	{
+		return new Vec ( parseFloat ( x ), parseFloat ( y ) );
+	}
+
+	/**
 	 * @name rad
 	 *
 	 * @param {Number} deg	Angle in degrees.
