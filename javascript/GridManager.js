@@ -444,7 +444,7 @@ class GridManager
 		/* Resize the current title if we haven't already */
 		if ( this._currentState !== GridManager.states.HIDDEN )
 			setTimeout ( () => newTitleSel
-				.style ( "transition-property", "left, top" )
+				.style ( "transition-property", "left, top, width, height" )
 				.style ( "transition-duration", animationDuration + "ms" )
 				.style ( "transition-timing-function", "ease-in-out" )
 				.style ( "left", layout.titlePos.x + "px" )
@@ -480,7 +480,7 @@ class GridManager
 
 		/* Animate the canvas changing */
 		setTimeout ( () => this._canvas
-			.style ( "transition-property", "" )
+			.style ( "transition-property", "width, height" )
 			.style ( "transition-duration", animationDuration + "ms" )
 			.style ( "transition-timing-function", "ease-in-out" )
 			.style ( "width", layout.canvasDimensions.x + "px" )
