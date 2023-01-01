@@ -254,8 +254,8 @@ class CardAnim
 				/* Apply the transformation */
 				return `translate(${translation.x}px,${translation.y}px) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
 			} )
-			.style ( "width", d => d.size.x )
-			.style ( "height", d => d.size.y );
+			.style ( "width", d => d.size.x + "px" )
+			.style ( "height", d => d.size.y + "px" );
 
 		/* Animate */
 		if ( this.startParams )
