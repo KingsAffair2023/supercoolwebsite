@@ -254,10 +254,8 @@ class CardAnim
 				console.log ( scale );
 
 				/* Apply the transformation */
-				return `translate(${translation.x}px,${translation.y}px) scale(${scale.x},${scale.y}) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
-			} )
-			.style ( "width", "800px" )
-			.style ( "height", "1120px" );
+				return `translate3d(0,0,0) translate(${translation.x}px,${translation.y}px) scale(${scale.x},${scale.y}) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+			} );
 
 		/* Animate */
 		if ( this.startParams )
