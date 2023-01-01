@@ -24,13 +24,13 @@ html
 {
     position: absolute;
     will-change: transform;
+    transform-origin: top left;
 }
 
 .card
 {
     width: 800px;
     height: 1120px;
-    transform-origin: top left;
     will-change: transform;
 }
 
