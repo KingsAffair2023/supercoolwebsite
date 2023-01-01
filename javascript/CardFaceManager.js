@@ -49,10 +49,9 @@ class CardFaceManager
 				cardBack
 					.style ( "transition", "transform " + cardFlipDuration + "ms" )
 					.style ( "transition-timing-function", "ease" )
-					.style ( "transition-delay", ( i * cardFlipDelay ) + "ms" )
+					.style ( "transition-delay", i * cardFlipDelay + "ms" )
 					.style ( "transform", "rotateY(180deg)" );
 				cardFace
-					.style ( "visibility", "visible" )
 					.style ( "transition", "transform " + cardFlipDuration + "ms" )
 					.style ( "transition-timing-function", "ease" )
 					.style ( "transition-delay", i * cardFlipDelay + "ms" )
