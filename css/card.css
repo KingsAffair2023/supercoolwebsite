@@ -3,6 +3,7 @@
 html
 {
     background-image: url("/assets/background.crop.small.png");
+    background-size: 100%;
     background-color: black;
     background-repeat: repeat;
     scroll-behavior: smooth;
