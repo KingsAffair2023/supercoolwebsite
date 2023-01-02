@@ -31,9 +31,11 @@ class CardFaceManager
 			{
 				if ( this.classList.contains ( "card-inactive" ) )
 				{
-					this.style.animation = "";
-					setTimeout ( () => this.style.animation = "tilt-shaking 300ms" );
+					this.style.animation = "tilt-shaking 300ms";
 				}
+			} ).on ( "animationend", function ()
+			{
+				this.style.animation = "";
 			} );
 		} );
 	}
