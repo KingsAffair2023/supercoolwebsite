@@ -25,6 +25,7 @@ class CardFaceManager
 		this._cards = cards;
 
 		/* Set a click handler for the cards */
+		/*
 		this._cards.each ( function ()
 		{
 			d3.select ( this ).select ( ".card-inner" ).on ( "click", function ()
@@ -38,6 +39,7 @@ class CardFaceManager
 				this.style.animation = "";
 			} );
 		} );
+		*/
 	}
 
 
