@@ -24,20 +24,7 @@ class CardFaceManager
 		/* Save the parameters */
 		this._cards = cards;
 
-		/* Set a click handler for the cards */
-		this._cards.each ( function ()
-		{
-			d3.select ( this ).select ( ".card-inner" ).on ( "click", function ()
-			{
-				if ( this.classList.contains ( "card-inactive" ) )
-				{
 
-				}
-			} ).on ( "animationend", function ()
-			{
-				this.style.animation = "";
-			} );
-		} );
 	}
 
 
