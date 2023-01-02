@@ -231,11 +231,10 @@ class CardAnim
 		/** @see{@link https://stackoverflow.com/questions/60813162/extract-the-different-css-transformations-from-a-transform-string} */
 		const parseTransform = transform =>
 			Array.from ( transform.matchAll ( /(\w+)\((.+?)\)/gm ) )
-				.reduce( ( agg, [, fn, val] ) => ( {
+				.reduce ( ( agg, [, fn, val] ) => ( {
 						...agg,
 						[fn]: val
-					} )
-					, {} );
+					} ), {} );
 
 		/* Set the attributes of a selection */
 		const applyAnimParams = selection => selection.style ( "transform", function ( d )
