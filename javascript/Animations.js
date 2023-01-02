@@ -245,7 +245,6 @@ class CardAnim
 
 				/* Get the position */
 				const translation = d.position ?? ( transform [ "translate3d" ] ? Vec.parse.apply ( null, transform [ "translate3d" ].split ( "," ).slice ( 0, 2 ) ) : new Vec ( 0 ) );
-				console.log ( translation );
 
 				/* Get the rotation */
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
