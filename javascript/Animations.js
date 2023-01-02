@@ -40,6 +40,11 @@ class AnimParams
 class CardAnim
 {
 
+	/** @public {Number} A short amount of delay to allow an animation to finish (especially on firefox) */;
+	static durationEpsilon = 50;
+
+
+
 	/** @public {Object} */
 	selection;
 
@@ -239,13 +244,14 @@ class CardAnim
 				const transform = parseTransform ( this.style.transform );
 
 				/* Get the position */
-				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
+				const translation = d.position ?? ( transform [ "translate3d" ] ? Vec.parse.apply ( null, transform [ "translate3d" ].split ( "," ).slice ( 0, 2 ) ) : new Vec ( 0 ) );
+				console.log ( translation );
 
 				/* Get the rotation */
 				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
 
 				/* Apply the transformation */
-				return `translate3D(${translation.x}px,${translation.y}px, 0) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+				return `translate3d(${translation.x}px,${translation.y}px, 0) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
 			} )
 			.style ( "width", function ( d ) { return d.size ? d.size.x + "px" : this.style.width; } )
 			.style ( "height", function ( d ) { return d.size ? d.size.y + "px" : this.style.height; } );
@@ -262,7 +268,7 @@ class CardAnim
 					.style ( "transition-timing-function", this.ease ) ) );
 
 		/* Add the callback and return */
-		return  new Promise ( res => setTimeout ( res, this.duration ) )
+		return  new Promise ( res => setTimeout ( res, this.duration + CardAnim.durationEpsilon ) )
 			.then ( () => { if ( this.callback ) this.callback (); } );
 	}
 

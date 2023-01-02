@@ -55,10 +55,11 @@ html
     will-change: transform;
 }
 
-/* The card face should be initially flipped */
+/* The card face should be initially flipped and hidden */
 .card-face
 {
     transform: rotateY(180deg);
+    visibility: hidden;
 }
 
 /* Animate shaking */
