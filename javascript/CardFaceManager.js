@@ -24,15 +24,13 @@ class CardFaceManager
 		/* Save the parameters */
 		this._cards = cards;
 
-		/* Set a click handler for the cards */
+		/* Set a click handler for cards, so that inactive cards shake */
 		this._cards.each ( function ()
 		{
 			d3.select ( this ).select ( ".card-inner" ).on ( "click", function ()
 			{
 				if ( this.classList.contains ( "card-inactive" ) )
-				{
 					this.style.animation = "tilt-shaking 300ms";
-				}
 			} ).on ( "animationend", function ()
 			{
 				this.style.animation = "";
