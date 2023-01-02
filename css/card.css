@@ -54,16 +54,6 @@ html
     will-change: transform;
 }
 
-/* Style the back side (fallback if image is missing) */
-.card-back
-{
-    background-color: #fff;
-}
-.card-back > .card-img
-{
-    filter: invert(27%) sepia(93%) saturate(5822%) hue-rotate(356deg) brightness(89%) contrast(130%);
-}
-
 /* The card face should be initially flipped */
 .card-face
 {
