@@ -31,7 +31,7 @@ class CardFaceManager
 			{
 				if ( this.classList.contains ( "card-inactive" ) )
 				{
-					this.style.animation = "tilt-shaking 300ms";
+
 				}
 			} ).on ( "animationend", function ()
 			{
