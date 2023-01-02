@@ -223,13 +223,32 @@ class CardAnim
 	 */
 	_animate ()
 	{
+		/** @see{@link https://stackoverflow.com/questions/60813162/extract-the-different-css-transformations-from-a-transform-string} */
+		const parseTransform = transform =>
+			Array.from ( transform.matchAll ( /(\w+)\((.+?)\)/gm ) )
+				.reduce( ( agg, [, fn, val] ) => ( {
+						...agg,
+						[fn]: val
+					} )
+					, {} );
+
 		/* Set the attributes of a selection */
-		const applyAnimParams = selection => selection
-				.style ( "left", function ( d ) { return d.position?.x != null ? d.position.x + "px" : this.style.left } )
-				.style ( "top", function ( d ) { return d.position?.y != null ? d.position.y + "px" : this.style.top } )
-				.style ( "width", function ( d ) { return d.size?.x != null ? d.size.x + "px" : this.style.width } )
-				.style ( "height", function ( d ) { return d.size?.y != null ? d.size.y + "px" : this.style.height } )
-				.style ( "transform", function ( d ) { return d.rotation != null ? "rotate(" + d.rotation + "deg)" : this.style.transform; } );
+		const applyAnimParams = selection => selection.style ( "transform", function ( d )
+			{
+				/* Parse the transform */
+				const transform = parseTransform ( this.style.transform );
+
+				/* Get the position */
+				const translation = d.position ?? ( transform.translate ? Vec.parse.apply ( transform.translate.split ( "," ) ) : new Vec ( 0 ) );
+
+				/* Get the rotation */
+				const rotation = d.rotation ?? ( transform.rotate ? parseFloat ( transform.rotate ) : 0 );
+
+				/* Apply the transformation */
+				return `translate3D(${translation.x}px,${translation.y}px, 0) translate(50%, 50%) rotate(${rotation}deg) translate(-50%, -50%)`;
+			} )
+			.style ( "width", function ( d ) { return d.size ? d.size.x + "px" : this.style.width; } )
+			.style ( "height", function ( d ) { return d.size ? d.size.y + "px" : this.style.height; } );
 
 		/* Animate */
 		if ( this.startParams )
@@ -238,7 +257,7 @@ class CardAnim
 		if ( this.endParams )
 			setTimeout ( () => applyAnimParams (
 				this.selection.data ( this.endParams ).join ()
-					.style ( "transition-property", "left, top, width, height, transform" )
+					.style ( "transition-property", "transform, width, height" )
 					.style ( "transition-duration", this.duration + "ms" )
 					.style ( "transition-timing-function", this.ease ) ) );
 

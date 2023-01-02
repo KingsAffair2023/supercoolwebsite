@@ -25,6 +25,7 @@ html
 {
     position: absolute;
     will-change: transform;
+    transform-origin: top left;
 }
 
 /* Make card contents span the entire card */
