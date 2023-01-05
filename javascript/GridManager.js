@@ -60,7 +60,7 @@ class GridManager
 	/**
 	 * @public {Number} The number of cards that should vertically fit on the screen including the title on a desktop.
 	 */
-	static verticalCardsDesktop = 2;
+	static verticalCardsDesktop = 1;
 
 	/**
 	 * @public {Number} The number of cards that should vertically fit on the screen including the title on a phone.
