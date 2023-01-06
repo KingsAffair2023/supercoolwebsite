@@ -24,6 +24,7 @@
 .popup-close
 {
     position: absolute;
+    max-height: 6vh;
     background: white;
     border-radius: 0.8vh 0.8vh 0 0;
     font-size: 3vh;
