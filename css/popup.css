@@ -14,7 +14,7 @@
 .popup
 {
     position: absolute;
-    margin: 6vh 5vw;
+    margin: 7vh 5vw;
     width: 90%;
     background: white;
     border-radius: 1vh;
@@ -34,7 +34,7 @@
     padding: 10px 30px calc(1vh + 10px) 30px;
     will-change: transform;
     right: -6px;
-    top: 1vh;
+    top: 2vh;
     cursor: pointer;
 }
 .popup-close:hover,
