@@ -140,18 +140,18 @@ class PopupManager
 		if ( this._nextState !== this._currentState )
 		{
 			/* Actually animate */
-			this._canvas
+			setTimeout ( () => this._canvas
 				.style ( "visibility", "visible" )
 				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
-				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" );
+				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" ) )
 
 			/* Actually animate */
-			this._popupClose
+			setTimeout ( () => this._popupClose
 				.style ( "transition", "transform" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
 				.style ( "transition-delay", ( this._nextState === PopupManager.states.OPEN ? ( PopupManager.animationDuration / 2 ) : 0 ) + "ms" )
-				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" );
+				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" ) )
 
 			/* Hide or show the cards */
 			if ( this._nextState === PopupManager.states.CLOSED )
@@ -166,10 +166,10 @@ class PopupManager
 			this._canvas.node ().scrollTo ( 0, 0 );
 
 			/* Blur the canvas */
-			this._gridManager._canvas
+			setTimeout ( () => this._gridManager._canvas
 				.style ( "transition", "filter" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
-				.style ( "filter", "blur(" + ( this._nextState === PopupManager.states.CLOSED ? 0 : PopupManager.backgroundBlur ) + "px)" );
+				.style ( "filter", "blur(" + ( this._nextState === PopupManager.states.CLOSED ? 0 : PopupManager.backgroundBlur ) + "px)" ) );
 
 			/* Notify that an animation is occurring */
 			this._animationBusy = true;
