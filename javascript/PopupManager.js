@@ -159,8 +159,9 @@ class PopupManager
 			else
 				this._gridManager.hideCards ();
 
-			/* Enable/disable scrolling */
-			document.scrollingElement.style.overflowY = ( this._nextState === PopupManager.states.CLOSED ? "auto" : "hidden" );
+			/* Disable scrolling */
+			if (  this._nextState === PopupManager.states.OPEN )
+				document.scrollingElement.style.overflowY = "hidden";
 
 			/* Scroll to the top */
 			this._canvas.node ().scrollTo ( 0, 0 );
@@ -180,9 +181,12 @@ class PopupManager
 			/* Set a timeout for the end of the animation */
 			setTimeout ( () =>
 			{
-				/* Possibly hide the popup */
+				/* Possibly hide the popup/enable scrolling */
 				if ( this._currentState === PopupManager.states.CLOSED )
+				{
 					this._canvas.style ( "visibility", "hidden" );
+					document.scrollingElement.style.overflowY = "auto";
+				}
 
 				/* Check we do not need to transition again */
 				this._animationBusy = false;
