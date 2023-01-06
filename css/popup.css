@@ -6,7 +6,8 @@
     width: 100%;
     height: 100%;
     top: 100%;
-    display: none;
+    overflow: auto;
+    visibility: hidden;
 }
 
 /* Absolutely positioned within the fixed canvas */

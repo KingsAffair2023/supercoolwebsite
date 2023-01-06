@@ -139,22 +139,19 @@ class PopupManager
 		/* Animate */
 		if ( this._nextState !== this._currentState )
 		{
-			/* Show the canvas */
-			this._canvas
-				.style ( "display", "inline-block" )
-
 			/* Actually animate */
-			setTimeout ( () => this._canvas
+			this._canvas
+				.style ( "visibility", "visible" )
 				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
-				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" ) );
+				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" );
 
 			/* Actually animate */
-			setTimeout ( () => this._popupClose
+			this._popupClose
 				.style ( "transition", "transform" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
 				.style ( "transition-delay", ( this._nextState === PopupManager.states.OPEN ? ( PopupManager.animationDuration / 2 ) : 0 ) + "ms" )
-				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" ) );
+				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" );
 
 			/* Hide or show the cards */
 			if ( this._nextState === PopupManager.states.CLOSED )
@@ -169,10 +166,10 @@ class PopupManager
 			this._canvas.node ().scrollTo ( 0, 0 );
 
 			/* Blur the canvas */
-			setTimeout ( () => this._gridManager._canvas
+			this._gridManager._canvas
 				.style ( "transition", "filter" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
-				.style ( "filter", "blur(" + ( this._nextState === PopupManager.states.CLOSED ? 0 : PopupManager.backgroundBlur ) + "px)" ) );
+				.style ( "filter", "blur(" + ( this._nextState === PopupManager.states.CLOSED ? 0 : PopupManager.backgroundBlur ) + "px)" );
 
 			/* Notify that an animation is occurring */
 			this._animationBusy = true;
@@ -185,7 +182,7 @@ class PopupManager
 			{
 				/* Possibly hide the popup */
 				if ( this._currentState === PopupManager.states.CLOSED )
-					this._canvas.style ( "display", "none" );
+					this._canvas.style ( "visibility", "hidden" );
 
 				/* Check we do not need to transition again */
 				this._animationBusy = false;
