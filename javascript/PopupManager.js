@@ -71,9 +71,6 @@ class PopupManager
 		/* Set the state to closed */
 		this._currentState = this._nextState = PopupManager.states.CLOSED;
 
-		/* Hide the canvas */
-		this._canvas.style ( "visibility", "hidden" );
-
 		/* Create the overscroll detector, only if we are on mobile */
 		if ( GridManager.mobile )
 			this._overscrollDetector = new OverscrollDetector (
