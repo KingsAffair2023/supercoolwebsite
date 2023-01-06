@@ -426,69 +426,69 @@ class GridManager
 		/* ANIMATE */
 
 		/* If we are going from a hidden state to a hidden state, we don't need to animate */
-		if ( this._currentState === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN )
-			return;
+		if ( !( this._currentState === GridManager.states.HIDDEN && this._nextState === GridManager.states.HIDDEN ) )
+		{
+			/* Notify that animations are now in progress */
+			this._animationBusy = true;
 
-		/* Notify that animations are now in progress */
-		this._animationBusy = true;
+			/* Calculate the animation position, duration, and ease */
+			let animationPosition = layout.cardPositions;
+			let animationDuration = GridManager.mobile ? GridManager.mobileSmoothingDuration : prevAnimationDuration / 2;
+			let animationEase = "ease-in-out";
+			if ( this._nextState === GridManager.states.HIDDEN )
+				[ animationPosition, animationDuration, animationEase ] = [ layout.hiddenCardPositions, GridManager.hideShowCardDuration, "ease-in" ];
+			else if ( this._currentState === GridManager.states.HIDDEN )
+				[ animationDuration, animationEase ] = [ GridManager.hideShowCardDuration, "ease-out" ];
+			else if ( !this._currentState )
+				animationDuration = GridManager.initialGridFormationDuration;
+			else if ( gridChange )
+				animationDuration = GridManager.gridReshuffleDuration;
 
-		/* Calculate the animation position, duration, and ease */
-		let animationPosition = layout.cardPositions;
-		let animationDuration = GridManager.mobile ? GridManager.mobileSmoothingDuration : prevAnimationDuration / 2;
-		let animationEase = "ease-in-out";
-		if ( this._nextState === GridManager.states.HIDDEN )
-			[ animationPosition, animationDuration, animationEase ] = [ layout.hiddenCardPositions, GridManager.hideShowCardDuration, "ease-in" ];
-		else if ( this._currentState === GridManager.states.HIDDEN )
-			[ animationDuration, animationEase ] = [ GridManager.hideShowCardDuration, "ease-out" ];
-		else if ( !this._currentState )
-			animationDuration = GridManager.initialGridFormationDuration;
-		else if ( gridChange )
-			animationDuration = GridManager.gridReshuffleDuration;
+			/* Resize the current title if we haven't already */
+			if ( this._currentState !== GridManager.states.HIDDEN )
+				setTimeout ( () => newTitleSel
+					.style ( "transition-property", "left, top, width, height" )
+					.style ( "transition-duration", animationDuration + "ms" )
+					.style ( "transition-timing-function", "ease-in-out" )
+					.style ( "left", layout.titlePos.x + "px" )
+					.style ( "top", layout.titlePos.y + "px" )
+					.style ( "width", layout.titleSize.x + "px" )
+					.style ( "height", layout.titleSize.y + "px" ) );
 
-		/* Resize the current title if we haven't already */
-		if ( this._currentState !== GridManager.states.HIDDEN )
-			setTimeout ( () => newTitleSel
-				.style ( "transition-property", "left, top, width, height" )
+			/* Animate the cards moving */
+			new CardAnim (
+				this._cards,
+				null,
+				animationPosition,
+				animationEase,
+				animationDuration )
+				.addCallback ( () =>
+				{
+					/* Possibly call the setup callback if it exists */
+					if ( this._setupCallback ) this._setupCallback ();
+					this._setupCallback = null;
+
+					/* Make sure we scrolled to the top */
+					if ( gridChange && GridManager.mobile )
+						document.scrollingElement.scrollTop = 0;
+
+					/* Possibly disable scrolling */
+					document.scrollingElement.overflowY = ( layout.grid.y <= GridManager.verticalCards ? "hidden" : "" );
+
+					/* Check that positions are still correct after the animation */
+					this._animationBusy = false;
+					this.updatePositions ( animationDuration );
+				} )
+				.animate ();
+
+			/* Animate the canvas changing */
+			setTimeout ( () => this._canvas
+				.style ( "transition-property", "width, height" )
 				.style ( "transition-duration", animationDuration + "ms" )
 				.style ( "transition-timing-function", "ease-in-out" )
-				.style ( "left", layout.titlePos.x + "px" )
-				.style ( "top", layout.titlePos.y + "px" )
-				.style ( "width", layout.titleSize.x + "px" )
-				.style ( "height", layout.titleSize.y + "px" ) );
-
-		/* Animate the cards moving */
-		new CardAnim (
-			this._cards,
-			null,
-			animationPosition,
-			animationEase,
-			animationDuration )
-			.addCallback ( () =>
-			{
-				/* Possibly call the setup callback if it exists */
-				if ( this._setupCallback ) this._setupCallback ();
-				this._setupCallback = null;
-
-				/* Make sure we scrolled to the top */
-				if ( gridChange && GridManager.mobile )
-					document.scrollingElement.scrollTop = 0;
-
-				/* Possibly disable scrolling */
-				document.scrollingElement.overflowY = ( layout.grid.y <= GridManager.verticalCards ? "hidden" : "" );
-
-				/* Check that positions are still correct after the animation */
-				this._animationBusy = false;
-				this.updatePositions ( animationDuration );
-			} )
-			.animate ();
-
-		/* Animate the canvas changing */
-		setTimeout ( () => this._canvas
-			.style ( "transition-property", "width, height" )
-			.style ( "transition-duration", animationDuration + "ms" )
-			.style ( "transition-timing-function", "ease-in-out" )
-			.style ( "width", layout.canvasDimensions.x + "px" )
-			.style ( "height", layout.canvasDimensions.y + "px" ) );
+				.style ( "width", layout.canvasDimensions.x + "px" )
+				.style ( "height", layout.canvasDimensions.y + "px" ) );
+		}
 
 		/* Set the new state */
 		this._currentState = this._nextState;
