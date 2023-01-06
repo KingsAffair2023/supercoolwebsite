@@ -153,18 +153,25 @@ class PopupManager
 				.style ( "transition-delay", ( this._nextState === PopupManager.states.OPEN ? ( PopupManager.animationDuration / 2 ) : 0 ) + "ms" )
 				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" ) )
 
-			/* Hide or show the cards */
+			/* Various operations depending on whether we are opening or closing */
 			if ( this._nextState === PopupManager.states.CLOSED )
+			{
+				/* Show the cards */
 				this._gridManager.showCards ();
+				/* Disable scrolling on the popup canvas */
+				this._canvas.style ( "overflow", "hidden" );
+			}
 			else
+			{
+				/* Hide the cards */
 				this._gridManager.hideCards ();
-
-			/* Disable scrolling */
-			if (  this._nextState === PopupManager.states.OPEN )
+				/* Disable scrolling on the card canvas */
 				document.scrollingElement.style.overflowY = "hidden";
+			}
 
 			/* Scroll to the top */
-			this._canvas.node ().scrollTo ( 0, 0 );
+			if ( this._canvas.node ().scrollTop > 0 )
+				this._canvas.node ().scrollTo ( 0, 0 );
 
 			/* Blur the canvas */
 			setTimeout ( () => this._gridManager._canvas
@@ -186,6 +193,9 @@ class PopupManager
 				{
 					this._canvas.style ( "visibility", "hidden" );
 					document.scrollingElement.style.overflowY = "auto";
+				} else
+				{
+					this._canvas.style ( "overflow", "auto" );
 				}
 
 				/* Check we do not need to transition again */

@@ -8,6 +8,7 @@
     top: 100%;
     overflow: auto;
     visibility: hidden;
+    scroll-behavior: smooth;
 }
 
 /* Absolutely positioned within the fixed canvas */
