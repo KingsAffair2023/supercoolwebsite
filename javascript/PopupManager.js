@@ -36,6 +36,9 @@ class PopupManager
 	/** @private {Object} */
 	_popup;
 
+	/** @private {Object} */
+	_popupClose;
+
 
 	/** @private {String} */
 	_currentState;
@@ -54,13 +57,15 @@ class PopupManager
 	/**
 	 * @param {Object} canvas A D3 selection for the fixed outer element of the popup.
 	 * @param {Object} popup A D3 selection for the inner element of the popup, to which different contents are appended.
+	 * @param {Object} popupClose A D3 selection for the close button of the popup.
 	 * @param {GridManager} gridManager
 	 */
-	constructor ( canvas, popup, gridManager )
+	constructor ( canvas, popup, popupClose, gridManager )
 	{
 		/* Save the parameters */
 		this._canvas = canvas;
 		this._popup = popup;
+		this._popupClose = popupClose;
 		this._gridManager = gridManager;
 
 		/* Set the state to closed */
@@ -76,6 +81,9 @@ class PopupManager
 						this.closePopup ();
 				},
 				new Vec ( Infinity, PopupManager.overscrollCloseAmount ) );
+
+		/* Set the handler for the close button */
+		this._popupClose.on ( "click", () => this.closePopup () );
 	}
 
 	/**
@@ -137,6 +145,13 @@ class PopupManager
 				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
 				.style ( "top", this._nextState === PopupManager.states.OPEN ? "0" : "100%" );
+
+			/* Actually animate */
+			this._popupClose
+				.style ( "transition", "transform" )
+				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
+				.style ( "transition-delay", ( this._nextState === PopupManager.states.OPEN ? ( PopupManager.animationDuration / 2 ) : 0 ) + "ms" )
+				.style ( "transform", this._nextState === PopupManager.states.OPEN ? "translate(0,-100%)" : "translate(0,0)" );
 
 			/* Hide or show the cards */
 			if ( this._nextState === PopupManager.states.CLOSED )

@@ -1,4 +1,5 @@
 
+/* The canvas allows for scrolling */
 .popup-canvas
 {
     position: fixed;
@@ -8,17 +9,40 @@
     overflow: auto;
 }
 
+/* Absolutely positioned within the fixed canvas */
 .popup
 {
     position: absolute;
-    margin: 5% 5%;
+    margin: max(5%, 6vh) 5%;
     width: 90%;
     background: white;
     border-radius: 1vh;
     border: 3px solid white;
 }
 
-.popup:before {
+/* Popup close button */
+.popup-close
+{
+    position: absolute;
+    background: white;
+    border-radius: 0.8vh 0.8vh 0 0;
+    font-size: 3vh;
+    text-align: center;
+    margin: max(5%, 6vh) 5%;
+    padding: 10px 30px calc(1vh + 10px) 30px;
+    will-change: transform;
+    right: -6px;
+    top: 1vh;
+    cursor: pointer;
+}
+.popup-close:hover,
+.popup-close:focus
+{
+    background: #bbb;
+}
+
+/* The Extra outline */
+.popup::before {
     content: "";
     position: absolute;
     top: 0;
@@ -28,3 +52,4 @@
     border-radius: 1vh;
     border: 3px solid black;
 }
+

@@ -173,6 +173,9 @@
 		</div>
 
 		<div id="popup-canvas" class="popup-canvas">
+			<p id="popup-close" class="popup-close">
+				Close
+			</p>
 			<div id="popup" class="popup">
 
 			</div>
@@ -257,7 +260,7 @@
 					setTimeout ( () => gm.showCards (), 2000 );
 				};
 
-				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), gm );
+				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), d3.select ( "#popup-close" ), gm );
 
 
 				document.getElementById("card-face second").onclick = () =>
