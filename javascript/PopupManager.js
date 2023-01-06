@@ -141,6 +141,7 @@ class PopupManager
 		{
 			/* Actually animate */
 			this._canvas
+				.style ( "overflow", "auto" )
 				.style ( "visibility", "visible" )
 				.style ( "transition", "top" )
 				.style ( "transition-duration", PopupManager.animationDuration + "ms" )
@@ -182,7 +183,8 @@ class PopupManager
 			{
 				/* Possibly hide the popup */
 				if ( this._currentState === PopupManager.states.CLOSED )
-					this._canvas.style ( "visibility", "hidden" );
+					this._canvas.style ( "visibility", "hidden" )
+						.style ( "overflow", "hidden" );
 
 				/* Check we do not need to transition again */
 				this._animationBusy = false;
