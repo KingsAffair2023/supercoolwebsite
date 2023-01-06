@@ -200,7 +200,7 @@
 		<script>
 
 
-			let gm, cfm, pm, flipped = 3;
+			let gm, cfm, pm;
 
 			const onload1 = () =>
 			{
@@ -256,7 +256,7 @@
 					() => {
 
 						cfm = new CardFaceManager ( d3.selectAll ( ".card" ) );
-						cfm.flip ( flipped );
+						cfm.flip ( 8 );
 					} );
 
 				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), d3.select ( "#popup-close" ), gm );
@@ -267,14 +267,6 @@
 					pm.openPopup ( document.getElementById ( "popup-test-content" ).content.cloneNode ( true ) );
 					//setTimeout ( () => pm.closePopup (), 2000 );
 				};
-
-				window.addEventListener ( "keypress", e =>
-				{
-					const key = parseInt ( e.key );
-					if ( key != null )
-						cfm.flip ( key );
-				} );
-
 			}
 
 			window.onload = onload2;
