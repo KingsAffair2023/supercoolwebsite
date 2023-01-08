@@ -35,7 +35,7 @@
       var compressor = kompressor || 1;
 
       var resizer = function () {
-        const w = el.getBoundingClientRect ().width;
+        const w = el.clientWidth;
         if ( w )
           el.style.fontSize = Math.max(Math.min(w / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
         else
