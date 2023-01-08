@@ -72,3 +72,15 @@ html
     90% { transform: rotate(2deg); }
     100% { transform: rotate(0deg); }
 }
+
+.countdown-text
+{
+    position: absolute;
+    font-size: 5.5vh;
+    font-family: "Yatra One", cursive;
+    color: white;
+    width:100%;
+    margin: 0;
+    top:50%;
+    transform: translate(0,-50%);
+}

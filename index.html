@@ -8,8 +8,11 @@
 		<script src="https://d3js.org/d3.v7.min.js"></script>
 		<script src="javascript/ka.min.js"></script>
 
-
 		<link rel="stylesheet" href="css/ka.css" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
 	</head>
 
 	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden;">
@@ -40,10 +43,10 @@
 							<img class="card-img first" id="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 					</div>
 					<div class="card-face first" id="card-face first">
-						<!--Template Me-->
-						<div class="card-img first" style='background-image: url("faces/8.png") ; background-size: 100%; width: 100%; height: 100%;'>
-							<p style='position:absolute; font-size: 5.5vh; color: white; width:100%; margin: 0; top:50%; transform:translate(0,-50%);'>Countdown</p>
-						</div>
+
+						<img class="card-img first" src="faces/8.png">
+
+						<p class="countdown-text" >0 days</p>
 
 					</div>
 			</div>
@@ -57,7 +60,7 @@
 					</div>
 					<div class="card-face second" id="card-face second">
 
-						<img class="card-img second" src="faces/7.png" style ='height: 100%; width: 100%'>
+						<img class="card-img second" src="faces/7.png">
 
 						<!--Template Me-->
 
@@ -73,7 +76,7 @@
 					</div>
 					<div class="card-face third" id="card-face third">
 
-						<img class="card-img third" src="faces/6.png" style='height: 100%; width: 100%'>
+						<img class="card-img third" src="faces/6.png">
 
 						<!--Template Me-->
 
@@ -89,7 +92,7 @@
 					</div>
 					<div class="card-face fourth" id="card-face fourth">
 
-						<img class="card-img fourth" src="faces/5.png" style='height: 100%; width: 100%'>
+						<img class="card-img fourth" src="faces/5.png">
 
 						<!--Template Me-->
 
@@ -105,7 +108,7 @@
 					</div>
 					<div class="card-face fifth" id="card-face fifth">
 
-						<img class="card-img fifth" src="faces/4.png" style='height: 100%; width: 100%'>
+						<img class="card-img fifth" src="faces/4.png">
 
 						<!--Template Me-->
 
@@ -121,7 +124,7 @@
 					</div>
 					<div class="card-face sixth" id="card-face sixth">
 
-						<img class="card-img sixth" src="faces/3.png" style='height: 100%; width: 100%'>
+						<img class="card-img sixth" src="faces/3.png">
 
 						<!--Template Me-->
 
@@ -137,7 +140,7 @@
 					</div>
 					<div class="card-face seventh" id="card-face seventh">
 
-						<img class="card-img seventh" src="faces/2.png" style='height: 100%; width: 100%'>
+						<img class="card-img seventh" src="faces/2.png">
 
 						<!--Template Me-->
 
@@ -172,7 +175,8 @@
 			</div>
 		</div>
 
-		<template id="popup-test-content">
+		<template id="popup-about-content">
+			<!-- Template me -->
 			<p style="padding: 20px; font-size: 40px;">Lots of content in a popup... where we intend to put the about page</p>
 			<br>
 			<img src="assets/titlephone.3000x1349.png" style="width: 100%; background: grey;">
@@ -190,77 +194,45 @@
 
 		<script>
 
-
-			let gm, cfm, pm;
-
-			const onload1 = () =>
+			window.onload = () =>
 			{
-				let pparams1 = [ new AnimParams ( null, new Vec ( 50 ), null ),  new AnimParams ( null, new Vec ( 50 ), null ) ];
-				let pparams2 = [ new AnimParams ( null, new Vec ( 80 ), 90 ),  new AnimParams ( null, new Vec ( 20 ), 90 ) ];
+				/* Card size and margin */
+				const cardSize = new Vec ( 800, 1120 );
+				const cardMargin = cardSize.mult ( 0.1 );
 
-				let params1 = new AnimParams ( null, null, 180 );
-				let params2 = new AnimParams ( new Vec ( 500, 400 ), null, 359 );
-				let params3 = new AnimParams ( new Vec ( 100, 200 ), null, 420 );
+				/* Title sizes */
+				const mobileTitleSize = new Vec ( 3000, 1349 );
+				const desktopTitleSize = new Vec ( 3000, 577 );
 
-				let sanim = CardAnim.Setup ( d3.selectAll ( ".duck" ), "ease-in", 1000 )
-					.continueTo ( pparams1 )
-					.continueTo ( pparams2 )
-					.addCallback ( () => console.log ( "callback 1" ) )
-					.addCallback ( () => console.log ( "callback 2" ) )
-					.singleContinueTo ( 0, params1 )
-					.continueTo ( params2 )
-					.continueTo ( params3 );
+				/* Create a card face manager */
+				const cardFaceManager = new CardFaceManager ( d3.selectAll ( ".card" ) );
 
-				sanim.animate();
-			};
+				/* The number of cards that should flip */
+				const numFlips = 8;
 
-			const onload2 = () =>
-			{
-				const dealSize = new Vec ( 400, 150 );
-				const dealPos = new Vec ( 200, 100 );
-				const cardSize = new Vec ( 87, 122 ).mult ( 1.5 );
-
-				/*
-				d3.select ( "#svg" ).append ( "rect" )
-					.attr ( "x", dealPos.x )
-					.attr ( "y", dealPos.y )
-					.attr ( "width", dealSize.x )
-					.attr ( "height", dealSize.y );
-				 */
-				/*
-				const cards = [];
-				for ( let i = 0; i < 8; ++i )
-					cards.push ( new Card (
-						d3.select ( "#canvas" ),
-						"https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png",
-						cardSize
-					) );
-				*/
-				gm = new GridManager (
+				/* Create the grid manager */
+				const gridManager = new GridManager (
 					d3.select ( "#canvas" ),
 					d3.selectAll ( ".card" ),
 					d3.selectAll ( ".title" ),
 					cardSize,
 					cardSize.mult ( new Vec ( 0.1, 0.1 ) ),
-					[ new Vec ( 3000, 1349 ), new Vec ( 3000, 577 ) ],
+					[ mobileTitleSize, desktopTitleSize ],
 					[ 1, 2, 4 ],
-					() => {
+					() => cardFaceManager.flip ( numFlips ) );
 
-						cfm = new CardFaceManager ( d3.selectAll ( ".card" ) );
-						cfm.flip ( 8 );
-					} );
+				/* Create the popup manager */
+				const popupManager = new PopupManager (
+					d3.select ( "#popup-canvas" ),
+					d3.select ( "#popup" ),
+					d3.select ( "#popup-close" ),
+					gridManager );
 
-				pm = new PopupManager ( d3.select ( "#popup-canvas" ), d3.select ( "#popup" ), d3.select ( "#popup-close" ), gm );
-
-
-				document.getElementById("card-face third").onclick = () =>
-				{
-					pm.openPopup ( document.getElementById ( "popup-test-content" ).content.cloneNode ( true ) );
-					//setTimeout ( () => pm.closePopup (), 2000 );
-				};
+				/* About popup */
+				if ( numFlips >= 3 )
+					d3.select ( ".card-face.third" ).on ( "click", () =>
+						popupManager.openPopup ( document.getElementById ( "popup-about-content" ).content.cloneNode ( true ) ) );
 			}
-
-			window.onload = onload2;
 
 		</script>
 
