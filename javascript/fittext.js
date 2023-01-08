@@ -35,8 +35,9 @@
       var compressor = kompressor || 1;
 
       var resizer = function () {
-        if ( el.clientWidth )
-          el.style.fontSize = Math.max(Math.min(el.clientWidth / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
+        const w = el.getBoundingClientRect ().width;
+        if ( w )
+          el.style.fontSize = Math.max(Math.min(w / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
         else
           setTimeout ( () => resizer() );
       };
