@@ -73,7 +73,7 @@ html
     100% { transform: rotate(0deg); }
 }
 
-.countdown-text
+.countdown-wrapper
 {
     position: absolute;
     font-family: "Yatra One", cursive;
@@ -83,4 +83,12 @@ html
     margin: 0;
     top:50%;
     transform: translate(0,-50%);
+}
+
+.countdown-text
+{
+    position: relative;
+    display: block;
+    margin: 0;
+    width: 100%;
 }

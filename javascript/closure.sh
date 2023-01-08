@@ -9,4 +9,5 @@ uglifyjs -c -m -o ka.min.js --warn --keep-fnames --keep-fargs -b ascii_only=true
   CardFaceManager.js \
   GridManager.js \
   PopupManager.js \
+  Countdown.js \
 1> /dev/null
