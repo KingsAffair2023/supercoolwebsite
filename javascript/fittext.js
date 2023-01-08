@@ -39,7 +39,7 @@
       };
 
       // Call once to set.
-      resizer();
+      setTimeout ( () => resizer() );
 
       // Bind events
       // If you have any js library which support Events, replace this part
