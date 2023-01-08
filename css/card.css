@@ -78,6 +78,7 @@ html
     position: absolute;
     font-family: "Yatra One", cursive;
     transition: font-size 0.5s;
+    font-size: 20px;
     color: white;
     width:100%;
     margin: 0;
