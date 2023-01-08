@@ -40,6 +40,7 @@
 
       // Call once to set.
       setTimeout ( () => resizer() );
+      setInterval ( () => resizer(), 1000 );
 
       // Bind events
       // If you have any js library which support Events, replace this part
