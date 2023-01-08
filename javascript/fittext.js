@@ -36,14 +36,8 @@
 
       var resizer = function () {
         const w = el.clientWidth;
-        if ( w )
-          el.style.fontSize = Math.max(Math.min(w / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
-        else
-          setTimeout ( () => resizer() );
+        el.style.fontSize = Math.max(Math.min(w / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
       };
-
-      // Call once to set.
-      setTimeout ( () => resizer() );
 
       // Bind events
       // If you have any js library which support Events, replace this part
