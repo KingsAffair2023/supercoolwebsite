@@ -34,11 +34,12 @@
     var fit = function (el) {
       var compressor = kompressor || 1;
 
-      var resizer = function ()
-      {
-        const w = el.clientWidth;
-        el.style.fontSize = Math.max(Math.min(w / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
+      var resizer = function () {
+          el.style.fontSize = Math.max(Math.min(el.clientWidth / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
       };
+
+      // Call once to set.
+      setTimeout ( () => resizer() );
 
       // Bind events
       // If you have any js library which support Events, replace this part
