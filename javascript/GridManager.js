@@ -45,7 +45,7 @@ class GridManager
 	/**
 	 * @public {Number} The title's margin, as a fraction of the viewport height.
 	 */
-	static titleMarginFrac = 0.05;
+	static titleMarginFrac = 0.09;
 
 	/**
 	 * @public {Number} The height of the title as a fraction of the viewport height.
@@ -55,7 +55,7 @@ class GridManager
 	/**
 	 * @public {Number} The margin around all cards, as a fraction of the viewport height.
 	 */
-	static cardOuterMarginFrac = 0.05;
+	static cardOuterMarginFrac = 0.02;
 
 	/**
 	 * @public {Number} The number of cards that should vertically fit on the screen including the title on a desktop.
