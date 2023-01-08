@@ -233,7 +233,7 @@
 					d3.select ( ".card-face.third" ).on ( "click", () =>
 						popupManager.openPopup ( document.getElementById ( "popup-about-content" ).content.cloneNode ( true ) ) );
 
-				fitText ( document.getElementById ( "countdown-text" ), 0.8 );
+				setTimeout ( () => fitText ( document.getElementById ( "countdown-text" ), 0.8 ) );
 			}
 
 		</script>
