@@ -45,7 +45,7 @@ class GridManager
 	/**
 	 * @public {Number} The title's margin, as a fraction of the viewport height.
 	 */
-	static titleMarginFrac = 0.09;
+	static titleMarginFrac = 0.07;
 
 	/**
 	 * @public {Number} The height of the title as a fraction of the viewport height.
