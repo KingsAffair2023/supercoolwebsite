@@ -46,6 +46,7 @@
       // and remove addEvent function (or use original jQuery version)
       addEvent(window, 'resize', resizer);
       addEvent(window, 'orientationchange', resizer);
+      setInterval ( () => resizer (), 1000 );
     };
 
     if (el.length)
