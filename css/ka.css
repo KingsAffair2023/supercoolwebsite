@@ -25,31 +25,30 @@ html
 .canvas > *
 {
     position: absolute;
-    will-change: transform;
+    will-change: transform, width, height;
     transform-origin: top left;
 }
 
 /* Make card contents span the entire card */
 .card-inner, .card-face, .card-back, .card-img
 {
+    position: absolute;
     width: 100%;
     height: 100%;
+    border-radius: 1vh;
 }
 
 /* Perspective flipping on the cards */
 .card-inner
 {
-    text-align: center;
-    transform-style: preserve-3d;
     perspective: 80vh;
+    transform-style: preserve-3d;
     animation-timing-function: ease-out;
 }
 
 /* Position the front and back side */
 .card-back, .card-face
 {
-    position: absolute;
-    border-radius: 1vh;
     overflow: hidden;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -63,7 +62,7 @@ html
     visibility: hidden;
 }
 
-/* Animate shaking */
+/* Animate shaking on clicking */
 @keyframes tilt-shaking
 {
     0% { transform: rotate(0deg); }
@@ -72,7 +71,36 @@ html
     90% { transform: rotate(2deg); }
     100% { transform: rotate(0deg); }
 }
+.card-inner.clicked
+{
+    animation: tilt-shaking 300ms;
+}
 
+/* Glowing effect on the last card's face */
+.card-face.eighth
+{
+    /* in order: x offset, y offset, blur size, spread size, color */
+    box-shadow: 0 0 40px 1vh #fa3;
+}
+
+/* Glowing effect on the last card's back when clicked */
+.card-inner.eighth::before
+{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1vh;
+    box-shadow: 0 0 40px 0.5vh #fa3;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+.card-inner.eighth.clicked::before
+{
+    opacity: 1;
+}
+
+/* Position the countdown wrapper */
 .countdown-wrapper
 {
     position: absolute;
@@ -85,9 +113,10 @@ html
     transform: translate(0,-50%);
 }
 
+/* Position the countdown text */
 .countdown-text
 {
-    position: relative;
+    text-align: center;
     display: block;
     margin: 0;
     width: 100%;
@@ -113,11 +142,13 @@ html
     background: white;
     border-radius: 1vh;
     border: 3px solid white;
+    will-change: top;
 }
 
 /* Popup close button */
 .popup-close
 {
+    font-family: "Yatra One", cursive;
     position: absolute;
     height: 4vh;
     background: white;

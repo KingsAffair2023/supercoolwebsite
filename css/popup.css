@@ -20,11 +20,13 @@
     background: white;
     border-radius: 1vh;
     border: 3px solid white;
+    will-change: top;
 }
 
 /* Popup close button */
 .popup-close
 {
+    font-family: "Yatra One", cursive;
     position: absolute;
     height: 4vh;
     background: white;

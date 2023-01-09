@@ -30,10 +30,10 @@ class CardFaceManager
 			d3.select ( this ).select ( ".card-inner" ).on ( "click", function ()
 			{
 				if ( this.classList.contains ( "card-inactive" ) )
-					this.style.animation = "tilt-shaking 300ms";
+					this.classList.add ( "clicked" );
 			} ).on ( "animationend", function ()
 			{
-				this.style.animation = "";
+				this.classList.remove ( "clicked" );
 			} );
 		} );
 	}
@@ -57,34 +57,18 @@ class CardFaceManager
 			const cardBack = cardInner.select ( ".card-back" );
 
 			/* Flip the card */
-			if ( i < numFlips )
-			{
-				cardBack
-					.style ( "transition", "transform " + cardFlipDuration + "ms" )
-					.style ( "transition-timing-function", "ease" )
-					.style ( "transition-delay", i * cardFlipDelay + "ms" )
-					.style ( "transform", "rotateY(180deg)" );
-				cardFace
-					.style ( "visibility", "visible" )
-					.style ( "transition", "transform " + cardFlipDuration + "ms" )
-					.style ( "transition-timing-function", "ease" )
-					.style ( "transition-delay", i * cardFlipDelay + "ms" )
-					.style ( "transform", "rotateY(360deg)" );
-			}
-			else
-			{
-				cardFace
-					.style ( "transition", "transform " + cardFlipDuration + "ms" )
-					.style ( "transition-timing-function", "ease" )
-					.style ( "transition-delay", i * cardFlipDelay + "ms" )
-					.style ( "transform", "rotateY(180deg)" );
-				cardBack
-					.style ( "visibility", "visible" )
-					.style ( "transition", "transform " + cardFlipDuration + "ms" )
-					.style ( "transition-timing-function", "ease" )
-					.style ( "transition-delay", i * cardFlipDelay + "ms" )
-					.style ( "transform", "rotateY(0deg)" );
-			}
+			cardBack
+				.style ( "visibility", "visible" )
+				.style ( "transition", "transform " + cardFlipDuration + "ms" )
+				.style ( "transition-timing-function", "ease" )
+				.style ( "transition-delay", i * cardFlipDelay + "ms" )
+				.style ( "transform", i < numFlips ? "rotateY(180deg)" : "rotateY(0deg)" );
+			cardFace
+				.style ( "visibility", "visible" )
+				.style ( "transition", "transform " + cardFlipDuration + "ms" )
+				.style ( "transition-timing-function", "ease" )
+				.style ( "transition-delay", i * cardFlipDelay + "ms" )
+				.style ( "transform", i < numFlips ? "rotateY(360deg)" : "rotateY(180deg)" );
 
 			/* Set a timeout for when the flip is done */
 			setTimeout ( () =>
@@ -92,6 +76,12 @@ class CardFaceManager
 				/* Class the card */
 				cardInner.classed ( "card-inactive", i >= numFlips )
 					.classed ( "card-active", i < numFlips );
+
+				/* Hide one side */
+				if ( i < numFlips )
+					cardBack.style ( "visibility", "hidden" );
+				else
+					cardFace.style ( "visibility", "hidden" );
 			},  i * cardFlipDelay + cardFlipDuration );
 		} );
 	}
