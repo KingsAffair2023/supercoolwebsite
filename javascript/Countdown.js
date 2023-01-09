@@ -14,11 +14,22 @@ function setupCountdown ( target, days, hours, minutes, seconds )
 	/* Parse the date */
 	const targetTimestamp = Date.parse ( target );
 
+	/* The countdown interval ID */
+	let interval;
+
 	/* Create the countdown function */
 	const countdown = () =>
 	{
 		/* Get the time until the target */
 		const timeRemaining = Math.max ( targetTimestamp - Date.now (), 0 );
+
+		/* If there is no time remaining, reload the page */
+		if ( timeRemaining === 0 && interval )
+		{
+			clearInterval ( interval );
+			setTimeout ( () => location.reload (), 1000 );
+			return;
+		}
 
 		/* Set the seconds */
 		const secondsRemaining = timeRemaining / 1000;
@@ -37,7 +48,11 @@ function setupCountdown ( target, days, hours, minutes, seconds )
 		days.text ( ~~daysRemaining );
 	}
 
-	/* Run initially, then set an interval */
+	/* Set up the countdown, and only set an interval if the time has not already passed */
 	countdown ();
-	return setInterval ( countdown, 1000 );
+	if ( targetTimestamp > Date.now () )
+		interval = setInterval ( countdown, 1000 );
+
+	/* Return the interval */
+	return interval;
 }
