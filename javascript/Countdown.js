@@ -7,7 +7,7 @@
  * @param {Object} hours D3 selection for the <p> element for hours.
  * @param {Object} minutes D3 selection for the <p> element for minutes.
  * @param {Object} seconds D3 selection for the <p> element for seconds.
- * @returns {number} The interval which handles the timer.
+ * @returns {number|null} The interval which handles the timer, or null if no timer was set.
  */
 function setupCountdown ( target, days, hours, minutes, seconds )
 {
@@ -15,7 +15,7 @@ function setupCountdown ( target, days, hours, minutes, seconds )
 	const targetTimestamp = Date.parse ( target );
 
 	/* The countdown interval ID */
-	let interval;
+	let interval = null;
 
 	/* Create the countdown function */
 	const countdown = () =>
