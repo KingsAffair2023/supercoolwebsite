@@ -67,10 +67,11 @@
 									<img class="card-img second" id="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face second" id="card-face second">
+								<!-- {{if gt .time 1}} -->
 
 								<img class="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/faces/7.png">
 
-								<!--Template Me-->
+								<!-- {{end}} -->
 
 							</div>
 					</div>
@@ -83,10 +84,11 @@
 									<img class="card-img third" id="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face third" id="card-face third">
+								<!-- {{if gt .time 2}}-->
 
 								<img class="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/faces/6.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -99,10 +101,11 @@
 									<img class="card-img fourth" id="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face fourth" id="card-face fourth">
+								<!-- {{if gt .time 3}}-->
 
 								<img class="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/5.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -115,10 +118,11 @@
 									<img class="card-img fifth" id="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face fifth" id="card-face fifth">
+								<!-- {{if gt .time 4}}-->
 
 								<img class="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/4.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -131,10 +135,11 @@
 									<img class="card-img sixth" id="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face sixth" id="card-face sixth">
+								<!-- {{if gt .time 5}}-->
 
 								<img class="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/3.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -147,10 +152,11 @@
 									<img class="card-img seventh" id="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face seventh" id="card-face seventh">
+								<!-- {{if gt .time 6}}-->
 
 								<img class="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/faces/2.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -163,10 +169,11 @@
 									<img class="card-img eighth" id="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
 							<div class="card-face eighth" id="card-face eighth">
+								<!-- {{if gt .time 7}}-->
 
 								<img class="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/1.png">
 
-								<!--Template Me-->
+								<!--{{end}}-->
 
 							</div>
 					</div>
@@ -182,7 +189,7 @@
 
 			</div>
 		</div>
-
+		<!-- {{if gt .time 2}}-->
 		<template id="popup-about-content">
 			<!-- Template me -->
 			<p style="padding: 20px; font-size: 40px;">Lots of content in a popup... where we intend to put the about page</p>
@@ -195,7 +202,7 @@
 			<br>
 			<p style="padding: 20px; font-size: 40px;">End of content</p>
 		</template>
-
+		<!--{{end}}-->
 
 
 
@@ -216,7 +223,7 @@
 				const cardFaceManager = new CardFaceManager ( d3.selectAll ( ".card" ) );
 
 				/* The number of cards that should flip */
-				const numFlips = 0;
+				const numFlips = 0; // TODO:change to {{.time}}
 
 				/* Create the grid manager */
 				const gridManager = new GridManager (
