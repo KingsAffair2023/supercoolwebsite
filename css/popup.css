@@ -27,6 +27,8 @@
 .popup-close
 {
     font-family: "Yatra One", cursive;
+    text-decoration: none;
+    color: black;
     position: absolute;
     height: 4vh;
     background: white;

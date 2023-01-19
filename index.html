@@ -4,12 +4,12 @@
 		<title>The King's Affair</title>
 
 		<meta name="viewport" content= "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name=”description” content=”King's Affair, the antidote to may balls” />
+		<meta name="description" content="King's Affair, the antidote to may balls" />
 
 		<script src="https://d3js.org/d3.v7.min.js"></script>
-		<script src="https://d2oaifmaxam9sv.cloudfront.net/javascript/ka.min.js"></script>
+		<script src="javascript/ka.min.js"></script>
 
-		<link rel="stylesheet" href="https://d2oaifmaxam9sv.cloudfront.net/css/ka.css" />
+		<link rel="stylesheet" href="css/ka.css" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,8 @@
 	</head>
 
 	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden;">
+
+		<h1 class="accessibility-hide-element">The King's Affair, the antidote to may balls</h1>
 
 		<div id="canvas" class="canvas">
 
@@ -41,7 +43,7 @@
 				-->
 
 			<div class="card first" id="card-outer first">
-					<div class="card-inner first" id="card-inner first">
+					<a href="#!" class="card-inner first" id="card-inner first">
 							<div class="card-back first" id="card-back first">
 									<img class="card-img first" id="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -57,12 +59,12 @@
 								</div>
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card second" id="card-outer second">
-					<div class="card-inner second" id="card-inner second">
+					<a href="#!" class="card-inner second" id="card-inner second">
 							<div class="card-back second" id="card-back second">
 									<img class="card-img second" id="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -74,12 +76,12 @@
 								<!-- {{end}} -->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card third" id="card-outer third">
-					<div class="card-inner third" id="card-inner third">
+					<a href="#!" class="card-inner third" id="card-inner third">
 							<div class="card-back third" id="card-back third">
 									<img class="card-img third" id="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -91,12 +93,12 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card fourth" id="card-outer fourth">
-					<div class="card-inner fourth" id="card-inner fourth">
+					<a href="#!" class="card-inner fourth" id="card-inner fourth">
 							<div class="card-back fourth" id="card-back fourth">
 									<img class="card-img fourth" id="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -108,12 +110,12 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card fifth" id="card-outer fifth">
-					<div class="card-inner fifth" id="card-inner fifth">
+					<a href="#!" class="card-inner fifth" id="card-inner fifth">
 							<div class="card-back fifth" id="card-back fifth">
 									<img class="card-img fifth" id="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -125,12 +127,12 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card sixth" id="card-outer sixth">
-					<div class="card-inner sixth" id="card-inner sixth">
+					<a href="#!" class="card-inner sixth" id="card-inner sixth">
 							<div class="card-back sixth" id="card-back sixth">
 									<img class="card-img sixth" id="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -142,12 +144,12 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card seventh" id="card-outer seventh">
-					<div class="card-inner seventh" id="card-inner seventh">
+					<a href="#!" class="card-inner seventh" id="card-inner seventh">
 							<div class="card-back seventh" id="card-back seventh">
 									<img class="card-img seventh" id="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -159,12 +161,12 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 
 			<div class="card eighth" id="card-outer eighth">
-					<div class="card-inner eighth" id="card-inner eighth">
+					<a href="#!" class="card-inner eighth" id="card-inner eighth">
 							<div class="card-back eighth" id="card-back eighth">
 									<img class="card-img eighth" id="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -176,15 +178,15 @@
 								<!--{{end}}-->
 
 							</div>
-					</div>
+					</a>
 			</div>
 
 		</div>
 
 		<div id="popup-canvas" class="popup-canvas">
-			<p id="popup-close" class="popup-close">
+			<a href="#!" id="popup-close" class="popup-close">
 				Close
-			</p>
+			</a>
 			<div id="popup" class="popup">
 
 			</div>
@@ -223,7 +225,7 @@
 				const cardFaceManager = new CardFaceManager ( d3.selectAll ( ".card" ) );
 
 				/* The number of cards that should flip */
-				const numFlips = 0; // TODO:change to {{.time}}
+				const numFlips = 8; // TODO:change to {{.time}}
 
 				/* Create the grid manager */
 				const gridManager = new GridManager (
@@ -245,7 +247,7 @@
 
 				/* About popup */
 				if ( numFlips >= 3 )
-					d3.select ( ".card-face.third" ).on ( "click", () =>
+					d3.select ( ".card-inner.third" ).on ( "click", () =>
 						popupManager.openPopup ( document.getElementById ( "popup-about-content" ).content.cloneNode ( true ) ) );
 
 				/* Dynamically size the countdown */

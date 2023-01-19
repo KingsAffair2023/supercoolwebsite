@@ -52,6 +52,9 @@ class PopupManager
 	/** @private {Boolean} */
 	_animationBusy = false;
 
+	/** @private {HTMLElement} */
+	_focusBeforeOpening = null;
+
 
 
 	/**
@@ -84,6 +87,13 @@ class PopupManager
 
 		/* Set the handler for the close button */
 		this._popupClose.on ( "click", () => this.closePopup () );
+
+		/* Close if escape is pressed */
+		window.addEventListener ( "keyup", e =>
+		{
+			if ( e.key === "Escape" )
+				this.closePopup ();
+		} );
 	}
 
 	/**
@@ -158,15 +168,28 @@ class PopupManager
 			{
 				/* Show the cards */
 				this._gridManager.showCards ();
-				/* Disable scrolling on the popup canvas */
-				this._canvas.style ( "overflow", "hidden" );
+				/* Disable scrolling on the popup canvas and make it inert */
+				this._canvas.style ( "overflow", "hidden" )
+					.property ( "inert", true );
+				/* Make the grid canvas non-inert */
+				this._gridManager._canvas.property ( "inert", false );
+				/* Restore the focus */
+				setTimeout ( () => this._focusBeforeOpening?.focus () );
 			}
 			else
 			{
+				/* Save the current focus */
+				this._focusBeforeOpening = document.activeElement;
 				/* Hide the cards */
 				this._gridManager.hideCards ();
 				/* Disable scrolling on the card canvas */
 				document.scrollingElement.style.overflowY = "hidden";
+				/* Make the canvas non-inert */
+				this._canvas.property ( "inert", false );
+				/* Make the  grid canvas inert */
+				this._gridManager._canvas.property ( "inert", true );
+				/* Set the close button to be focused */
+				setTimeout ( () => this._popupClose.node ().focus () );
 			}
 
 			/* Scroll to the top */
