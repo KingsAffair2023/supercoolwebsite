@@ -1,3 +1,5 @@
+
+/* Hide an element without making it invisible */
 .accessibility-hide-element
 {
     border: 0;
@@ -9,4 +11,42 @@
     padding: 0;
     position: absolute;
     width: 1px;
+}
+
+/* The accessibility officer div */
+.accessibility-officer-wrapper
+{
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    left: 100%;
+    padding: 5px;
+    margin: 5px;
+    height: 60px;
+    transform: translate(-80px, 0);
+    transition: transform 0.5s;
+}
+
+/* Animate the accessibility wrapper opening */
+.accessibility-officer-wrapper.open
+{
+    transform: translate(-100%, 0) translate(-10px, 0);
+}
+
+/* The accessibility icon */
+.accessibility-officer-icon
+{
+    height: 100%;
+    aspect-ratio: 1;
+    filter: invert( 1 );
+}
+
+.accessibility-officer-text
+{
+    font-size: 20px;
+    align-self: center;
+    margin: 0 0 0 15px;
+    width: 17em;
+    font-family: "Yatra One", cursive;
+    color: white;
 }

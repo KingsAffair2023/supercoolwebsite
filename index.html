@@ -43,7 +43,7 @@
 				-->
 
 			<div class="card first" id="card-outer first">
-					<a href="#!" class="card-inner first" id="card-inner first">
+					<a href="javascript:" class="card-inner first" id="card-inner first">
 							<div class="card-back first" id="card-back first">
 									<img class="card-img first" id="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -63,7 +63,7 @@
 
 
 			<div class="card second" id="card-outer second">
-					<a href="#!" class="card-inner second" id="card-inner second">
+					<a href="javascript:" class="card-inner second" id="card-inner second">
 							<div class="card-back second" id="card-back second">
 									<img class="card-img second" id="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -80,7 +80,7 @@
 
 
 			<div class="card third" id="card-outer third">
-					<a href="#!" class="card-inner third" id="card-inner third">
+					<a href="javascript:" class="card-inner third" id="card-inner third">
 							<div class="card-back third" id="card-back third">
 									<img class="card-img third" id="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -97,7 +97,7 @@
 
 
 			<div class="card fourth" id="card-outer fourth">
-					<a href="#!" class="card-inner fourth" id="card-inner fourth">
+					<a href="javascript:" class="card-inner fourth" id="card-inner fourth">
 							<div class="card-back fourth" id="card-back fourth">
 									<img class="card-img fourth" id="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -114,7 +114,7 @@
 
 
 			<div class="card fifth" id="card-outer fifth">
-					<a href="#!" class="card-inner fifth" id="card-inner fifth">
+					<a href="javascript:" class="card-inner fifth" id="card-inner fifth">
 							<div class="card-back fifth" id="card-back fifth">
 									<img class="card-img fifth" id="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -131,7 +131,7 @@
 
 
 			<div class="card sixth" id="card-outer sixth">
-					<a href="#!" class="card-inner sixth" id="card-inner sixth">
+					<a href="javascript:" class="card-inner sixth" id="card-inner sixth">
 							<div class="card-back sixth" id="card-back sixth">
 									<img class="card-img sixth" id="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -148,7 +148,7 @@
 
 
 			<div class="card seventh" id="card-outer seventh">
-					<a href="#!" class="card-inner seventh" id="card-inner seventh">
+					<a href="javascript:" class="card-inner seventh" id="card-inner seventh">
 							<div class="card-back seventh" id="card-back seventh">
 									<img class="card-img seventh" id="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -165,7 +165,7 @@
 
 
 			<div class="card eighth" id="card-outer eighth">
-					<a href="#!" class="card-inner eighth" id="card-inner eighth">
+					<a href="javascript:" class="card-inner eighth" id="card-inner eighth">
 							<div class="card-back eighth" id="card-back eighth">
 									<img class="card-img eighth" id="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
 							</div>
@@ -182,14 +182,23 @@
 
 		</div>
 
+		<div class="accessibility-officer-wrapper">
+			<img class="accessibility-officer-icon" src="assets/access.svg" />
+			<p class="accessibility-officer-text">
+				Accessibility Lead: <b>Joel Mahabir</b><br>
+				Email: <a href="mailto:security@kingsaffair.co.uk" style="color: white"><b>security@kingsaffair.co.uk</b></a>
+			</p>
+		</div>
+
 		<div id="popup-canvas" class="popup-canvas">
-			<a href="#!" id="popup-close" class="popup-close">
+			<a href="javascript:" id="popup-close" class="popup-close">
 				Close
 			</a>
 			<div id="popup" class="popup">
 
 			</div>
 		</div>
+
 		<!-- {{if gt .time 2}}-->
 		<template id="popup-about-content">
 			<!-- Template me -->
@@ -260,6 +269,13 @@
 					d3.select ( ".countdown-number.mins" ),
 					d3.select ( ".countdown-number.secs" ),
 					true );
+
+				/* Add a callback for clicking the accessibility icon */
+				d3.select ( ".accessibility-officer-icon" ).on ( "click", () =>
+				{
+					const e = d3.select ( ".accessibility-officer-wrapper" );
+					e.classed ( "open", !e.classed ( "open" ) );
+				} );
 			}
 
 		</script>
