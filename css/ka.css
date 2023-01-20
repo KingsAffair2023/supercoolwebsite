@@ -25,6 +25,8 @@
     height: 60px;
     transform: translate(-80px, 0);
     transition: transform 0.5s;
+    border-radius: 10px;
+    backdrop-filter: blur(5px) brightness(0.7);
 }
 
 /* Animate the accessibility wrapper opening */
@@ -46,7 +48,7 @@
     font-size: 20px;
     align-self: center;
     margin: 0 0 0 15px;
-    width: 17em;
+    width: 340px;
     font-family: "Yatra One", cursive;
     color: white;
 }
