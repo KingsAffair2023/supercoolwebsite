@@ -52,10 +52,9 @@
 								<img class="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/faces/8.png">
 
 								<div id="countdown-wrapper" class="countdown-wrapper">
-									<p class="countdown-text days"><span class="countdown-number days"></span> Days</p>
-									<p class="countdown-text hours"><span class="countdown-number hours"></span> Hours</p>
-									<p class="countdown-text mins"><span class="countdown-number mins"></span> Minutes</p>
-									<p class="countdown-text secs"><span class="countdown-number secs"></span> Seconds</p>
+									<p class="countdown-text days">
+										<span class="countdown-number days"></span>:<span class="countdown-number hours"></span>:<span class="countdown-number mins"></span>:<span class="countdown-number secs"></span>
+									</p>
 								</div>
 
 							</div>
@@ -259,7 +258,8 @@
 					d3.select ( ".countdown-number.days" ),
 					d3.select ( ".countdown-number.hours" ),
 					d3.select ( ".countdown-number.mins" ),
-					d3.select ( ".countdown-number.secs" ) )
+					d3.select ( ".countdown-number.secs" ),
+					true );
 			}
 
 		</script>

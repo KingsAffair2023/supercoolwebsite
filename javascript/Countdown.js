@@ -7,9 +7,10 @@
  * @param {Object} hours D3 selection for the <p> element for hours.
  * @param {Object} minutes D3 selection for the <p> element for minutes.
  * @param {Object} seconds D3 selection for the <p> element for seconds.
+ * @param {Boolean} padNumbers Whether to pad numbers with zeros.
  * @returns {number|null} The interval which handles the timer, or null if no timer was set.
  */
-function setupCountdown ( target, days, hours, minutes, seconds )
+function setupCountdown ( target, days, hours, minutes, seconds, padNumbers = false )
 {
 	/* Parse the date */
 	const targetTimestamp = Date.parse ( target );
@@ -33,15 +34,15 @@ function setupCountdown ( target, days, hours, minutes, seconds )
 
 		/* Set the seconds */
 		const secondsRemaining = timeRemaining / 1000;
-		seconds.text ( ~~secondsRemaining % 60 );
+		seconds.text ( String ( ~~secondsRemaining % 60 ).padStart ( padNumbers ? 2 : 1, "0" ) );
 
 		/* Set the minutes */
 		const minutesRemaining = secondsRemaining / 60;
-		minutes.text ( ~~minutesRemaining % 60 );
+		minutes.text ( String ( ~~minutesRemaining % 60 ).padStart ( padNumbers ? 2 : 1, "0" ) );
 
 		/* Set the hours */
 		const hoursRemaining = minutesRemaining / 60;
-		hours.text ( ~~hoursRemaining % 24 );
+		hours.text ( String ( ~~hoursRemaining % 24 ).padStart ( padNumbers ? 2 : 1, "0" ) );
 
 		/* Set the days */
 		const daysRemaining = hoursRemaining / 24;
