@@ -40,11 +40,12 @@
 /* The accessibility icon */
 .accessibility-officer-icon
 {
-    height: 100%;
-    aspect-ratio: 1;
+    height: 60px;
+    width: 60px;
     filter: invert( 1 );
 }
 
+/* Accessibility text */
 .accessibility-officer-text
 {
     font-size: 18px;
