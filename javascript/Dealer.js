@@ -108,7 +108,7 @@ class Line
 
 
 	/**
-	 * @description Apply ax + by + 1 to the point (x, y)
+	 * @description Apply ax + by + c to the point (x, y)
 	 * @param {Vec} point
 	 * @returns {number}
 	 */
