@@ -197,10 +197,38 @@ html
     position: absolute;
     margin: 7vh 5vw;
     width: 90%;
-    background: white;
+    background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
+    backdrop-filter: ;
     border-radius: 1vh;
-    border: 3px solid white;
+    border: 5px solid #ccc;
     will-change: top;
+    padding: 20px;
+}
+
+/* The Extra outline */
+.popup::before
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.6vh;
+    border: 5px solid darkred;
+}
+
+/* The Extra outline */
+.popup::after
+{
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border-radius: 0.5vh;
+    border: 5px solid #ccc;
 }
 
 /* Popup close button */
@@ -211,7 +239,7 @@ html
     color: black;
     position: absolute;
     height: 4vh;
-    background: white;
+    background: #ccc;
     border-radius: 0.8vh 0.8vh 0 0;
     font-size: 3vh;
     text-align: center;
@@ -228,16 +256,22 @@ html
     background: #bbb;
 }
 
-/* The Extra outline */
-.popup::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 1vh;
-    border: 3px solid black;
+/* The about popup's styles */
+#popup-about-content
+{
+    font-family: "Yatra One", cursive;
+    font-size: 5vh;
+    text-align: center;
+    color: #ddd;
+}
+#popup-about-content > p
+{
+    color: #ccc;
+    margin: 10vh 0;
+}
+#popup-about-content > h2
+{
+    margin: 10vh 0 17vh 0;
 }
 
 /* Width and position */

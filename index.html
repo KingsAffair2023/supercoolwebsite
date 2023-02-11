@@ -200,17 +200,40 @@
 		</div>
 
 		<!-- {{if gt .time 2}}-->
-		<template id="popup-about-content">
-			<!-- Template me -->
-			<p style="padding: 20px; font-size: 40px;">Lots of content in a popup... where we intend to put the about page</p>
-			<br>
-			<img src="https://d2oaifmaxam9sv.cloudfront.net/assets/titlephone.3000x1349.png" style="width: 100%; background: grey;">
-			<br>
-			<p style="padding: 20px; font-size: 40px;">Wow, such content</p>
-			<br>
-			<img src="https://d2oaifmaxam9sv.cloudfront.net/assets/titlephone.3000x1349.png" style="width: 100%; background: grey;">
-			<br>
-			<p style="padding: 20px; font-size: 40px;">End of content</p>
+		<template id="popup-about-template">
+
+			<div id="popup-about-content">
+
+				<!-- Template me -->
+
+				<h2> At King's, we like to do things differently. </h2>
+
+				<p>
+					Celebrated as the 'antidote to the monotony of traditional May Balls',
+					the King's Affair is held on the Wednesday of May Week,
+					transforming the infamous grounds of King's College into a spectacular,
+					daring, dream-like world for one night a year.
+				</p>
+
+				<p>
+					Here, inclusivity is our champion.
+				</p>
+
+				<p>
+					Gowns and tuxedos are exchanged for extravagant fancy dress and costume,
+					up-and-coming artists rule the stage, whilst glittering lights and wild artwork take over the senses.
+				</p>
+
+				<p>
+					Think festival, `beats not bollingers', and a world turned upside down.
+				</p>
+
+				<p>
+					Our much anticipated theme will be revealed shortly (18.02.23), and until then, stay excited for KA!
+				</p>
+
+			</div>
+
 		</template>
 		<!--{{end}}-->
 
@@ -256,7 +279,7 @@
 				/* About popup */
 				if ( numFlips >= 3 )
 					d3.select ( ".card-inner.third" ).on ( "click", () =>
-						popupManager.openPopup ( document.getElementById ( "popup-about-content" ).content.cloneNode ( true ) ) );
+						popupManager.openPopup ( document.getElementById ( "popup-about-template" ).content.cloneNode ( true ) ) );
 
 				/* Dynamically size the countdown */
 				setTimeout ( () => fitText ( document.getElementsByClassName ( "countdown-text" ), 0.8 ) );
