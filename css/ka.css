@@ -200,10 +200,12 @@ body
 .popup
 {
     position: absolute;
-    margin: 7vh calc(5% - 14px);
-    width: calc(90% - 20px);
+
+    overflow: hidden;
+    margin: 7% calc(10% - 20px);
+    width: 80%;
     background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
-    border-radius: 1vh;
+    border-radius: 12px;
     border: 5px solid #ccc;
     will-change: top;
     padding: 20px;
@@ -218,7 +220,7 @@ body
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 0.6vh;
+    border-radius: 6px;
     border: 5px solid darkred;
 }
 
@@ -231,7 +233,7 @@ body
     left: 4px;
     right: 4px;
     bottom: 4px;
-    border-radius: 0.5vh;
+    border-radius: 5px;
     border: 5px solid #ccc;
 }
 
@@ -242,16 +244,15 @@ body
     text-decoration: none;
     color: black;
     position: absolute;
-    height: 4vh;
+    height: 50px;
     background: #ccc;
-    border-radius: 0.8vh 0.8vh 0 0;
-    font-size: 3vh;
+    border-radius: 10px 10px 0 0;
+    font-size: 40px;
     text-align: center;
-    margin: 6vh 5vw;
-    padding: 10px 30px calc(1vh + 10px) 30px;
+    margin: 7% 10%;
+    padding: 10px 30px 16px 30px;
     will-change: transform;
-    right: -6px;
-    top: 2vh;
+    right: 0;
     cursor: pointer;
 }
 .popup-close:hover,
