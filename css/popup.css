@@ -17,7 +17,7 @@
     position: absolute;
 
     overflow: hidden;
-    margin: 100px calc(10% - 20px);
+    margin: 100px calc(10% - 26px);
     width: 80%;
     background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
     border-radius: 12px;
@@ -59,12 +59,12 @@
     text-decoration: none;
     color: black;
     position: absolute;
-    height: 50px;
+    height: 30px;
     background: #ccc;
     border-radius: 10px 10px 0 0;
-    font-size: 40px;
+    font-size: 30px;
     text-align: center;
-    margin: 100px 10%;
+    margin: 100px calc(10% - 10px);
     padding: 10px 30px 16px 30px;
     will-change: transform;
     right: 0;
