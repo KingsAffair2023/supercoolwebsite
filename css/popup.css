@@ -15,10 +15,9 @@
 .popup
 {
     position: absolute;
-    margin: 7vh 5vw;
-    width: 90%;
+    margin: 7vh calc((10vw + 20px)/2);
+    width: calc(90vw - 20px);
     background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
-    backdrop-filter: ;
     border-radius: 1vh;
     border: 5px solid #ccc;
     will-change: top;
