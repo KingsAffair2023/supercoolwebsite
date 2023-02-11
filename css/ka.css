@@ -200,7 +200,7 @@ body
 .popup
 {
     position: absolute;
-    margin: 7vh calc(5% - 9px);
+    margin: 7vh calc(5% - 14px);
     width: calc(90% - 20px);
     background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
     border-radius: 1vh;
