@@ -20,7 +20,7 @@
     margin: 8vmin calc(10% - 26px);
     width: 80%;
     /* background: #050505 url("/assets/back.cropped.faded.png") repeat center/800px; */
-    background: url("https://www.lunapic.com/editor/premade/transparent.gif");
+    background: url("/assets/back.cropped.faded.png");
     background-size: auto 1500px;
     border-radius: 12px;
     border: 5px solid #eee;
