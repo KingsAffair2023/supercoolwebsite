@@ -202,11 +202,11 @@ body
     position: absolute;
 
     overflow: hidden;
-    margin: 100px calc(10% - 26px);
+    margin: 8vmin calc(10% - 26px);
     width: 80%;
     background: center/800px url("/assets/back.cropped.faded.png") #050505 repeat;
     border-radius: 12px;
-    border: 5px solid #ccc;
+    border: 5px solid #eee;
     will-change: top;
     padding: 20px;
 }
@@ -244,13 +244,13 @@ body
     text-decoration: none;
     color: black;
     position: absolute;
-    height: 30px;
-    background: #ccc;
+    height: 3vmin;
+    background: #eee;
     border-radius: 10px 10px 0 0;
-    font-size: 30px;
+    font-size: 3vmin;
     text-align: center;
-    margin: 100px calc(10% - 10px);
-    padding: 10px 30px 16px 30px;
+    margin: 8vmin calc(10% - 10px);
+    padding: 1vmin 2vmin 2vmin 2vmin;
     will-change: transform;
     right: 0;
     cursor: pointer;
@@ -283,7 +283,7 @@ body
 #popup-about-content > h2
 {
     color: #eee;
-    margin: 10vmin 4vmin 16vmin 4vmin;
+    margin: 12vmin 4vmin 16vmin 4vmin;
 }
 
 /* Width and position */
