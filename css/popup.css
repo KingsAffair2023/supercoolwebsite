@@ -79,18 +79,25 @@
 /* The about popup's styles */
 #popup-about-content
 {
-    font-family: "Yatra One", cursive;
-    font-size: 5vh;
+    font-family: 'Yeseva One', cursive;
+    font-size: 45px;
     text-align: center;
     color: #ddd;
 }
 #popup-about-content > p
 {
+    text-align: justify;
+    text-align-last: center;
     color: #ccc;
-    margin: 10vh 0;
+    margin: 100px 50px;
+}
+#popup-about-content > h3
+{
+    color: #ddd;
+    margin: 200px 50px 200px 50px;
 }
 #popup-about-content > h2
 {
-    margin: 10vh 0 17vh 0;
+    margin: 150px 50px 200px 50px;
 }
 
