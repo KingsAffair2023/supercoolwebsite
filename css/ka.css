@@ -244,10 +244,10 @@ body
     text-decoration: none;
     color: black;
     position: absolute;
-    height: 3vmin;
+    height: 3.5vmin;
     background: #eee;
     border-radius: 10px 10px 0 0;
-    font-size: 3vmin;
+    font-size: 3.5vmin;
     text-align: center;
     margin: 8vmin calc(10% - 10px);
     padding: 1vmin 2vmin 2vmin 2vmin;
