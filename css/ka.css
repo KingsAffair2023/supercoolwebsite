@@ -246,7 +246,7 @@ body
     position: absolute;
     height: 3.5vmin;
     background: #eee;
-    border-radius: 10px 10px 0 0;
+    border-radius: 0.5vmin 0.5vmin 0 0;
     font-size: 3.5vmin;
     text-align: center;
     margin: 8vmin calc(10% - 10px);
