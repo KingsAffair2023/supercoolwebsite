@@ -276,15 +276,10 @@ body
     color: #ccc;
     margin: 10vmin 4vmin;
 }
-#popup-about-content > h3
+#popup-about-content > h3, h2
 {
     color: #eee;
     margin: 16vmin 4vmin;
-}
-#popup-about-content > h2
-{
-    color: #eee;
-    margin: 12vmin 4vmin 16vmin 4vmin;
 }
 
 /* Width and position */
