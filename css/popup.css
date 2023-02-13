@@ -80,6 +80,7 @@
 #popup-about-content
 {
     font-family: 'Yeseva One', cursive;
+    line-height: 130%;
     font-size: 4vmin;
     text-align: center;
 }
