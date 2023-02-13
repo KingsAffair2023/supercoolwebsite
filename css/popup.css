@@ -82,7 +82,6 @@
     font-family: 'Yeseva One', cursive;
     font-size: 4vmin;
     text-align: center;
-    color: #ccc;
 }
 #popup-about-content > p
 {
@@ -93,12 +92,12 @@
 }
 #popup-about-content > h3
 {
-    color: #ddd;
+    color: #eee;
     margin: 16vmin 4vmin;
 }
 #popup-about-content > h2
 {
-    color: #ddd;
+    color: #eee;
     margin: 10vmin 4vmin 16vmin 4vmin;
 }
 
