@@ -19,7 +19,7 @@
     overflow: hidden;
     margin: 8vmin calc(10% - 26px);
     width: 80%;
-    background: url("/assets/back.cropped.faded.png") center/800px #050505 repeat;
+    background: #050505 url("/assets/back.cropped.faded.png") repeat center/800px;
     border-radius: 12px;
     border: 5px solid #eee;
     will-change: top;
