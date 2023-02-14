@@ -58,7 +58,7 @@
 /* General HTML styles */
 html
 {
-    background-image: url("https://d2oaifmaxam9sv.cloudfront.net/assets/background.crop.small.png");
+    background-image: url("https://d2oaifmaxam9sv.cloudfront.net/assets/background.webp");
     background-size: 100%;
     background-color: black;
     background-repeat: repeat;
@@ -204,7 +204,7 @@ body
     overflow: hidden;
     margin: 8vmin calc(10% - 26px);
     width: 80%;
-    background: url("https://d2oaifmaxam9sv.cloudfront.net/assets/back.cropped.faded.png") repeat center/80vmin;
+    background: url("https://d2oaifmaxam9sv.cloudfront.net/assets/back.faded.webp") repeat center/80vmin;
     border-radius: 12px;
     border: 5px solid #eee;
     will-change: top;
