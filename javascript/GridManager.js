@@ -48,6 +48,11 @@ class GridManager
 	static titleMarginFrac = 0.07;
 
 	/**
+	 * @public {Number} The title's absolute horizontal margin.
+	 */
+	static titleHorizontalMargin = 50;
+
+	/**
 	 * @public {Number} The height of the title as a fraction of the viewport height.
 	 */
 	static titleHeightFrac = 0.2;
@@ -522,24 +527,6 @@ class GridManager
 
 
 
-		/* CALCULATE CARD POSITIONS */
-
-		/* Calculate the corner offset for cards in the grid */
-		const cornerOffset = new Vec (
-			( screenSize.x - ( grid.x * cardSizeWithMargin.x ) + marginSize.x ) / 2,
-			screenSize.y * ( GridManager.titleHeightFrac + GridManager.cardOuterMarginFrac + GridManager.titleMarginFrac * 2 ) + marginSize.y / 2 );
-
-		/* Calculate the card positions */
-		const cardPositions = [];
-		for ( let y = 0; y < grid.y; ++y )
-			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
-				cardPositions.push ( new AnimParams (
-					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) ),
-					cardSize,
-					0 ) );
-
-
-
 		/* CALCULATE CANVAS DIMENSIONS */
 
 		/* Calculate the final canvas dimensions */
@@ -552,8 +539,8 @@ class GridManager
 		/* CHOOSE A TITLE AND CALCULATE ITS SIZE AND POSITION */
 
 		/* Calculate the height of the title and the area's aspect ratio */
-		const titleHeight = screenSize.y * GridManager.titleHeightFrac;
-		const titleAreaRatio = screenSize.x / titleHeight;
+		const theoreticalTitleHeight = screenSize.y * GridManager.titleHeightFrac;
+		const titleAreaRatio = ( screenSize.x - 2 * GridManager.titleHorizontalMargin ) / theoreticalTitleHeight;
 
 		/* Choose the best title to fit the space */
 		let titleChoice = null;
@@ -562,10 +549,29 @@ class GridManager
 				titleChoice = i;
 
 		/* Calculate the title position and size */
-		const titleSize = new Vec ( this._titleRatios [ titleChoice ] * titleHeight, titleHeight );
+		const titleWidth = Math.min ( this._titleRatios [ titleChoice ] * theoreticalTitleHeight, screenSize.x - 2 * GridManager.titleHorizontalMargin );
+		const titleSize = new Vec ( titleWidth, titleWidth / this._titleRatios [ titleChoice ] );
 		const titlePos = new Vec (
 			( screenSize.x - titleSize.x ) / 2,
 			screenSize.y * GridManager.titleMarginFrac );
+
+
+
+		/* CALCULATE CARD POSITIONS */
+
+		/* Calculate the corner offset for cards in the grid */
+		const cornerOffset = new Vec (
+			( screenSize.x - ( grid.x * cardSizeWithMargin.x ) + marginSize.x ) / 2,
+			titleSize.y + screenSize.y * ( GridManager.cardOuterMarginFrac + GridManager.titleMarginFrac * 2 ) + marginSize.y / 2 );
+
+		/* Calculate the card positions */
+		const cardPositions = [];
+		for ( let y = 0; y < grid.y; ++y )
+			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
+				cardPositions.push ( new AnimParams (
+					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) ),
+					cardSize,
+					0 ) );
 
 
 
