@@ -46,7 +46,7 @@ function setupCountdown ( target, days, hours, minutes, seconds, padNumbers = fa
 
 		/* Set the days */
 		const daysRemaining = hoursRemaining / 24;
-		days.text ( ~~daysRemaining );
+		days.text ( String ( ~~daysRemaining ).padStart ( padNumbers ? 2 : 1, "0" ) );
 	}
 
 	/* Set up the countdown, and only set an interval if the time has not already passed */
