@@ -574,7 +574,7 @@ class GridManager
 			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
 				cardPositions.push ( new AnimParams (
 					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) )
-						.add ( y == grid.y - 1 ? bottomRowOffset : new Vec () ),
+						.add ( y === grid.y - 1 ? bottomRowOffset : new Vec () ),
 					cardSize,
 					0 ) );
 
