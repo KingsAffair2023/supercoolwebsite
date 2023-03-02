@@ -564,12 +564,17 @@ class GridManager
 			( screenSize.x - ( grid.x * cardSizeWithMargin.x ) + marginSize.x ) / 2,
 			titleSize.y + screenSize.y * ( GridManager.cardOuterMarginFrac + GridManager.titleMarginFrac * 2 ) + marginSize.y / 2 );
 
+		/* Calculate the offset of bottom row cards */
+		const cardsOnBottomRow = this._cards.size () - ( grid.x * ( grid.y - 1 ) );
+		const bottomRowOffset = new Vec ( ( grid.x - cardsOnBottomRow ) * cardSizeWithMargin.x / 2, 0 );
+
 		/* Calculate the card positions */
 		const cardPositions = [];
 		for ( let y = 0; y < grid.y; ++y )
 			for ( let x = 0; x < grid.x && y * grid.x + x < this._cards.size (); ++x )
 				cardPositions.push ( new AnimParams (
-					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) ),
+					cornerOffset.add ( cardSizeWithMargin.mult ( new Vec ( x, y ) ) )
+						.add ( y == grid.y - 1 ? bottomRowOffset : new Vec () ),
 					cardSize,
 					0 ) );
 
