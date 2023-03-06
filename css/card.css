@@ -84,14 +84,14 @@ body
 }
 
 /* Glowing effect on the last card's face */
-.card-face.eighth
+.card-face.glow.eighth
 {
     /* in order: x offset, y offset, blur size, spread size, color */
     box-shadow: 0 0 40px 1vh #fa3;
 }
 
 /* Glowing effect on the last card's back when clicked */
-.card-inner.eighth::before
+.card-inner.glow.eighth::before
 {
     content: '';
     position: absolute;
@@ -102,7 +102,7 @@ body
     transition: opacity 0.3s ease-in-out;
     opacity: 0;
 }
-.card-inner.eighth.clicked::before
+.card-inner.glow.eighth.clicked::before
 {
     opacity: 1;
 }
