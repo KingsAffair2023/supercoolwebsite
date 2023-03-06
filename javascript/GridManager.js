@@ -79,6 +79,7 @@ class GridManager
 
 
 
+
 	/**
 	 * @public {Number} The delay between dealing cards.
 	 */
@@ -199,6 +200,17 @@ class GridManager
 	 * @private {String}
 	 */
 	_nextState;
+
+
+	/**
+	 * @private {Number} The height of the last getScreenSize
+	 */
+	_cachedHeight = window.outerHeight ?? window.innerHeight;
+
+	/**
+	 * @public {Number}
+	 */
+	static heightChangeThreshold = 0.15;
 
 
 
@@ -343,7 +355,7 @@ class GridManager
 	updatePositions ( prevAnimationDuration = 0 )
 	{
 		/* Get the new screen size */
-		const newScreenSize = GridManager.getScreenSize ();
+		const newScreenSize = this.getScreenSize ();
 
 		/* Don't do anything if a reshuffle is in progress, or if there is no need */
 		if ( this._animationBusy || ( this._nextState === this._currentState && newScreenSize.equals ( this._currentScreenSize ) ) )
@@ -686,9 +698,12 @@ class GridManager
 	/**
 	 * @returns {Vec}
 	 */
-	static getScreenSize ()
+	getScreenSize ()
 	{
-		return new Vec ( window.innerWidth, window.outerHeight ?? window.innerHeight );
+		const newHeight = window.outerHeight ?? window.innerHeight;
+		if ( Math.abs ( this._cachedHeight - newHeight ) / this._cachedHeight > GridManager.heightChangeThreshold )
+			this._cachedHeight = newHeight;
+		return new Vec ( window.innerWidth, this._cachedHeight );
 	}
 
 }
