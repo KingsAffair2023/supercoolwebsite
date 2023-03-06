@@ -203,14 +203,14 @@ class GridManager
 
 
 	/**
-	 * @private {Number} The height of the last getScreenSize
+	 * @private {Vec} The height of the last getScreenSize
 	 */
-	_cachedHeight = window.innerHeight;
+	_cachedScreenSize = new Vec ( window.innerWidth, window.innerHeight );
 
 	/**
 	 * @public {Number}
 	 */
-	static heightChangeThreshold = 0.15;
+	static heightChangeThreshold = 0.2;
 
 
 
@@ -700,9 +700,11 @@ class GridManager
 	 */
 	getScreenSize ()
 	{
-		if ( window.innerHeight > this._cachedHeight || Math.abs ( window.innerHeight - this._cachedHeight ) / this._cachedHeight > GridManager.heightChangeThreshold )
-			this._cachedHeight = window.innerHeight;
-		return new Vec ( window.innerWidth, this._cachedHeight );
+		if ( !GridManager.mobile || window.innerWidth !== this._cachedScreenSize.x || Math.abs ( window.innerHeight - this._cachedScreenSize.y ) / this._cachedScreenSize.y > GridManager.heightChangeThreshold )
+			this._cachedScreenSize = new Vec ( window.innerWidth, window.innerHeight );
+		else
+			this._cachedScreenSize = new Vec ( window.innerWidth, this._cachedScreenSize.y );
+		return this._cachedScreenSize;
 	}
 
 }
