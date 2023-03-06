@@ -240,7 +240,7 @@ body
 /* Popup close button */
 .popup-close
 {
-    font-family: "Yatra One", cursive;
+    font-family: "alegreya";
     text-decoration: none;
     color: black;
     position: absolute;
@@ -264,7 +264,7 @@ body
 /* The about popup's styles */
 #popup-about-content
 {
-    font-family: 'Yeseva One', cursive;
+    font-family: "alegreya";
     line-height: 130%;
     font-size: 4vmin;
     text-align: center;
@@ -274,12 +274,12 @@ body
     text-align: justify;
     text-align-last: center;
     color: #ccc;
-    margin: 10vmin 4vmin;
+    margin: 8vmin 4vmin;
 }
 #popup-about-content > h3, h2
 {
     color: #eee;
-    margin: 16vmin 4vmin;
+    margin: 12vmin 4vmin;
 }
 
 /* Width and position */
