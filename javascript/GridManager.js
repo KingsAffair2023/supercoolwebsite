@@ -205,7 +205,7 @@ class GridManager
 	/**
 	 * @private {Number} The height of the last getScreenSize
 	 */
-	_cachedHeight = window.outerHeight ?? window.innerHeight;
+	_cachedHeight = window.innerHeight;
 
 	/**
 	 * @public {Number}
@@ -266,7 +266,7 @@ class GridManager
 		/* INITIAL CANVAS SETUP */
 
 		/* Get the layout and set up the memory attributes */
-		this._currentScreenSize = GridManager.getScreenSize ();
+		this._currentScreenSize = this.getScreenSize ();
 		const layout = this._calculateLayout ( this._currentScreenSize );
 		this._currentGrid = layout.grid;
 		this._currentTitle = layout.titleChoice;
@@ -700,9 +700,8 @@ class GridManager
 	 */
 	getScreenSize ()
 	{
-		const newHeight = window.outerHeight ?? window.innerHeight;
-		if ( Math.abs ( this._cachedHeight - newHeight ) / this._cachedHeight > GridManager.heightChangeThreshold )
-			this._cachedHeight = newHeight;
+		if ( window.innerHeight > this._cachedHeight || Math.abs ( window.innerHeight - this._cachedHeight ) / this._cachedHeight > GridManager.heightChangeThreshold )
+			this._cachedHeight = window.innerHeight;
 		return new Vec ( window.innerWidth, this._cachedHeight );
 	}
 
