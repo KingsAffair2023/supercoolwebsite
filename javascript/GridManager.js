@@ -688,7 +688,7 @@ class GridManager
 	 */
 	static getScreenSize ()
 	{
-		return new Vec ( window.innerWidth, window.innerHeight );
+		return new Vec ( window.innerWidth, window.outerHeight ?? window.innerHeight );
 	}
 
 }
