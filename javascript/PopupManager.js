@@ -174,7 +174,12 @@ class PopupManager
 				/* Make the grid canvas non-inert */
 				this._gridManager._canvas.property ( "inert", false );
 				/* Restore the focus */
-				setTimeout ( () => this._focusBeforeOpening?.focus () );
+				setTimeout ( () =>
+				{
+					const scroll = new Vec ( window.scrollX, window.scrollY );
+					this._focusBeforeOpening?.focus ();
+					window.scroll ( scroll.x, scroll.y );
+				} );
 			}
 			else
 			{
