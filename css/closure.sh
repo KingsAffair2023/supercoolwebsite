@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cat accessibility.css card.css popup.css scrollbar.css > ka.css
+cat accessibility.css card.css popup.css scrollbar.css contact.css > ka.css

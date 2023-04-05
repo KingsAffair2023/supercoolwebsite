@@ -15,7 +15,6 @@
 .popup
 {
     position: absolute;
-
     overflow: hidden;
     margin: 8vmin calc(10% - 26px);
     width: 80%;
@@ -97,3 +96,54 @@
     margin: 12vmin 4vmin;
 }
 
+
+
+/* The about popup's styles */
+#popup-email-content
+{
+    font-family: "alegreya";
+    line-height: 130%;
+    font-size: 4vmin;
+    text-align: center;
+}
+#popup-email-content > h3, h2
+{
+    color: #eee;
+    margin: 12vmin 4vmin;
+}
+#popup-email-content > #popup-email-committees
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#popup-email-content > #popup-email-committees > .popup-email-committee
+{
+    display: flex;
+    flex-direction: column;
+    width: 45vmin;
+    padding: 20px;
+    color: #eee;
+    border-radius: 20px;
+    backdrop-filter: blur(5px) brightness(0.7);
+    -webkit-backdrop-filter: blur(5px) brightness(0.7);
+    text-align: center;
+    margin: min(20px, 2vmin);
+}
+#popup-email-content > #popup-email-committees > .popup-email-committee > h3
+{
+    margin: 0;
+    font-size: 90%;
+}
+#popup-email-content > #popup-email-committees > .popup-email-committee > h4
+{
+    font-size: 80%;
+    font-weight: normal;
+    margin: 0;
+}
+#popup-email-content > #popup-email-committees > .popup-email-committee > p
+{
+    font-size: 70%;
+    font-style: italic;
+    margin: 0;
+}

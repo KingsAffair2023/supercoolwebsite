@@ -199,6 +199,18 @@
 		</div>
 	</div>
 
+	<div class="contact-wrapper">
+		<a href="javascript:" class="email-link">
+			<img class="email-icon" src="assets/email.svg" alt="Email us"/>
+		</a>
+		<a href="https://www.facebook.com/people/Kings-Affair/100089874409050/" class="fb-link" target="_blank">
+			<img class="fb-icon" src="assets/fb.png" alt="Find us on Facebook"/>
+		</a>
+		<a href="https://instagram.com/kingsaffair?igshid=Mzc1MmZhNjY=" class="ig-link" target="_blank">
+			<img class="ig-icon" src="assets/ig.svg" alt="Find us on Instagram"/>
+		</a>
+	</div>
+
 	<div id="popup-canvas" class="popup-canvas">
 		<a href="javascript:" id="popup-close" class="popup-close">
 			Close
@@ -246,15 +258,103 @@
 
 	</template>
 
-	<div class="accessibility-officer-wrapper">
-		<a href="javascript:" class="accessibility-officer-link"><img class="accessibility-officer-icon"
-				src="assets/access.svg" alt="Accessibility Help" /></a>
-		<p class="accessibility-officer-text">
-			Accessibility Lead: <b>Joel Mahabir</b><br>
-			Email: <a href="mailto:security@kingsaffair.co.uk"
-				style="color: white"><b>security@kingsaffair.co.uk</b></a>
-		</p>
-	</div>
+	<template id="popup-email-template">
+
+		<div id="popup-email-content">
+
+			<h2> Contact the committee </h2>
+
+			<div id="popup-email-committees">
+				
+				<div class="popup-email-committee">
+					<h3>Chairs</h3>
+					<h4>chair@kingsaffair.co.uk</h4>
+					<p>Maya Sultana-Feinstein, Celia Bennett</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>IT and Ticketing</h3>
+					<h4>ticketing@kingsaffair.co.uk</h4>
+					<p>Jasmine Rush, Will Pinkerton, Louis Hobson</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Accessibility</h3>
+					<h4>security@kingsaffair.co.uk</h4>
+					<p>Joel Mahabir</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Security and Infrastructure</h3>
+					<h4>security@kingsaffair.co.uk</h4>
+					<p>Joel Mahabir, Andrea Alexander</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Arts</h3>
+					<h4>arts@kingsaffair.co.uk</h4>
+					<p>Tom Rowe, Eden Hogston, Georgia Gollogly</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Production</h3>
+					<h4>production@kingsaffair.co.uk</h4>
+					<p>Dan Erwig, Aditya Bharadwaj</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Music</h3>
+					<h4>music@kingsaffair.co.uk</h4>
+					<p>Didi Robinson, Mya Saxby, Beth Doherty</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Entertainments</h3>
+					<h4>ents@kingsaffair.co.uk</h4>
+					<p>Poppy Maxwell, Adnaan Ilyas</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Food and Drink</h3>
+					<h4>food@kingsaffair.co.uk</h4>
+					<p>Ronnie Crichton, Leon Checkland</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Sustainability</h3>
+					<h4>sustainability@kingsaffair.co.uk</h4>
+					<p>Aditya Bharadwaj</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Workers and Legal</h3>
+					<h4>workers@kingsaffair.co.uk</h4>
+					<p>Francesca Mangeolles, Kiana Muller</p>
+				</div>
+
+				<div class="popup-email-committee">
+					<h3>Treasurers</h3>
+					<h4>treasurer@kingsaffair.co.uk</h4>
+					<p>Sophia He, Bernice Chiu</p>
+				</div>
+
+			</div>
+
+		</div>
+
+	</template>
+
+	<!--
+		<div class="accessibility-officer-wrapper">
+			<a href="javascript:" class="accessibility-officer-link"><img class="accessibility-officer-icon"
+					src="assets/access.svg" alt="Accessibility Help" /></a>
+			<p class="accessibility-officer-text">
+				Accessibility Lead: <b>Joel Mahabir</b><br>
+				Email: <a href="mailto:security@kingsaffair.co.uk"
+					style="color: white"><b>security@kingsaffair.co.uk</b></a>
+			</p>
+		</div>
+	-->
 
 
 
@@ -299,6 +399,10 @@
 			/* About popup */
 			d3.select(".card-inner.third").on("click", () =>
 				popupManager.openPopup(document.getElementById("popup-about-template").content.cloneNode(true)));
+
+			/* Email popup */
+			d3.select(".email-link").on("click", () =>
+				popupManager.openPopup(document.getElementById("popup-email-template").content.cloneNode(true)));
 
 			/* Dynamically size the countdown */
 			setTimeout(() => fitText(document.getElementsByClassName("countdown-text"), 0.8));
