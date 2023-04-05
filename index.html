@@ -1,36 +1,37 @@
 <!doctype html>
 <html lang="" style="width: 100%; height: 100%; margin: 0">
-	<head>
-		<title>The King's Affair</title>
 
-		<meta name="viewport" content= "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<meta name="description" content="King's Affair, the antidote to may balls" />
+<head>
+	<title>The King's Affair</title>
 
-		<script src="https://d3js.org/d3.v7.min.js"></script>
-		<script src="javascript/ka.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="description" content="King's Affair, the antidote to may balls" />
 
-		<link rel="stylesheet" href="css/ka.css" />
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<script src="javascript/ka.min.js"></script>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Alegreya&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/ka.css" />
 
-		<link rel="icon" href="https://d2oaifmaxam9sv.cloudfront.net/favicon.ico" type="image/x-icon">
-	</head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Alegreya&display=swap" rel="stylesheet">
 
-	<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden;">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
 
-		<h1 class="accessibility-hide-element">The King's Affair, the antidote to may balls</h1>
+<body style="width: 100%; height: 100%; margin: 0; overflow-x: hidden;">
 
-		<div id="canvas" class="canvas">
+	<h1 class="accessibility-hide-element">The King's Affair, the antidote to may balls. Theme: Carnivalesque.</h1>
 
-			<img class="title" src="https://d2oaifmaxam9sv.cloudfront.net/assets/titlephone.3000x1349.png"/>
-			<img class="title" src="https://d2oaifmaxam9sv.cloudfront.net/assets/titledesktop.3000x577.png"/>
+	<div id="canvas" class="canvas"
+		aria-description="There are eight playing cards. The first card contains a countdown. The third card says 'about'. The eighth card says 'tickets'. The ninth card says 'name changes'. The tenth card says 'posters'.">
 
+		<img class="title" src="assets/titlephone.theme.webp" alt="" />
+		<img class="title" src="assets/titledesktop.theme.webp" alt="" />
 
-				<!--
+		<!--
 		 ________________________________________
 		/ And thus spoke the villain "Thou shalt \
 		| populate thine card faces within the   |
@@ -44,266 +45,282 @@
 						||     ||
 				-->
 
-			<div class="card first" id="card-outer first">
-					<a href="javascript:" class="card-inner first" id="card-inner first">
-							<div class="card-back first" id="card-back first">
-									<img class="card-img first" id="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face first" id="card-face first">
+		<div class="card first" id="card-outer first">
+			<a href="javascript:" class="card-inner first" id="card-inner first">
+				<div class="card-back first" id="card-back first">
+					<img class="card-img first" id="card-img first"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face first" id="card-face first">
+					<img class="card-img first" src="assets/8.webp"
+						alt="The first of ten playing cards. The card is the eight of diamonds and is not clickable, but it shows a counting-down timer." />
 
-								<img class="card-img first" src="https://d2oaifmaxam9sv.cloudfront.net/faces/8.png">
+					<div id="countdown-wrapper" class="countdown-wrapper">
+						<p class="countdown-text days">
+							<span class="countdown-number days"></span>:<span
+								class="countdown-number hours"></span>:<span class="countdown-number mins"></span>:<span
+								class="countdown-number secs"></span>
+						</p>
+					</div>
 
-								<div id="countdown-wrapper" class="countdown-wrapper">
-									<p class="countdown-text days">
-										<span class="countdown-number days"></span>:<span class="countdown-number hours"></span>:<span class="countdown-number mins"></span>:<span class="countdown-number secs"></span>
-									</p>
-								</div>
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card second" id="card-outer second">
-					<a href="javascript:" class="card-inner second" id="card-inner second">
-							<div class="card-back second" id="card-back second">
-									<img class="card-img second" id="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face second" id="card-face second">
-								<!-- {{if gt .time 1}} -->
-
-								<img class="card-img second" src="https://d2oaifmaxam9sv.cloudfront.net/faces/7.png">
-
-								<!-- {{end}} -->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card third" id="card-outer third">
-					<a href="javascript:" class="card-inner third" id="card-inner third">
-							<div class="card-back third" id="card-back third">
-									<img class="card-img third" id="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face third" id="card-face third">
-								<!-- {{if gt .time 2}}-->
-
-								<img class="card-img third" src="https://d2oaifmaxam9sv.cloudfront.net/faces/6.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card fourth" id="card-outer fourth">
-					<a href="javascript:" class="card-inner fourth" id="card-inner fourth">
-							<div class="card-back fourth" id="card-back fourth">
-									<img class="card-img fourth" id="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face fourth" id="card-face fourth">
-								<!-- {{if gt .time 3}}-->
-
-								<img class="card-img fourth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/5.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card fifth" id="card-outer fifth">
-					<a href="javascript:" class="card-inner fifth" id="card-inner fifth">
-							<div class="card-back fifth" id="card-back fifth">
-									<img class="card-img fifth" id="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face fifth" id="card-face fifth">
-								<!-- {{if gt .time 4}}-->
-
-								<img class="card-img fifth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/4.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card sixth" id="card-outer sixth">
-					<a href="javascript:" class="card-inner sixth" id="card-inner sixth">
-							<div class="card-back sixth" id="card-back sixth">
-									<img class="card-img sixth" id="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face sixth" id="card-face sixth">
-								<!-- {{if gt .time 5}}-->
-
-								<img class="card-img sixth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/3.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card seventh" id="card-outer seventh">
-					<a href="javascript:" class="card-inner seventh" id="card-inner seventh">
-							<div class="card-back seventh" id="card-back seventh">
-									<img class="card-img seventh" id="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face seventh" id="card-face seventh">
-								<!-- {{if gt .time 6}}-->
-
-								<img class="card-img seventh" src="https://d2oaifmaxam9sv.cloudfront.net/faces/2.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-
-			<div class="card eighth" id="card-outer eighth">
-					<a href="https://tickets.kingsaffair.co.uk" target="_blank" class="card-inner eighth" id="card-inner eighth">
-							<div class="card-back eighth" id="card-back eighth">
-									<img class="card-img eighth" id="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/assets/back.smaller.png">
-							</div>
-							<div class="card-face eighth" id="card-face eighth">
-								<!-- {{if gt .time 7}}-->
-
-								<img class="card-img eighth" src="https://d2oaifmaxam9sv.cloudfront.net/faces/1.png">
-
-								<!--{{end}}-->
-
-							</div>
-					</a>
-			</div>
-
-		</div>
-
-		<div id="popup-canvas" class="popup-canvas">
-			<a href="javascript:" id="popup-close" class="popup-close">
-				Close
+				</div>
 			</a>
-			<div id="popup" class="popup">
-
-			</div>
 		</div>
 
-		<div class="accessibility-officer-wrapper">
-			<a href="javascript:"><img class="accessibility-officer-icon" src="assets/access.svg" alt="Accessibility Help" /></a>
-			<p class="accessibility-officer-text">
-				Accessibility Lead: <b>Joel Mahabir</b><br>
-				Email: <a href="mailto:security@kingsaffair.co.uk" style="color: white"><b>security@kingsaffair.co.uk</b></a>
+
+		<div class="card second" id="card-outer second">
+			<a href="javascript:" class="card-inner second" id="card-inner second">
+				<div class="card-back second" id="card-back second">
+					<img class="card-img second" id="card-img second"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face second" id="card-face second">
+					<img class="card-img second" src="assets/7.webp"
+						alt="The second of ten playing cards. The card is the seven of clubs and is not clickable." />
+
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card third" id="card-outer third">
+			<a href="javascript:" class="card-inner third" id="card-inner third">
+				<div class="card-back third" id="card-back third">
+					<img class="card-img third" id="card-img third"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face third" id="card-face third">
+					<img class="card-img third" src="assets/6.webp"
+						alt="The third of ten playing cards. The card is the six of diamonds and is clickable, with the word 'about' written on its face." />
+
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card fourth" id="card-outer fourth">
+			<a href="javascript:" class="card-inner fourth" id="card-inner fourth">
+				<div class="card-back fourth" id="card-back fourth">
+					<img class="card-img fourth" id="card-img fourth"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face fourth" id="card-face fourth">
+					<img class="card-img fourth" src="assets/5.webp"
+						alt="The fourth of ten playing cards. The card is the five of diamonds and is not clickable." />
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card fifth" id="card-outer fifth">
+			<a href="javascript:" class="card-inner fifth" id="card-inner fifth">
+				<div class="card-back fifth" id="card-back fifth">
+					<img class="card-img fifth" id="card-img fifth"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face fifth" id="card-face fifth">
+					<img class="card-img fifth" src="assets/4.webp"
+						alt="The fifth of ten playing cards. The card is the four of clubs and is not clickable." />
+
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card sixth" id="card-outer sixth">
+			<a href="javascript:" class="card-inner sixth" id="card-inner sixth">
+				<div class="card-back sixth" id="card-back sixth">
+					<img class="card-img sixth" id="card-img sixth"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face sixth" id="card-face sixth">
+					<img class="card-img sixth" src="assets/3.webp"
+						alt="The sixth of ten playing cards. The card is the three of hearts and is not clickable." />
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card seventh" id="card-outer seventh">
+			<a href="javascript:" class="card-inner seventh" id="card-inner seventh">
+				<div class="card-back seventh" id="card-back seventh">
+					<img class="card-img seventh" id="card-img seventh"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face seventh" id="card-face seventh">
+					<img class="card-img seventh" src="assets/2.webp"
+						alt="The seventh of ten playing cards. The card is the two of hearts and is not clickable." />
+				</div>
+			</a>
+		</div>
+
+
+		<div class="card eighth" id="card-outer eighth">
+			<a href="https://tickets.kingsaffair.co.uk/tickets" target="_blank" class="card-inner eighth" id="card-inner eighth">
+				<div class="card-back eighth" id="card-back eighth">
+					<img class="card-img eighth" id="card-img eighth"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face eighth" id="card-face eighth">
+					<img class="card-img eighth" src="assets/1.webp"
+						alt="The eighth of ten playing cards. The card is the ace of diamonds and is clickable, with the word 'tickets' written on its face." />
+				</div>
+			</a>
+		</div>
+
+
+
+		<div class="card ninth" id="card-outer ninth">
+			<a href="https://tickets.kingsaffair.co.uk/ticket-transfer" target="_blank" class="card-inner ninth" id="card-inner ninth">
+				<div class="card-back ninth" id="card-back ninth">
+					<img class="card-img ninth" id="card-img ninth"
+						src="assets/back.webp" alt="" />
+				</div>
+				<div class="card-face ninth" id="card-face ninth">
+					<img class="card-img ninth" src="assets/name-changes.webp"
+						alt="The ninth of ten playing cards. The card is the two of clubs and is clickable, with the words 'Name Changes' written on its face." />
+				</div>
+			</a>
+		</div>
+
+		<div class="card tenth" id="card-outer tenth">
+			<a href="https://the-kings-affair.square.site/" target="_blank" class="card-inner tenth"
+				id="card-inner tenth">
+				<div class="card-back tenth" id="card-back tenth">
+					<img class="card-img tenth" id="card-img tenth"
+						src="assets/back.webp" alt="" />
+
+				</div>
+				<div class="card-face tenth" id="card-face tenth">
+					<img class="card-img tenth" src="assets/posters.webp"
+						alt="The tenth of ten playing cards. The card is the ace of spades and is clickable, with the words 'Posters' written on its face." />
+				</div>
+			</a>
+		</div>
+	</div>
+
+	<div id="popup-canvas" class="popup-canvas">
+		<a href="javascript:" id="popup-close" class="popup-close">
+			Close
+		</a>
+		<div id="popup" class="popup">
+
+		</div>
+	</div>
+
+	<template id="popup-about-template">
+
+		<div id="popup-about-content">
+
+			<!-- Template me -->
+
+			<h2> At King's, we like to do things differently. </h2>
+
+			<p class="p1">
+				Celebrated as the 'antidote to the monotony of traditional May Balls',
+				the King's Affair is held on the Wednesday of May Week,
+				transforming the infamous grounds of King's College into a spectacular,
+				daring, dream-like world for one night a year.
 			</p>
+
+			<h3>
+				Here, inclusivity is our champion.
+			</h3>
+
+			<p>
+				Gowns and tuxedos are exchanged for extravagant fancy dress and costume,
+				up-and-coming artists rule the stage, whilst glittering lights and wild artwork take over the senses.
+			</p>
+
+			<p>
+				Think festival, 'beats not bollingers', and a world turned upside down.
+			</p>
+
+			<p>
+				Carnivalesque is a philosophical term originated by Mikhail Bakhtin. It's about free interaction between
+				people, turning upside down the social hierarchy and giving the body over to eating, drinking, dancing
+				and revelry. Join us on 21/06/23 for a night of humour and chaos.
+			<p>
+
 		</div>
 
-		<!-- {{if gt .time 2}}-->
-		<template id="popup-about-template">
+	</template>
 
-			<div id="popup-about-content">
-
-				<!-- Template me -->
-
-				<h2> At King's, we like to do things differently. </h2>
-
-				<p class="p1">
-					Celebrated as the 'antidote to the monotony of traditional May Balls',
-					the King's Affair is held on the Wednesday of May Week,
-					transforming the infamous grounds of King's College into a spectacular,
-					daring, dream-like world for one night a year.
-				</p>
-
-				<h3>
-					Here, inclusivity is our champion.
-				</h3>
-
-				<p>
-					Gowns and tuxedos are exchanged for extravagant fancy dress and costume,
-					up-and-coming artists rule the stage, whilst glittering lights and wild artwork take over the senses.
-				</p>
-
-				<p>
-					Think festival, `beats not bollingers', and a world turned upside down.
-				</p>
-
-				<p>
-					Our much anticipated theme will be revealed shortly (18.02.23), and until then, stay excited for KA!
-				</p>
-
-			</div>
-
-		</template>
-		<!--{{end}}-->
+	<div class="accessibility-officer-wrapper">
+		<a href="javascript:" class="accessibility-officer-link"><img class="accessibility-officer-icon"
+				src="assets/access.svg" alt="Accessibility Help" /></a>
+		<p class="accessibility-officer-text">
+			Accessibility Lead: <b>Joel Mahabir</b><br>
+			Email: <a href="mailto:security@kingsaffair.co.uk"
+				style="color: white"><b>security@kingsaffair.co.uk</b></a>
+		</p>
+	</div>
 
 
 
 
-		<script>
 
-			window.onload = () =>
-			{
-				/* Card size and margin */
-				const cardSize = new Vec ( 800, 1120 );
-				const cardMargin = cardSize.mult ( 0.1 );
+	<script>
 
-				/* Title sizes */
-				const mobileTitleSize = new Vec ( 3000, 1349 );
-				const desktopTitleSize = new Vec ( 3000, 577 );
+		window.onload = () => {
+			/* Card size and margin */
+			const cardSize = new Vec(800, 1120);
+			const cardMargin = cardSize.mult(0.1);
 
-				/* Create a card face manager */
-				const cardFaceManager = new CardFaceManager ( d3.selectAll ( ".card" ) );
+			/* Title sizes */
+			const mobileTitleSize = new Vec(3000, 1709);
+			const desktopTitleSize = new Vec(3000, 958);
 
-				/* The number of cards that should flip */
-				const numFlips = 8; // TODO:change to {{.time}}
+			/* Create a card face manager */
+			const cardFaceManager = new CardFaceManager(d3.selectAll(".card"));
 
-				/* Create the grid manager */
-				const gridManager = new GridManager (
-					d3.select ( "#canvas" ),
-					d3.selectAll ( ".card" ),
-					d3.selectAll ( ".title" ),
-					cardSize,
-					cardSize.mult ( new Vec ( 0.1, 0.1 ) ),
-					[ mobileTitleSize, desktopTitleSize ],
-					[ 1, 2, 3, 4, 5 ],
-					() => cardFaceManager.flip ( numFlips ) );
+			/* The number of cards that should flip */
+			const numFlips = 10;
+			GridManager.titleHeightFrac = 0.32;
 
-				/* Create the popup manager */
-				const popupManager = new PopupManager (
-					d3.select ( "#popup-canvas" ),
-					d3.select ( "#popup" ),
-					d3.select ( "#popup-close" ),
-					gridManager );
+			/* Create the grid manager */
+			const gridManager = new GridManager(
+				d3.select("#canvas"),
+				d3.selectAll(".card"),
+				d3.selectAll(".title"),
+				cardSize,
+				cardSize.mult(new Vec(0.1, 0.1)),
+				[mobileTitleSize, desktopTitleSize],
+				[1, 2, 3, 4, 5],
+				() => cardFaceManager.flip(numFlips));
 
-				/* About popup */
-				if ( numFlips >= 3 )
-					d3.select ( ".card-inner.third" ).on ( "click", () =>
-						popupManager.openPopup ( document.getElementById ( "popup-about-template" ).content.cloneNode ( true ) ) );
+			/* Create the popup manager */
+			const popupManager = new PopupManager(
+				d3.select("#popup-canvas"),
+				d3.select("#popup"),
+				d3.select("#popup-close"),
+				gridManager);
 
-				/* Dynamically size the countdown */
-				setTimeout ( () => fitText ( document.getElementsByClassName ( "countdown-text" ), 0.8 ) );
+			/* About popup */
+			d3.select(".card-inner.third").on("click", () =>
+				popupManager.openPopup(document.getElementById("popup-about-template").content.cloneNode(true)));
 
-				/* Create the countdown */
-				setupCountdown (
-					"2023-02-20T00:00:00.000Z",
-					d3.select ( ".countdown-number.days" ),
-					d3.select ( ".countdown-number.hours" ),
-					d3.select ( ".countdown-number.mins" ),
-					d3.select ( ".countdown-number.secs" ),
-					true );
+			/* Dynamically size the countdown */
+			setTimeout(() => fitText(document.getElementsByClassName("countdown-text"), 0.8));
 
-				/* Add a callback for clicking the accessibility icon */
-				d3.select ( ".accessibility-officer-icon" ).on ( "click", () =>
-				{
-					const e = d3.select ( ".accessibility-officer-wrapper" );
-					e.classed ( "open", !e.classed ( "open" ) );
-				} );
-			}
+			/* Create the countdown */
+			setupCountdown(
+				"2023-06-21T00:00:00.000Z",
+				d3.select(".countdown-number.days"),
+				d3.select(".countdown-number.hours"),
+				d3.select(".countdown-number.mins"),
+				d3.select(".countdown-number.secs"),
+				true);
 
-		</script>
+			/* Add a callback for clicking the accessibility icon */
+			d3.select(".accessibility-officer-link").on("click", () => {
+				const e = d3.select(".accessibility-officer-wrapper");
+				e.classed("open", !e.classed("open"));
+			});
+		}
 
-	</body>
+	</script>
+
+</body>
+
 </html>

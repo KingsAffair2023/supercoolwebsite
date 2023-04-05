@@ -48,10 +48,10 @@
 /* Accessibility text */
 .accessibility-officer-text
 {
-    font-size: 18px;
+    font-size: 16px;
     align-self: center;
     margin: 0 0 0 15px;
-    width: 330px;
+    width: 270px;
     font-family: "Yatra One", cursive;
     color: white;
 }
