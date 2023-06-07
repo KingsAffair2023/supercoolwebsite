@@ -29,7 +29,7 @@ class CardFaceManager
 		{
 			d3.select ( this ).select ( ".card-inner" ).on ( "click", function ()
 			{
-				if ( this.classList.contains ( "card-inactive" ) )
+				if ( this.classList.contains ( "card-inactive" ) || this.classList.contains ( "shake" ) )
 					this.classList.add ( "clicked" );
 			} ).on ( "animationend", function ()
 			{
